@@ -1,7 +1,12 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using MyBlog.App.Middlewares.Extensions;
 using MyBlog.Data;
+using MyBlog.Data.DBModels.Comments;
+using MyBlog.Data.DBModels.Posts;
+using MyBlog.Data.DBModels.Tags;
 using MyBlog.Data.DBModels.Users;
+using MyBlog.Data.Repositories;
 
 namespace MyBlog.App
 {
@@ -14,7 +19,11 @@ namespace MyBlog.App
             builder.Services.AddControllersWithViews();
 
             var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-            builder.Services.AddDbContext<MyBlogContext>(opt => opt.UseSqlite(connectionString, b => b.MigrationsAssembly("MyBlog.Data")));
+            builder.Services.AddDbContext<MyBlogContext>(opt => opt.UseSqlite(connectionString, b => b.MigrationsAssembly("MyBlog.Data")))
+                .AddUnitOfWork()
+                .AddCustomRepository<Post, PostRepository>()
+                .AddCustomRepository<Comment, CommentRepository>()
+                .AddCustomRepository<Tag, TagRepository>();
 
             builder.Services.AddIdentity<User, IdentityRole<int>>()
                 .AddEntityFrameworkStores<MyBlogContext>();
