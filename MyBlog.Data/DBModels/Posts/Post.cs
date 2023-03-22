@@ -15,7 +15,7 @@ namespace MyBlog.Data.DBModels.Posts
         public string Content { get; set; }
         public DateTime CreatedDate { get; set; }
 
-        public string CreaterId { get; set; }
+        public int CreaterId { get; set; }
         public User Creater { get; set; }
 
         public List<Tag> Tags { get; set; }

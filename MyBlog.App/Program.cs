@@ -16,7 +16,7 @@ namespace MyBlog.App
             var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
             builder.Services.AddDbContext<MyBlogContext>(opt => opt.UseSqlite(connectionString, b => b.MigrationsAssembly("MyBlog.Data")));
 
-            builder.Services.AddIdentity<User, IdentityRole>()
+            builder.Services.AddIdentity<User, IdentityRole<int>>()
                 .AddEntityFrameworkStores<MyBlogContext>();
 
             var app = builder.Build();

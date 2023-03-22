@@ -8,15 +8,8 @@ namespace MyBlog.Data
 {
     public class MyBlogContext : DbContext
     {
-        //DbSet<User> Users { get; set; }
-        //DbSet<Comment> Comments { get; set; }
-        //DbSet<Post> Posts { get; set; }
-        //DbSet<Tag> Tags { get; set; }
-
-        public MyBlogContext(DbContextOptions<MyBlogContext> contextOptions) : base(contextOptions)
-        {
+        public MyBlogContext(DbContextOptions<MyBlogContext> contextOptions) : base(contextOptions) =>
             Database.Migrate();
-        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -25,6 +18,7 @@ namespace MyBlog.Data
             modelBuilder.ApplyConfiguration(new TagConfiguration());
             modelBuilder.ApplyConfiguration(new СommentConfiguration());
             modelBuilder.ApplyConfiguration(new PostConfiguration());
+            modelBuilder.ApplyConfiguration(new UserConfiguration());
         }
     }
 }

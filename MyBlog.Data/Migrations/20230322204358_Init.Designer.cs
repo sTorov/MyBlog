@@ -11,7 +11,7 @@ using MyBlog.Data;
 namespace MyBlog.Data.Migrations
 {
     [DbContext(typeof(MyBlogContext))]
-    [Migration("20230322165820_Init")]
+    [Migration("20230322204358_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -32,9 +32,8 @@ namespace MyBlog.Data.Migrations
                     b.Property<int>("RecipientId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("SenderId")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
+                    b.Property<int>("SenderId")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Text")
                         .IsRequired()
@@ -46,7 +45,7 @@ namespace MyBlog.Data.Migrations
 
                     b.HasIndex("SenderId");
 
-                    b.ToTable("Comments");
+                    b.ToTable("Comments", (string)null);
                 });
 
             modelBuilder.Entity("MyBlog.Data.DBModels.Posts.Post", b =>
@@ -62,9 +61,8 @@ namespace MyBlog.Data.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("CreaterId")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
+                    b.Property<int>("CreaterId")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -74,7 +72,7 @@ namespace MyBlog.Data.Migrations
 
                     b.HasIndex("CreaterId");
 
-                    b.ToTable("Posts");
+                    b.ToTable("Posts", (string)null);
                 });
 
             modelBuilder.Entity("MyBlog.Data.DBModels.Tags.Tag", b =>
@@ -89,13 +87,14 @@ namespace MyBlog.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Tags");
+                    b.ToTable("Tags", (string)null);
                 });
 
             modelBuilder.Entity("MyBlog.Data.DBModels.Users.User", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("TEXT");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
 
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("INTEGER");
@@ -141,7 +140,7 @@ namespace MyBlog.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("PostTag", b =>

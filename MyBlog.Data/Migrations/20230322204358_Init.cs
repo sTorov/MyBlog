@@ -28,7 +28,8 @@ namespace MyBlog.Data.Migrations
                 name: "Users",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "TEXT", nullable: false),
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
                     UserName = table.Column<string>(type: "TEXT", nullable: true),
                     NormalizedUserName = table.Column<string>(type: "TEXT", nullable: true),
                     Email = table.Column<string>(type: "TEXT", nullable: true),
@@ -58,7 +59,7 @@ namespace MyBlog.Data.Migrations
                     Title = table.Column<string>(type: "TEXT", nullable: false),
                     Content = table.Column<string>(type: "TEXT", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    CreaterId = table.Column<string>(type: "TEXT", nullable: false)
+                    CreaterId = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -79,7 +80,7 @@ namespace MyBlog.Data.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     Text = table.Column<string>(type: "TEXT", nullable: false),
                     DataCreated = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    SenderId = table.Column<string>(type: "TEXT", nullable: false),
+                    SenderId = table.Column<int>(type: "INTEGER", nullable: false),
                     RecipientId = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
