@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using MyBlog.App.Middlewares.Extensions;
+using MyBlog.App.Utils.Extensions;
 using MyBlog.Data;
 using MyBlog.Data.DBModels.Comments;
 using MyBlog.Data.DBModels.Posts;

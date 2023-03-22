@@ -1,7 +1,7 @@
 ﻿using MyBlog.Data.Repositories;
 using MyBlog.Data.Repositories.Interfaces;
 
-namespace MyBlog.App.Middlewares.Extensions
+namespace MyBlog.App.Utils.Extensions
 {
     public static class ServerCollectionExtensions
     {
