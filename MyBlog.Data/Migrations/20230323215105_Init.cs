@@ -30,6 +30,11 @@ namespace MyBlog.Data.Migrations
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
+                    FirstName = table.Column<string>(type: "TEXT", nullable: false),
+                    SecondName = table.Column<string>(type: "TEXT", nullable: false),
+                    LastName = table.Column<string>(type: "TEXT", nullable: false),
+                    BitrhDate = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    Photo = table.Column<string>(type: "TEXT", nullable: false),
                     UserName = table.Column<string>(type: "TEXT", nullable: true),
                     NormalizedUserName = table.Column<string>(type: "TEXT", nullable: true),
                     Email = table.Column<string>(type: "TEXT", nullable: true),
@@ -59,14 +64,14 @@ namespace MyBlog.Data.Migrations
                     Title = table.Column<string>(type: "TEXT", nullable: false),
                     Content = table.Column<string>(type: "TEXT", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    CreaterId = table.Column<int>(type: "INTEGER", nullable: false)
+                    UserId = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Posts", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Posts_Users_CreaterId",
-                        column: x => x.CreaterId,
+                        name: "FK_Posts_Users_UserId",
+                        column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -79,29 +84,29 @@ namespace MyBlog.Data.Migrations
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     Text = table.Column<string>(type: "TEXT", nullable: false),
-                    DataCreated = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    SenderId = table.Column<int>(type: "INTEGER", nullable: false),
-                    RecipientId = table.Column<int>(type: "INTEGER", nullable: false)
+                    CreatedDate = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    UserId = table.Column<int>(type: "INTEGER", nullable: false),
+                    PostId = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Comments", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Comments_Posts_RecipientId",
-                        column: x => x.RecipientId,
+                        name: "FK_Comments_Posts_PostId",
+                        column: x => x.PostId,
                         principalTable: "Posts",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Comments_Users_SenderId",
-                        column: x => x.SenderId,
+                        name: "FK_Comments_Users_UserId",
+                        column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "PostTag",
+                name: "PostEntityTagEntity",
                 columns: table => new
                 {
                     PostsId = table.Column<int>(type: "INTEGER", nullable: false),
@@ -109,15 +114,15 @@ namespace MyBlog.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_PostTag", x => new { x.PostsId, x.TagsId });
+                    table.PrimaryKey("PK_PostEntityTagEntity", x => new { x.PostsId, x.TagsId });
                     table.ForeignKey(
-                        name: "FK_PostTag_Posts_PostsId",
+                        name: "FK_PostEntityTagEntity_Posts_PostsId",
                         column: x => x.PostsId,
                         principalTable: "Posts",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_PostTag_Tags_TagsId",
+                        name: "FK_PostEntityTagEntity_Tags_TagsId",
                         column: x => x.TagsId,
                         principalTable: "Tags",
                         principalColumn: "Id",
@@ -125,24 +130,24 @@ namespace MyBlog.Data.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Comments_RecipientId",
+                name: "IX_Comments_PostId",
                 table: "Comments",
-                column: "RecipientId");
+                column: "PostId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Comments_SenderId",
+                name: "IX_Comments_UserId",
                 table: "Comments",
-                column: "SenderId");
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Posts_CreaterId",
-                table: "Posts",
-                column: "CreaterId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_PostTag_TagsId",
-                table: "PostTag",
+                name: "IX_PostEntityTagEntity_TagsId",
+                table: "PostEntityTagEntity",
                 column: "TagsId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Posts_UserId",
+                table: "Posts",
+                column: "UserId");
         }
 
         /// <inheritdoc />
@@ -152,7 +157,7 @@ namespace MyBlog.Data.Migrations
                 name: "Comments");
 
             migrationBuilder.DropTable(
-                name: "PostTag");
+                name: "PostEntityTagEntity");
 
             migrationBuilder.DropTable(
                 name: "Posts");

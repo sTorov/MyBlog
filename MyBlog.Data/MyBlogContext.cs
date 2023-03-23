@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using MyBlog.Data.DBModels.Comments;
-using MyBlog.Data.DBModels.Posts;
-using MyBlog.Data.DBModels.Tags;
-using MyBlog.Data.DBModels.Users;
+using MyBlog.Data.Entities.Comments;
+using MyBlog.Data.Entities.Posts;
+using MyBlog.Data.Entities.Tags;
+using MyBlog.Data.Entities.Users;
 
 namespace MyBlog.Data
 {

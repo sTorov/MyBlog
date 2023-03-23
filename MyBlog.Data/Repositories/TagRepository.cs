@@ -1,8 +1,8 @@
-﻿using MyBlog.Data.DBModels.Tags;
+﻿using MyBlog.Data.Entities.Tags;
 
 namespace MyBlog.Data.Repositories
 {
-    public class TagRepository : Repository<Tag>
+    public class TagRepository : Repository<TagEntity>
     {
         public TagRepository(MyBlogContext context) : base(context) { }
     }

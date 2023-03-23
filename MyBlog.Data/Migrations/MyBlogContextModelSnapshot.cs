@@ -17,35 +17,35 @@ namespace MyBlog.Data.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.4");
 
-            modelBuilder.Entity("MyBlog.Data.DBModels.Comments.Comment", b =>
+            modelBuilder.Entity("MyBlog.Data.Entities.Comments.CommentEntity", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<DateTime>("DataCreated")
+                    b.Property<DateTime>("CreatedDate")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("RecipientId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("SenderId")
+                    b.Property<int>("PostId")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Text")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<int>("UserId")
+                        .HasColumnType("INTEGER");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("RecipientId");
+                    b.HasIndex("PostId");
 
-                    b.HasIndex("SenderId");
+                    b.HasIndex("UserId");
 
                     b.ToTable("Comments", (string)null);
                 });
 
-            modelBuilder.Entity("MyBlog.Data.DBModels.Posts.Post", b =>
+            modelBuilder.Entity("MyBlog.Data.Entities.Posts.PostEntity", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -58,21 +58,21 @@ namespace MyBlog.Data.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("CreaterId")
-                        .HasColumnType("INTEGER");
-
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<int>("UserId")
+                        .HasColumnType("INTEGER");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("CreaterId");
+                    b.HasIndex("UserId");
 
                     b.ToTable("Posts", (string)null);
                 });
 
-            modelBuilder.Entity("MyBlog.Data.DBModels.Tags.Tag", b =>
+            modelBuilder.Entity("MyBlog.Data.Entities.Tags.TagEntity", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -87,7 +87,7 @@ namespace MyBlog.Data.Migrations
                     b.ToTable("Tags", (string)null);
                 });
 
-            modelBuilder.Entity("MyBlog.Data.DBModels.Users.User", b =>
+            modelBuilder.Entity("MyBlog.Data.Entities.Users.UserEntity", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -95,6 +95,9 @@ namespace MyBlog.Data.Migrations
 
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("BitrhDate")
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("ConcurrencyStamp")
                         .HasColumnType("TEXT");
@@ -104,6 +107,14 @@ namespace MyBlog.Data.Migrations
 
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("INTEGER");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("INTEGER");
@@ -126,6 +137,14 @@ namespace MyBlog.Data.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("Photo")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("SecondName")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("TEXT");
 
@@ -140,7 +159,7 @@ namespace MyBlog.Data.Migrations
                     b.ToTable("Users", (string)null);
                 });
 
-            modelBuilder.Entity("PostTag", b =>
+            modelBuilder.Entity("PostEntityTagEntity", b =>
                 {
                     b.Property<int>("PostsId")
                         .HasColumnType("INTEGER");
@@ -152,52 +171,59 @@ namespace MyBlog.Data.Migrations
 
                     b.HasIndex("TagsId");
 
-                    b.ToTable("PostTag");
+                    b.ToTable("PostEntityTagEntity");
                 });
 
-            modelBuilder.Entity("MyBlog.Data.DBModels.Comments.Comment", b =>
+            modelBuilder.Entity("MyBlog.Data.Entities.Comments.CommentEntity", b =>
                 {
-                    b.HasOne("MyBlog.Data.DBModels.Posts.Post", "Recipient")
+                    b.HasOne("MyBlog.Data.Entities.Posts.PostEntity", "Post")
                         .WithMany()
-                        .HasForeignKey("RecipientId")
+                        .HasForeignKey("PostId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("MyBlog.Data.DBModels.Users.User", "Sender")
-                        .WithMany()
-                        .HasForeignKey("SenderId")
+                    b.HasOne("MyBlog.Data.Entities.Users.UserEntity", "User")
+                        .WithMany("Comments")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Recipient");
+                    b.Navigation("Post");
 
-                    b.Navigation("Sender");
+                    b.Navigation("User");
                 });
 
-            modelBuilder.Entity("MyBlog.Data.DBModels.Posts.Post", b =>
+            modelBuilder.Entity("MyBlog.Data.Entities.Posts.PostEntity", b =>
                 {
-                    b.HasOne("MyBlog.Data.DBModels.Users.User", "Creater")
-                        .WithMany()
-                        .HasForeignKey("CreaterId")
+                    b.HasOne("MyBlog.Data.Entities.Users.UserEntity", "User")
+                        .WithMany("Posts")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Creater");
+                    b.Navigation("User");
                 });
 
-            modelBuilder.Entity("PostTag", b =>
+            modelBuilder.Entity("PostEntityTagEntity", b =>
                 {
-                    b.HasOne("MyBlog.Data.DBModels.Posts.Post", null)
+                    b.HasOne("MyBlog.Data.Entities.Posts.PostEntity", null)
                         .WithMany()
                         .HasForeignKey("PostsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("MyBlog.Data.DBModels.Tags.Tag", null)
+                    b.HasOne("MyBlog.Data.Entities.Tags.TagEntity", null)
                         .WithMany()
                         .HasForeignKey("TagsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("MyBlog.Data.Entities.Users.UserEntity", b =>
+                {
+                    b.Navigation("Comments");
+
+                    b.Navigation("Posts");
                 });
 #pragma warning restore 612, 618
         }
