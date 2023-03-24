@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using MyBlog.App.ViewModels.User;
+using MyBlog.App.ViewModels.Users;
 using MyBlog.Data.DBModels.Users;
 
 namespace MyBlog.App.Controllers
@@ -58,6 +58,22 @@ namespace MyBlog.App.Controllers
             }
 
             return View("Register", model);
+        }
+
+        [HttpGet]
+        [Route("GetUser/{id?}")]
+        public async Task<IActionResult> GetUser([FromRoute]int? id = null)
+        {
+            var model = new UsersVIewModel();
+            if(id == null)
+                model.Users = _userManager.Users.ToList();
+            else
+            {
+                var user = await _userManager.FindByIdAsync(id?.ToString() ?? string.Empty);
+                if (user != null) model.Users.Add(user);
+            }
+
+            return View(model);
         }
     }
 }

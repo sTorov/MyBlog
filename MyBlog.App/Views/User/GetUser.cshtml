@@ -1,0 +1,49 @@
+﻿@model MyBlog.App.ViewModels.Users.UsersVIewModel
+@{
+    ViewData["Title"] = "Пользователи";
+}
+
+<style>
+    table{
+        border: 2px solid gray;
+    }
+    th{
+        border: 2px solid gray;
+        padding: 3px;
+        background-color: cornflowerblue;
+    }
+    td{
+        border: 2px solid gray;
+        padding: 3px;
+    }
+</style>
+
+<div>
+
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Имя</th>
+            <th>Фамилия</th>
+            <th>Отчество</th>
+            <th>Никнейм</th>
+            <th>Дата рождения</th>
+            <th>Email</th>
+            <th>Фото</th>
+        </tr>
+        @foreach(var user in Model.Users)
+        {
+            <tr>
+                <td>@user.Id</td>
+                <td>@user.FirstName</td>
+                <td>@user.SecondName</td>
+                <td>@user.LastName</td>
+                <td>@user.UserName</td>
+                <td>@user.BitrhDate</td>
+                <td>@user.Email</td>
+                <td>@user.Photo</td>
+            </tr>
+        }
+    </table>
+
+</div>

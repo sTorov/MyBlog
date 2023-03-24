@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using MyBlog.App.ViewModels.User;
+using MyBlog.App.ViewModels.Users;
 using MyBlog.Data.DBModels.Users;
 
 namespace MyBlog.App.Utils
