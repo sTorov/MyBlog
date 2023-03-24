@@ -1,0 +1,81 @@
+﻿@model MyBlog.App.ViewModels.User.UserRegisterViewModel
+@{
+    ViewData["Title"] = "Регистрация"; 
+}
+
+<style>
+    .wrapper{
+        display: flex;
+    }
+    input{
+        margin-left: 5px;
+    }
+    .warning{
+        color: red;
+        font-size: 12px;
+        margin-left: 10px;
+    }
+</style>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.1/jquery.validate.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.11/jquery.validate.unobtrusive.js"></script>
+
+<div>
+    <h1>Регистрация нового пользователя</h1>
+
+    <form method="post" asp-controller="User" asp-action="PostRegister">
+        <div asp-validation-summary="ModelOnly" class="warning"></div>
+
+        <div class="wrapper">
+            <label asp-for="FirstName"></label>
+            <input asp-for="FirstName" />
+            <span asp-validation-for="FirstName" class="warning"></span>
+        </div>
+
+        <div class="wrapper">
+            <label asp-for="SecondName"></label>
+            <input asp-for="SecondName" />
+            <span asp-validation-for="SecondName" class="warning"></span>
+        </div>
+
+        <div class="wrapper">
+            <label asp-for="LastName"></label>
+            <input asp-for="LastName" />
+            <span asp-validation-for="LastName" class="warning"></span>
+        </div>
+
+        <div class="wrapper">
+            <label asp-for="EmailReg"></label>
+            <input asp-for="EmailReg" />
+            <span asp-validation-for="EmailReg" class="warning"></span>
+        </div>
+
+        <div class="wrapper">
+            <label asp-for="Login"></label>
+            <input asp-for="Login" />
+            <span asp-validation-for="Login" class="warning"></span>
+        </div>
+
+        <div class="wrapper">
+            <label asp-for="BirthDate"></label>
+            <input asp-for="BirthDate" />
+            <span asp-validation-for="BirthDate" class="warning"></span>
+        </div>
+
+        <div class="wrapper">
+            <label asp-for="PasswordReg"></label>
+            <input asp-for="PasswordReg" />
+            <span asp-validation-for="PasswordReg" class="warning"></span>
+        </div>
+
+        <div class="wrapper">
+            <label asp-for="PasswordConfirm"></label>
+            <input asp-for="PasswordConfirm" />
+            <span asp-validation-for="PasswordConfirm" class="warning"></span>
+        </div>
+
+        <button type="submit">Регистрация</button>
+    </form>
+</div>
+

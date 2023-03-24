@@ -21,4 +21,11 @@
     <ProjectReference Include="..\MyBlog.Data\MyBlog.Data.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Services\" />
+    <Folder Include="Views\Tag\" />
+    <Folder Include="Views\Comment\" />
+    <Folder Include="Views\Post\" />
+  </ItemGroup>
+
 </Project>

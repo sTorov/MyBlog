@@ -30,8 +30,14 @@ namespace MyBlog.App
             var assembly = Assembly.GetAssembly(typeof(MapperProfile));
             builder.Services.AddAutoMapper(assembly);
 
-            builder.Services.AddIdentity<User, IdentityRole<int>>()
-                .AddEntityFrameworkStores<MyBlogContext>();
+            builder.Services.AddIdentity<User, IdentityRole<int>>(cfg => {
+                //заглушка
+                cfg.Password.RequiredLength = 8;
+                cfg.Password.RequireNonAlphanumeric = false;
+                cfg.Password.RequireUppercase = false;
+                cfg.Password.RequireLowercase = false;
+                cfg.Password.RequireDigit = false;
+            }).AddEntityFrameworkStores<MyBlogContext>();
 
             var app = builder.Build();
 
