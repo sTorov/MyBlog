@@ -30,6 +30,8 @@
             <th>Дата рождения</th>
             <th>Email</th>
             <th>Фото</th>
+            <th></th>
+            <th></th>
         </tr>
         @foreach(var user in Model.Users)
         {
@@ -39,9 +41,19 @@
                 <td>@user.SecondName</td>
                 <td>@user.LastName</td>
                 <td>@user.UserName</td>
-                <td>@user.BitrhDate</td>
+                <td>@user.BirthDate</td>
                 <td>@user.Email</td>
                 <td>@user.Photo</td>
+                <td>
+                    <form method="post" asp-controller="User" asp-action="Remove" asp-route-id="@user.Id">
+                        <button type="submit">Удалить</button>
+                    </form>
+                </td>
+                <td>
+                    <form method="get" asp-controller="User" asp-action="Edit" asp-route-id="@user.Id">
+                        <button type="submit">Изменить</button>
+                    </form>
+                </td>
             </tr>
         }
     </table>

@@ -1,0 +1,76 @@
+﻿@model MyBlog.App.ViewModels.Users.UserEditViewModel
+@{
+    ViewData["Title"] = "Редактирование пользователя";
+}
+
+<style>
+    .wrapper {
+        display: flex;
+    }
+
+    input {
+        margin-left: 5px;
+    }
+
+    .warning {
+        color: red;
+        font-size: 12px;
+        margin-left: 10px;
+    }
+</style>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.1/jquery.validate.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.11/jquery.validate.unobtrusive.js"></script>
+
+<div>
+    <h1>Редактирование пользователя @Model.Login</h1>
+
+    <form method="post" asp-controller="User" asp-action="Edit">
+        <div asp-validation-summary="ModelOnly" class="warning"></div>
+
+        <div class="wrapper">
+            <label asp-for="FirstName"></label>
+            <input asp-for="FirstName" value="@Model.FirstName" />
+            <span asp-validation-for="FirstName" class="warning"></span>
+        </div>
+
+        <div class="wrapper">
+            <label asp-for="SecondName"></label>
+            <input asp-for="SecondName" value="@Model.SecondName" />
+            <span asp-validation-for="SecondName" class="warning"></span>
+        </div>
+
+        <div class="wrapper">
+            <label asp-for="LastName"></label>
+            <input asp-for="LastName" value="@Model.LastName" />
+            <span asp-validation-for="LastName" class="warning"></span>
+        </div>
+
+        <div class="wrapper">
+            <label asp-for="Email"></label>
+            <input asp-for="Email" value="@Model.Email" />
+            <span asp-validation-for="Email" class="warning"></span>
+        </div>
+
+        <div class="wrapper">
+            <label asp-for="BirthDate"></label>
+            <input asp-for="BirthDate" value="@Model.BirthDate.ToString("yyyy-MM-dd")" type="date" />
+            <span asp-validation-for="BirthDate" class="warning"></span>
+        </div>
+
+        <div class="wrapper">
+            <label asp-for="Login"></label>
+            <input asp-for="Login" value="@Model.Login" />
+            <span asp-validation-for="Login" class="warning"></span>
+        </div>
+
+        <div class="wrapper">
+            <label asp-for="Photo"></label>
+            <input asp-for="Photo" value="@Model.Photo" />
+            <span asp-validation-for="Photo" class="warning"></span>
+        </div>
+
+        <button type="submit">Сохранить</button>
+    </form>
+</div>

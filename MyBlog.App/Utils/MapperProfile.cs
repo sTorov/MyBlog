@@ -12,6 +12,12 @@ namespace MyBlog.App.Utils
                 .ForMember(u => u.UserName, opt => opt.MapFrom(m => m.Login))
                 .ForMember(u => u.Email, opt => opt.MapFrom(m => m.EmailReg))
                 .ForMember(u => u.PasswordHash, opt => opt.MapFrom(m => m.PasswordReg.GetHashCode()));
+
+            CreateMap<User, UserEditViewModel>()
+                .ForMember(u => u.Login, opt => opt.MapFrom(m => m.UserName));
+
+            CreateMap<UserEditViewModel, User>()
+                .ForMember(u => u.UserName, opt => opt.MapFrom(m => m.Login));
         }
     }
 }

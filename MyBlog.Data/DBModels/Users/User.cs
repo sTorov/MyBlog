@@ -9,7 +9,7 @@ namespace MyBlog.Data.DBModels.Users
         public string FirstName { get; set; }
         public string SecondName { get; set; }
         public string? LastName { get; set; }
-        public DateTime BitrhDate { get; set; }
+        public DateTime BirthDate { get; set; }
         public string Photo { get; set; }
 
         public List<Post> Posts { get; set; }
