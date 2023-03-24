@@ -1,18 +1,18 @@
-﻿using MyBlog.Data.Entities.Users;
-using MyBlog.Data.Entities.Posts;
+﻿using MyBlog.Data.DBModels.Users;
+using MyBlog.Data.DBModels.Posts;
 
-namespace MyBlog.Data.Entities.Comments
+namespace MyBlog.Data.DBModels.Comments
 {
-    public class CommentEntity
+    public class Comment
     {
         public int Id { get; set; }
         public string Text { get; set; }        
         public DateTime CreatedDate { get; set; }
 
         public int UserId { get; set; }
-        public UserEntity User { get; set; }
+        public User User { get; set; }
 
         public int PostId { get; set; }
-        public PostEntity Post { get; set; }
+        public Post Post { get; set; }
     }
 }

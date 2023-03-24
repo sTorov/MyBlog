@@ -1,8 +1,8 @@
-﻿using MyBlog.Data.Entities.Comments;
+﻿using MyBlog.Data.DBModels.Comments;
 
 namespace MyBlog.Data.Repositories
 {
-    public class CommentRepository : Repository<CommentEntity>
+    public class CommentRepository : Repository<Comment>
     {
         public CommentRepository(MyBlogContext context) : base(context) { }
     }

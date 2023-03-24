@@ -1,11 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
 
-namespace MyBlog.Data.Entities.Tags
+namespace MyBlog.Data.DBModels.Tags
 {
-    public class TagConfiguration : IEntityTypeConfiguration<TagEntity>
+    public class TagConfiguration : IEntityTypeConfiguration<Tag>
     {
-        public void Configure(EntityTypeBuilder<TagEntity> builder)
+        public void Configure(EntityTypeBuilder<Tag> builder)
         {
             builder.ToTable("Tags").HasKey(c => c.Id);
         }

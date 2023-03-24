@@ -2,10 +2,10 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using MyBlog.App.Utils.Extensions;
 using MyBlog.Data;
-using MyBlog.Data.Entities.Comments;
-using MyBlog.Data.Entities.Posts;
-using MyBlog.Data.Entities.Tags;
-using MyBlog.Data.Entities.Users;
+using MyBlog.Data.DBModels.Comments;
+using MyBlog.Data.DBModels.Posts;
+using MyBlog.Data.DBModels.Tags;
+using MyBlog.Data.DBModels.Users;
 using MyBlog.Data.Repositories;
 using MyBlog.App.Utils;
 using System.Reflection;
@@ -23,14 +23,14 @@ namespace MyBlog.App
             var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
             builder.Services.AddDbContext<MyBlogContext>(opt => opt.UseSqlite(connectionString, b => b.MigrationsAssembly("MyBlog.Data")))
                 .AddUnitOfWork()
-                .AddCustomRepository<PostEntity, PostRepository>()
-                .AddCustomRepository<CommentEntity, CommentRepository>()
-                .AddCustomRepository<TagEntity, TagRepository>();
+                .AddCustomRepository<Post, PostRepository>()
+                .AddCustomRepository<Comment, CommentRepository>()
+                .AddCustomRepository<Tag, TagRepository>();
 
             var assembly = Assembly.GetAssembly(typeof(MapperProfile));
             builder.Services.AddAutoMapper(assembly);
 
-            builder.Services.AddIdentity<UserEntity, IdentityRole<int>>()
+            builder.Services.AddIdentity<User, IdentityRole<int>>()
                 .AddEntityFrameworkStores<MyBlogContext>();
 
             var app = builder.Build();
