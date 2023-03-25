@@ -1,4 +1,5 @@
-﻿using MyBlog.Data.DBModels.Tags;
+﻿using MyBlog.Data.DBModels.Comments;
+using MyBlog.Data.DBModels.Tags;
 using MyBlog.Data.DBModels.Users;
 
 namespace MyBlog.Data.DBModels.Posts
@@ -14,5 +15,6 @@ namespace MyBlog.Data.DBModels.Posts
         public User User { get; set; }
 
         public List<Tag> Tags { get; set; }
+        public List<Comment> Comments { get; set; }
     }
 }

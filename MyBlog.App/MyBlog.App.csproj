@@ -24,7 +24,6 @@
   <ItemGroup>
     <Folder Include="Views\Tag\" />
     <Folder Include="Views\Comment\" />
-    <Folder Include="Views\Post\" />
   </ItemGroup>
 
 </Project>

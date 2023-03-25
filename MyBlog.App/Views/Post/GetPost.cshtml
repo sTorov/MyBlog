@@ -1,0 +1,35 @@
+﻿@model MyBlog.App.ViewModels.Posts.PostsVIewModel
+@{
+    ViewData["Title"] = "Список статей";
+}
+
+<style>
+    table {
+        border: 2px solid gray;
+    }
+
+    th {
+        border: 2px solid gray;
+        padding: 3px;
+        background-color: cornflowerblue;
+    }
+
+    td {
+        border: 2px solid gray;
+        padding: 3px;
+    }
+</style>
+
+<div>
+    <table>
+        <tr>
+            <th></th>
+        </tr>
+        @foreach(var post in Model.Posts)
+        {
+            <tr>
+
+            </tr>
+        }
+    </table>
+</div>
