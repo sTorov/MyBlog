@@ -23,12 +23,39 @@
 <div>
     <table>
         <tr>
-            <th></th>
+            <th>ID</th>
+            <th>Заголовок</th>
+            <th>Контент</th>
+            <th>ID создателя</th>
+            <th>Теги</th>
+            <th>Дата созадния</th>
+            <th>Комментарии</th>
         </tr>
         @foreach(var post in Model.Posts)
         {
             <tr>
-
+                <td>@post.Id</td>
+                <td>@post.Title</td>
+                <td>
+                    <details>
+                        <summary>Раскрыть</summary>
+                        @post.Content
+                    </details>
+                </td>
+                <td>@post.UserId</td>
+                <td>
+                    <details>
+                        <summary>Раскрыть</summary>
+                        @string.Join("\n", post.Tags)
+                    </details>
+                </td>
+                <td>@post.CreatedDate.ToString("dd-MM-yyyy")</td>
+                <td>
+                    <details>
+                        <summary>Раскрыть</summary>
+                        @string.Join("\n\n", post.Comments)
+                    </details>
+                </td>
             </tr>
         }
     </table>

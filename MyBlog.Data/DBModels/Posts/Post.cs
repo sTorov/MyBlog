@@ -16,5 +16,12 @@ namespace MyBlog.Data.DBModels.Posts
 
         public List<Tag> Tags { get; set; }
         public List<Comment> Comments { get; set; }
+
+        public Post()
+        {
+            CreatedDate = DateTime.Now;
+            Tags = new List<Tag>();
+            Comments = new List<Comment>();
+        }
     }
 }
