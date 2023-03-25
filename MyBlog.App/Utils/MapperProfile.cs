@@ -15,9 +15,6 @@ namespace MyBlog.App.Utils
 
             CreateMap<User, UserEditViewModel>()
                 .ForMember(u => u.Login, opt => opt.MapFrom(m => m.UserName));
-
-            CreateMap<UserEditViewModel, User>()
-                .ForMember(u => u.UserName, opt => opt.MapFrom(m => m.Login));
         }
     }
 }

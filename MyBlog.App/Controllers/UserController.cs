@@ -1,7 +1,6 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using MyBlog.App.Utils.Extensions;
+using MyBlog.App.Utils.Services.Interfaces;
 using MyBlog.App.ViewModels.Users;
 using MyBlog.Data.DBModels.Users;
 
@@ -9,44 +8,32 @@ namespace MyBlog.App.Controllers
 {
     public class UserController : Controller
     {
-        private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
-        private readonly IMapper _mapper;
+        private readonly IUserService _userService;
 
-        public UserController(UserManager<User> userManager, SignInManager<User> signInManager, IMapper mapper)
+        public UserController(SignInManager<User> signInManager, IUserService userService)
         {
-            _userManager = userManager;
             _signInManager = signInManager;
-            _mapper = mapper;
+            _userService = userService;
         }
 
         [HttpGet]
         [Route("Register")]
-        public IActionResult Register(UserRegisterViewModel model = null)
-        {
-            return View(model);
-        }
+        public IActionResult Register(UserRegisterViewModel? model = null) => View(model);
 
         [HttpPost]
         public async Task<IActionResult> PostRegister(UserRegisterViewModel model)
         {
-            var checkName = (await _userManager.FindByNameAsync(model.Login))?.UserName;
-            if (checkName != null)
-                ModelState.AddModelError(string.Empty, $"Пользователь с никнеймом [{model.Login}] уже существует!");
-
-            var checkEmail = (await _userManager.FindByEmailAsync(model.EmailReg))?.Email;
-            if (checkEmail != null)
-                ModelState.AddModelError(string.Empty, $"Адрес [{model.EmailReg}] уже зарегистрирован!");
+            await _userService.CheckDataAtRegistration(this, model);
 
             if (ModelState.IsValid)
             {
-                var user = _mapper.Map<User>(model);
-                var result = await _userManager.CreateAsync(user, model.PasswordReg);
+                var result = await _userService.CreateUserAsync(model);
 
                 if (result.Succeeded)
                 {
-                    //заглушка
-                    return Json(user);
+                    //заглушка(SignIn)
+                    return RedirectToAction("GetUser");
                 }
                 else
                 {
@@ -54,7 +41,6 @@ namespace MyBlog.App.Controllers
                         ModelState.AddModelError(string.Empty, error.Description);
                 }
             }
-
             return View("Register", model);
         }
 
@@ -62,12 +48,13 @@ namespace MyBlog.App.Controllers
         [Route("GetUser/{id?}")]
         public async Task<IActionResult> GetUser([FromRoute] int? id = null)
         {
-            var model = new UsersVIewModel();
+            var model = new UsersViewModel();
+
             if (id == null)
-                model.Users = _userManager.Users.ToList();
+                model.Users = await _userService.GetAllUsersAsync();
             else
             {
-                var user = await _userManager.FindByIdAsync(id?.ToString() ?? string.Empty);
+                var user = await _userService.GetUserByIdAsync(id);
                 if (user != null) model.Users.Add(user);
             }
 
@@ -77,8 +64,7 @@ namespace MyBlog.App.Controllers
         [HttpPost]
         public async Task<IActionResult> Remove(int id)
         {
-            var user = await _userManager.FindByIdAsync(id.ToString());
-            if (user != null) await _userManager.DeleteAsync(user);
+            _ = await _userService.DeleteByIdAsync(id);
 
             return RedirectToAction("GetUser");
         }
@@ -86,12 +72,9 @@ namespace MyBlog.App.Controllers
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
-            var user = await _userManager.FindByIdAsync(id.ToString());
-            if (user != null)
-            {
-                var model = _mapper.Map<UserEditViewModel>(user);
+            var model = await _userService.GetUserEditViewModelAsync(id);
+            if (model != null)
                 return View(model);
-            }
             else
                 return RedirectToAction("GetUser");
         }
@@ -99,22 +82,14 @@ namespace MyBlog.App.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(UserEditViewModel model)
         {
-            var currentUser = await _userManager.FindByIdAsync(model.Id.ToString());
+            var currentUser = await _userService.GetUserByIdAsync(model.Id);
             if (currentUser != null)
             {
-                var checkLogin = (await _userManager.FindByNameAsync(model.Login))?.UserName;
-                if (checkLogin != null && checkLogin != currentUser.UserName)
-                    ModelState.AddModelError(string.Empty, $"Никнейм [{model.Login}] уже используется!");
-
-                var checkEmail = (await _userManager.FindByEmailAsync(model.Email))?.Email;
-                if (checkEmail != null && checkEmail != currentUser.Email)
-                    ModelState.AddModelError(string.Empty, $"Адрес [{model.Email}] уже зарегистрирован!");
+                await _userService.CheckDataAtEdition(this, model, currentUser);
 
                 if (ModelState.IsValid)
                 {
-                    currentUser.Convert(model);
-
-                    var result = await _userManager.UpdateAsync(currentUser);
+                    var result = await _userService.UpdateUserAsync(model, currentUser);
 
                     if (result.Succeeded)
                         return RedirectToAction("GetUser");
@@ -125,7 +100,6 @@ namespace MyBlog.App.Controllers
                     }
                 }
             }
-
             return View(model);
         }
     }

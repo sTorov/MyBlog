@@ -22,7 +22,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Services\" />
     <Folder Include="Views\Tag\" />
     <Folder Include="Views\Comment\" />
     <Folder Include="Views\Post\" />
