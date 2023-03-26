@@ -16,6 +16,8 @@ namespace MyBlog.App.Utils.Extensions
         public static IServiceCollection AddAppServices(this IServiceCollection services)
         {
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IPostService, PostService>();
+
             return services;
         }
 

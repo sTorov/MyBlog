@@ -1,26 +1,16 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using MyBlog.App.Utils.Extensions;
+﻿using Microsoft.AspNetCore.Mvc;
+using MyBlog.App.Utils.Services.Interfaces;
 using MyBlog.App.ViewModels.Posts;
-using MyBlog.Data.DBModels.Posts;
-using MyBlog.Data.DBModels.Users;
-using MyBlog.Data.Repositories;
-using MyBlog.Data.Repositories.Interfaces;
 
 namespace MyBlog.App.Controllers
 {
     public class PostController : Controller
     {
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly IMapper _mapper;
-        private readonly UserManager<User> _userManager;
+        private readonly IPostService _postService;
 
-        public PostController(IUnitOfWork unitOfWork, IMapper mapper, UserManager<User> userManager)
+        public PostController(IPostService postService)
         {
-            _unitOfWork = unitOfWork;
-            _mapper = mapper;
-            _userManager = userManager;
+            _postService = postService;
         }
 
         [HttpGet]
@@ -30,24 +20,11 @@ namespace MyBlog.App.Controllers
         [HttpPost]
         public async Task<IActionResult> PostCreate(PostCreateViewModel model)
         {
-            //заглушка
-            //var user = User;
-            //_ = int.TryParse(_userManager.GetUserId(user), out int userId);
-            //model.UsertId = userId;
-
-            var repo = _unitOfWork.GetRepository<Post>() as PostRepository;
-
-            var creater = await _userManager.FindByIdAsync(model.UsertId.ToString());
-            if (creater == null)
-                ModelState.AddModelError(string.Empty, $"Пользователя с ID [{model.UsertId}] не существует!");
+            var creater = await _postService.CheckDataAtCreated(this, model);
 
             if (ModelState.IsValid)
             {
-                var post = _mapper.Map<Post>(model);
-                post.User = creater!;
-
-                await repo!.CreateAsync(post);
-
+                await _postService.CreatePost(creater, model);
                 return RedirectToAction("GetPost");
             }
             else
@@ -58,13 +35,7 @@ namespace MyBlog.App.Controllers
         [Route("GetPost/{userId?}")]
         public async Task<IActionResult> GetPost([FromRoute]int? userId)
         {
-            var model = new PostsVIewModel();
-            var repo = _unitOfWork.GetRepository<Post>() as PostRepository;
-
-            if (userId == null)
-                model.Posts = await repo!.GetAllAsync();
-            else
-                model.Posts = await repo!.GetPostsByUserIdAsync((int)userId);
+            var model = await _postService.GetPostViewModel(userId);
 
             return View(model);
         }
@@ -72,9 +43,7 @@ namespace MyBlog.App.Controllers
         [HttpPost]
         public async Task<IActionResult> Remove(int id)
         {
-            var repo = _unitOfWork.GetRepository<Post>() as PostRepository;
-            var post = await repo!.GetAsync(id);
-            if (post != null) await repo.DeleteAsync(post!);
+            _ = await _postService.DeletePost(id);
 
             return RedirectToAction("GetPost");
         }
@@ -82,13 +51,10 @@ namespace MyBlog.App.Controllers
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
-            var repo = _unitOfWork.GetRepository<Post>() as PostRepository;
-            var post = await repo!.GetAsync(id);
-            if (post != null)
-            {
-                var model = _mapper.Map<PostEditViewModel>(post);
+            var model = await _postService.GetPostEditViewModel(id);
+
+            if (model != null)
                 return View(model);
-            }
             else
                 return RedirectToAction("GetPost");
         }
@@ -96,14 +62,8 @@ namespace MyBlog.App.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(PostEditViewModel model)
         {
-            var repo = _unitOfWork.GetRepository<Post>() as PostRepository;
+            _ = await _postService.UpdatePostAsync(model);
 
-            var currentPost = await repo!.GetAsync(model.Id);
-            if (currentPost != null)
-            {
-                currentPost.Convert(model);
-                await repo!.UpdateAsync(currentPost);
-            }
             return RedirectToAction("GetPost");
         }
     }
