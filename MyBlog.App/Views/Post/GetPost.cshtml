@@ -30,6 +30,8 @@
             <th>Теги</th>
             <th>Дата созадния</th>
             <th>Комментарии</th>
+            <th></th>
+            <th></th>
         </tr>
         @foreach(var post in Model.Posts)
         {
@@ -55,6 +57,16 @@
                         <summary>Раскрыть</summary>
                         @string.Join("\n\n", post.Comments)
                     </details>
+                </td>
+                <td>
+                    <form method="post" asp-controller="Post" asp-action="Remove" asp-route-id="@post.Id">
+                        <button type="submit">Удалить</button>
+                    </form>
+                </td>
+                <td>
+                    <form method="get" asp-controller="Post" asp-action="Edit" asp-route-id="@post.Id">
+                        <button type="submit">Редактировать</button>
+                    </form>
                 </td>
             </tr>
         }

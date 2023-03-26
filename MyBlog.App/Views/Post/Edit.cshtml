@@ -1,6 +1,6 @@
-﻿@model MyBlog.App.ViewModels.Posts.PostCreateViewModel
+﻿@model MyBlog.App.ViewModels.Posts.PostEditViewModel
 @{
-    ViewData["Title"] = "Создание статьи";
+    ViewData["Title"] = "Редактирование статьи";
 }
 
 <style>
@@ -28,28 +28,23 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.11/jquery.validate.unobtrusive.js"></script>
 
 <div>
-    <h1>Создание статьи</h1>
+    <h1>Редактирование статьи "@Model.Title"</h1>
 
-    <form method="post" asp-controller="Post" asp-action="PostCreate">
+    <form method="post" asp-controller="Post" asp-action="Edit">
         <div asp-validation-summary="ModelOnly" class="warning"></div>
 
         <div class="wrapper">
-            <label asp-for="UsertId"></label>
-            <input asp-for="UsertId" />
-        </div>
-
-        <div class="wrapper">
             <label asp-for="Title"></label>
-            <input asp-for="Title" />
+            <input asp-for="Title" value="@Model.Title"/>
             <span asp-validation-for="Title" class="warning"></span>
         </div>
 
         <div class="wrapper">
             <label asp-for="Content"></label>
-            <textarea asp-for="Content" rows="4" cols="80" ></textarea>
+            <textarea asp-for="Content" rows="4" cols="80" >@Model.Content</textarea>
             <span asp-validation-for="Content" class="warning"></span>
         </div>
 
-        <button type="submit">Создать</button>
+        <button type="submit">Сохранить</button>
     </form>
 </div>

@@ -97,10 +97,12 @@ namespace MyBlog.App.Controllers
                     {
                         foreach (var error in result.Errors)
                             ModelState.AddModelError(string.Empty, error.Description);
+
+                        return View(model);
                     }
                 }
             }
-            return View(model);
+            return RedirectToAction("GetUser");
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using MyBlog.App.Utils.Extensions;
 using MyBlog.App.ViewModels.Posts;
 using MyBlog.Data.DBModels.Posts;
 using MyBlog.Data.DBModels.Users;
@@ -27,7 +28,7 @@ namespace MyBlog.App.Controllers
         public IActionResult Create() => View();
 
         [HttpPost]
-        public async Task<IActionResult> CreatePost(PostCreateViewModel model)
+        public async Task<IActionResult> PostCreate(PostCreateViewModel model)
         {
             //заглушка
             //var user = User;
@@ -66,6 +67,44 @@ namespace MyBlog.App.Controllers
                 model.Posts = await repo!.GetPostsByUserIdAsync((int)userId);
 
             return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Remove(int id)
+        {
+            var repo = _unitOfWork.GetRepository<Post>() as PostRepository;
+            var post = await repo!.GetAsync(id);
+            if (post != null) await repo.DeleteAsync(post!);
+
+            return RedirectToAction("GetPost");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Edit(int id)
+        {
+            var repo = _unitOfWork.GetRepository<Post>() as PostRepository;
+            var post = await repo!.GetAsync(id);
+            if (post != null)
+            {
+                var model = _mapper.Map<PostEditViewModel>(post);
+                return View(model);
+            }
+            else
+                return RedirectToAction("GetPost");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(PostEditViewModel model)
+        {
+            var repo = _unitOfWork.GetRepository<Post>() as PostRepository;
+
+            var currentPost = await repo!.GetAsync(model.Id);
+            if (currentPost != null)
+            {
+                currentPost.Convert(model);
+                await repo!.UpdateAsync(currentPost);
+            }
+            return RedirectToAction("GetPost");
         }
     }
 }
