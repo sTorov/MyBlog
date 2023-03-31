@@ -5,6 +5,7 @@ using MyBlog.App.ViewModels.Comments;
 using MyBlog.Data.DBModels.Comments;
 using MyBlog.Data.DBModels.Posts;
 using MyBlog.Data.DBModels.Users;
+using MyBlog.App.Utils.Extensions;
 using MyBlog.Data.Repositories;
 using MyBlog.Data.Repositories.Interfaces;
 
@@ -66,6 +67,37 @@ namespace MyBlog.App.Utils.Services
             };
 
             return model;
+        }
+
+        public async Task<Comment?> GetCommentByIdAsync(int id) => await _commentRepository.GetAsync(id);
+
+        public async Task<bool> DeleteComment(int id)
+        {
+            var deletedComment = await GetCommentByIdAsync(id);
+            if (deletedComment == null)
+                return false;
+
+            await _commentRepository.DeleteAsync(deletedComment);
+            return true;
+        }
+
+        public async Task<CommentEditViewModel?> GetCommentEditViewModel(int id)
+        {
+            var comment = await GetCommentByIdAsync(id);
+            var model = comment == null ? null : _mapper.Map<CommentEditViewModel>(comment);
+
+            return model;
+        }
+
+        public async Task<bool> UpdateComment(CommentEditViewModel model)
+        {
+            var currentComment = await GetCommentByIdAsync(model.Id);
+            if (currentComment == null)
+                return false;
+
+            currentComment.Convert(model);
+            await _commentRepository.UpdateAsync(currentComment);
+            return true;
         }
     }
 }

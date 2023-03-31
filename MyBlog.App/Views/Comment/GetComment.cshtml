@@ -45,15 +45,15 @@
                 <td>@comment.PostId</td>
                 <td>@comment.CreatedDate.ToString("dd-MM-yyyy hh:mm")</td>
                 <td>
-@*                    <form method="post" asp-controller="Post" asp-action="Remove" asp-route-id="@comment.Id">
+                    <form method="post" asp-controller="Comment" asp-action="Remove" asp-route-id="@comment.Id">
                         <button type="submit">Удалить</button>
                     </form>
-*@                </td>
+                </td>
                 <td>
-@*                    <form method="get" asp-controller="Post" asp-action="Edit" asp-route-id="@comment.Id">
+                    <form method="get" asp-controller="Comment" asp-action="Edit" asp-route-id="@comment.Id">
                         <button type="submit">Редактировать</button>
                     </form>
-*@                </td>
+                </td>
             </tr>
         }
     </table>

@@ -23,6 +23,7 @@ namespace MyBlog.App.Utils
             CreateMap<Post, PostEditViewModel>();
 
             CreateMap<CommentCreateViewModel, Comment>();
+            CreateMap<Comment, CommentEditViewModel>();
         }
     }
 }

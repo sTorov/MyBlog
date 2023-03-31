@@ -39,5 +39,32 @@ namespace MyBlog.App.Controllers
 
             return View(model);
         }
+
+        [HttpGet]
+        public async Task<IActionResult> Edit(int id)
+        {
+            var model = await _commentService.GetCommentEditViewModel(id);
+
+            if (model != null)
+                return View(model);
+            else
+                return RedirectToAction("GetComment");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(CommentEditViewModel model)
+        {
+            await _commentService.UpdateComment(model);
+
+            return RedirectToAction("GetComment");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Remove(int id)
+        {
+            await _commentService.DeleteComment(id);
+
+            return RedirectToAction("GetComment");
+        }
     }
 }

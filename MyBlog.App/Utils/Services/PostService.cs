@@ -76,25 +76,22 @@ namespace MyBlog.App.Utils.Services
         public async Task<bool> DeletePost(int id)
         {
             var post = await GetPostByIdAsync(id);
+            if (post == null)
+                return false;
 
-            if (post != null)
-            {
-                await _postRepository.DeleteAsync(post!);
-                return true;
-            } 
-            return false;
+            await _postRepository.DeleteAsync(post!);
+            return true;
         }
 
         public async Task<bool> UpdatePostAsync(PostEditViewModel model)
         {
             var currentPost = await GetPostByIdAsync(model.Id);
-            if (currentPost != null)
-            {
-                currentPost.Convert(model);
-                await _postRepository.UpdateAsync(currentPost);
-                return true;
-            }
-            return false;
+            if (currentPost == null)
+                return false;
+
+            currentPost.Convert(model);
+            await _postRepository.UpdateAsync(currentPost);
+            return true;
         }
     }
 }
