@@ -23,7 +23,6 @@
 
   <ItemGroup>
     <Folder Include="Views\Tag\" />
-    <Folder Include="Views\Comment\" />
   </ItemGroup>
 
 </Project>

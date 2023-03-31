@@ -48,14 +48,14 @@
                 <td>
                     <details>
                         <summary>Раскрыть</summary>
-                        @string.Join("\n", post.Tags)
+                        @string.Join(", ", post.Tags.Select(t => t.Name))
                     </details>
                 </td>
                 <td>@post.CreatedDate.ToString("dd-MM-yyyy")</td>
                 <td>
                     <details>
                         <summary>Раскрыть</summary>
-                        @string.Join("\n\n", post.Comments)
+                        @string.Join(" || ", post.Comments.Select(c => c.Text))
                     </details>
                 </td>
                 <td>

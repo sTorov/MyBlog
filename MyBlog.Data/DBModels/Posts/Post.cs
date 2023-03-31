@@ -20,8 +20,6 @@ namespace MyBlog.Data.DBModels.Posts
         public Post()
         {
             CreatedDate = DateTime.Now;
-            Tags = new List<Tag>();
-            Comments = new List<Comment>();
         }
     }
 }

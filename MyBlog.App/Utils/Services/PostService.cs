@@ -1,6 +1,4 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Identity;
 using MyBlog.App.Controllers;
 using MyBlog.App.Utils.Extensions;
 using MyBlog.App.Utils.Services.Interfaces;
@@ -73,9 +71,6 @@ namespace MyBlog.App.Utils.Services
              return model;
         }
 
-        /// <summary>
-        /// ???
-        /// </summary>
         public async Task<Post?> GetPostByIdAsync(int id) => await _postRepository.GetAsync(id);
 
         public async Task<bool> DeletePost(int id)

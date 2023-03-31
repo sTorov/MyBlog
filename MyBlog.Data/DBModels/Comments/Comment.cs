@@ -14,5 +14,10 @@ namespace MyBlog.Data.DBModels.Comments
 
         public int PostId { get; set; }
         public Post Post { get; set; }
+
+        public Comment()
+        {
+            CreatedDate = DateTime.Now;
+        }
     }
 }

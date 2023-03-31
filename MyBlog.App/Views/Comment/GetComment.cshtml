@@ -1,0 +1,60 @@
+﻿@model MyBlog.App.ViewModels.Comments.CommentsViewModel
+@{
+    ViewData["Title"] = "Список комментариев";
+}
+
+<style>
+    table {
+        border: 2px solid gray;
+    }
+
+    th {
+        border: 2px solid gray;
+        padding: 3px;
+        background-color: cornflowerblue;
+    }
+
+    td {
+        border: 2px solid gray;
+        padding: 3px;
+    }
+</style>
+
+<div>
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Текст</th>
+            <th>ID создателя</th>
+            <th>ID поста</th>
+            <th>Дата созадния</th>
+            <th></th>
+            <th></th>
+        </tr>
+        @foreach(var comment in Model.Comments)
+        {
+            <tr>
+                <td>@comment.Id</td>
+                <td>
+                    <details>
+                        <summary>Раскрыть</summary>
+                        @comment.Text
+                    </details>
+                </td>
+                <td>@comment.UserId</td>
+                <td>@comment.PostId</td>
+                <td>@comment.CreatedDate.ToString("dd-MM-yyyy hh:mm")</td>
+                <td>
+@*                    <form method="post" asp-controller="Post" asp-action="Remove" asp-route-id="@comment.Id">
+                        <button type="submit">Удалить</button>
+                    </form>
+*@                </td>
+                <td>
+@*                    <form method="get" asp-controller="Post" asp-action="Edit" asp-route-id="@comment.Id">
+                        <button type="submit">Редактировать</button>
+                    </form>
+*@                </td>
+            </tr>
+        }
+    </table>
+</div>

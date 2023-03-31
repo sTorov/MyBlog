@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
+using MyBlog.App.ViewModels.Comments;
 using MyBlog.App.ViewModels.Posts;
 using MyBlog.App.ViewModels.Users;
+using MyBlog.Data.DBModels.Comments;
 using MyBlog.Data.DBModels.Posts;
 using MyBlog.Data.DBModels.Users;
 
@@ -19,6 +21,8 @@ namespace MyBlog.App.Utils
 
             CreateMap<PostCreateViewModel, Post>();
             CreateMap<Post, PostEditViewModel>();
+
+            CreateMap<CommentCreateViewModel, Comment>();
         }
     }
 }

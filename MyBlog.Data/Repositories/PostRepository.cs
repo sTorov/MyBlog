@@ -8,17 +8,14 @@ namespace MyBlog.Data.Repositories
     {
         public PostRepository(MyBlogContext context) : base(context) { }
 
-        public override Task<List<Post>> GetAllAsync()
-        {
-            Set.Include(p => p.Tags).Include(p => p.Comments);
-            return base.GetAllAsync();
-        }
+        public async override Task<List<Post>> GetAllAsync() => 
+            await Set.Include(p => p.Tags).Include(p => p.Comments).ToListAsync();
 
         public async Task<List<Post>> GetPostsByUserIdAsync(int userId) 
         {
-            Set.Include(p => p.Tags).Include(p => p.Comments);
             return await Task.Run(() => 
-                Set.AsEnumerable().Where(p => p.UserId == userId).ToList());
+                Set.Include(p => p.Tags).Include(p => p.Comments)
+                    .AsEnumerable().Where(p => p.UserId == userId).ToList());
         }
     }
 }
