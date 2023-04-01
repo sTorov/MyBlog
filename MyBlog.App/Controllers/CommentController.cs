@@ -18,6 +18,7 @@ namespace MyBlog.App.Controllers
         public IActionResult Create() => View();
 
         [HttpPost]
+        [Route("CreateComment")]
         public async Task<IActionResult> PostCreate(CommentCreateViewModel model)
         {
             var (user, post) = await _commentService.CheckDataAtCreateComment(this, model);

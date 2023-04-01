@@ -18,6 +18,7 @@ namespace MyBlog.App.Utils.Extensions
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IPostService, PostService>();
             services.AddScoped<ICommentService, CommentService>();
+            services.AddScoped<ITagService, TagService>();
 
             return services;
         }

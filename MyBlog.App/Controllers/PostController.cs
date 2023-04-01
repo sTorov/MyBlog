@@ -18,13 +18,14 @@ namespace MyBlog.App.Controllers
         public IActionResult Create() => View();
 
         [HttpPost]
+        [Route("CreatePost")]
         public async Task<IActionResult> PostCreate(PostCreateViewModel model)
         {
             var creater = await _postService.CheckDataAtCreated(this, model);
 
             if (ModelState.IsValid)
             {
-                await _postService.CreatePost(creater, model);
+                await _postService.CreatePost(creater!, model);
                 return RedirectToAction("GetPost");
             }
             else

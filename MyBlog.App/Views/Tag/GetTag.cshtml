@@ -1,0 +1,59 @@
+﻿@model MyBlog.App.ViewModels.Tags.TagsViewModel
+@{
+    ViewData["Title"] = "Список тегов";
+}
+
+<style>
+    table {
+        border: 2px solid gray;
+    }
+
+    th {
+        border: 2px solid gray;
+        padding: 3px;
+        background-color: cornflowerblue;
+    }
+
+    td {
+        border: 2px solid gray;
+        padding: 3px;
+    }
+</style>
+
+<div>
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Имя тега</th>
+            <th>Список статей</th>
+            <th></th>
+            <th></th>
+        </tr>
+        @foreach(var tag in Model.Tags)
+        {
+            <tr>
+                <td>@tag.Id</td>
+                <td>@tag.Name</td>
+                <td>
+                    <details>
+                        <summary>Раскрыть</summary>
+                        @if(tag.Posts != null)
+                            @string.Join(", ", @tag.Posts.Select(p => p.Title))
+                        else
+                            @string.Empty
+                    </details>
+                </td>
+                <td>
+                    <form method="post" asp-controller="Tag" asp-action="Remove" asp-route-id="@tag.Id">
+                        <button type="submit">Удалить</button>
+                    </form>
+                </td>
+                <td>
+                    <form method="get" asp-controller="Tag" asp-action="Edit" asp-route-id="@tag.Id">
+                        <button type="submit">Редактировать</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </table>
+</div>

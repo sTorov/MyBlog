@@ -22,6 +22,7 @@ namespace MyBlog.App.Controllers
         public IActionResult Register(UserRegisterViewModel? model = null) => View(model);
 
         [HttpPost]
+        [Route("Register")]
         public async Task<IActionResult> PostRegister(UserRegisterViewModel model)
         {
             await _userService.CheckDataAtRegistration(this, model);

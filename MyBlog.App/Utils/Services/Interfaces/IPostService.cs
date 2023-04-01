@@ -2,7 +2,6 @@
 using MyBlog.App.ViewModels.Posts;
 using MyBlog.Data.DBModels.Posts;
 using MyBlog.Data.DBModels.Users;
-using MyBlog.Data.Repositories;
 
 namespace MyBlog.App.Utils.Services.Interfaces
 {
