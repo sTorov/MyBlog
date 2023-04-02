@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using MyBlog.Data.DBModels.Comments;
 using MyBlog.Data.DBModels.Posts;
+using MyBlog.Data.DBModels.Roles;
 
 namespace MyBlog.Data.DBModels.Users
 {
@@ -12,6 +13,7 @@ namespace MyBlog.Data.DBModels.Users
         public DateTime BirthDate { get; set; }
         public string Photo { get; set; }
 
+        public List<Role> Roles { get; set; }
         public List<Post> Posts { get; set; }
         public List<Comment> Comments { get; set; }
 

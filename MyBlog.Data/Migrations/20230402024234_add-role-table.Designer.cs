@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MyBlog.Data;
 
@@ -10,9 +11,11 @@ using MyBlog.Data;
 namespace MyBlog.Data.Migrations
 {
     [DbContext(typeof(MyBlogContext))]
-    partial class MyBlogContextModelSnapshot : ModelSnapshot
+    [Migration("20230402024234_add-role-table")]
+    partial class addroletable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.4");
@@ -87,7 +90,12 @@ namespace MyBlog.Data.Migrations
                     b.Property<string>("NormalizedName")
                         .HasColumnType("TEXT");
 
+                    b.Property<int?>("UserId")
+                        .HasColumnType("INTEGER");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Roles", (string)null);
                 });
@@ -193,21 +201,6 @@ namespace MyBlog.Data.Migrations
                     b.ToTable("PostTag");
                 });
 
-            modelBuilder.Entity("RoleUser", b =>
-                {
-                    b.Property<int>("RolesId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("UsersId")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("RolesId", "UsersId");
-
-                    b.HasIndex("UsersId");
-
-                    b.ToTable("RoleUser");
-                });
-
             modelBuilder.Entity("MyBlog.Data.DBModels.Comments.Comment", b =>
                 {
                     b.HasOne("MyBlog.Data.DBModels.Posts.Post", "Post")
@@ -238,6 +231,13 @@ namespace MyBlog.Data.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("MyBlog.Data.DBModels.Roles.Role", b =>
+                {
+                    b.HasOne("MyBlog.Data.DBModels.Users.User", null)
+                        .WithMany("Roles")
+                        .HasForeignKey("UserId");
+                });
+
             modelBuilder.Entity("PostTag", b =>
                 {
                     b.HasOne("MyBlog.Data.DBModels.Posts.Post", null)
@@ -253,21 +253,6 @@ namespace MyBlog.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("RoleUser", b =>
-                {
-                    b.HasOne("MyBlog.Data.DBModels.Roles.Role", null)
-                        .WithMany()
-                        .HasForeignKey("RolesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("MyBlog.Data.DBModels.Users.User", null)
-                        .WithMany()
-                        .HasForeignKey("UsersId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("MyBlog.Data.DBModels.Posts.Post", b =>
                 {
                     b.Navigation("Comments");
@@ -278,6 +263,8 @@ namespace MyBlog.Data.Migrations
                     b.Navigation("Comments");
 
                     b.Navigation("Posts");
+
+                    b.Navigation("Roles");
                 });
 #pragma warning restore 612, 618
         }
