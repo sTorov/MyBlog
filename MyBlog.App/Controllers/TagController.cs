@@ -21,11 +21,11 @@ namespace MyBlog.App.Controllers
         [Route("CreateTag")]
         public async Task<IActionResult> CreatePost(TagCreateViewModel model)
         {
-            var post = await _tagService.CheckDataAtCreateTagAsync(this, model);
+            _ = await _tagService.CheckDataAtCreateTagAsync(this, model);
 
             if (ModelState.IsValid)
             {
-                await _tagService.CreateTagAsync(model, post!);
+                await _tagService.CreateTagAsync(model);
                 return RedirectToAction("GetTag");
             }
             else

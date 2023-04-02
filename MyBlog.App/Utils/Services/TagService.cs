@@ -14,15 +14,13 @@ namespace MyBlog.App.Utils.Services
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-        private readonly IPostService _postService;
 
         private readonly TagRepository _tagRepository;
 
-        public TagService(IUnitOfWork unitOfWork, IMapper mapper, IPostService postService)
+        public TagService(IUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
-            _postService = postService;
 
             _tagRepository = GetTagRepository();
 
@@ -58,21 +56,13 @@ namespace MyBlog.App.Utils.Services
             return model;
         }
 
-        public async Task<Post?> CheckDataAtCreateTagAsync(TagController controller, TagCreateViewModel model)
+        public async Task<Tag?> CheckDataAtCreateTagAsync(TagController controller, TagCreateViewModel model)
         {
             var checkTag = await _tagRepository.GetTagByNameAsync(model.Name);
             if (checkTag != null)
                 controller.ModelState.AddModelError(string.Empty, $"Тег с именем [{model.Name}] уже существует!");
 
-            Post? checkPost = null!;
-            if (model.PostId != null)
-            {
-                checkPost = await _postService.GetPostByIdAsync((int)model.PostId);
-                if (checkPost == null)
-                    controller.ModelState.AddModelError(string.Empty, $"Пост с идентификатором [{model.PostId}] не найден!");
-            }
-
-            return checkPost;
+            return checkTag;
         }
 
         public async Task<Tag?> CheckDataAtEditTagAsync(TagController controller, TagEditViewModel model)
@@ -84,10 +74,9 @@ namespace MyBlog.App.Utils.Services
             return checkTag;
         }
 
-        public async Task CreateTagAsync(TagCreateViewModel model, Post? post)
+        public async Task CreateTagAsync(TagCreateViewModel model)
         {
             var tag = _mapper.Map<Tag>(model);
-            if(post != null) tag.Posts = new List<Post> { post };
 
             await _tagRepository.CreateAsync(tag);
         }
