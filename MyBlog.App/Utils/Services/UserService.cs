@@ -5,6 +5,7 @@ using MyBlog.App.Controllers;
 using MyBlog.App.Utils.Extensions;
 using MyBlog.App.Utils.Services.Interfaces;
 using MyBlog.App.ViewModels.Users;
+using MyBlog.Data.DBModels.Roles;
 using MyBlog.Data.DBModels.Users;
 
 namespace MyBlog.App.Utils.Services
@@ -12,17 +13,24 @@ namespace MyBlog.App.Utils.Services
     public class UserService : IUserService
     {
         private readonly UserManager<User> _userManager;
+        private readonly RoleManager<Role> _roleManager;
         private readonly IMapper _mapper;
 
-        public UserService(UserManager<User> userManager, IMapper mapper)
+        public UserService(UserManager<User> userManager, IMapper mapper, RoleManager<Role> roleManager)
         {
             _userManager = userManager;
             _mapper = mapper;
+            _roleManager = roleManager;
         }
 
         public async Task<IdentityResult> CreateUserAsync(UserRegisterViewModel model)
         {
             var user = _mapper.Map<User>(model);
+            
+            var defaultRole = await _roleManager.FindByNameAsync("User");
+            if (defaultRole != null) 
+                user.Roles.Add(defaultRole);
+
             return await _userManager.CreateAsync(user, model.PasswordReg);
         }
 

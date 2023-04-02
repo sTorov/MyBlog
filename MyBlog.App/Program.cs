@@ -9,6 +9,7 @@ using MyBlog.Data.DBModels.Users;
 using MyBlog.Data.Repositories;
 using MyBlog.App.Utils;
 using System.Reflection;
+using MyBlog.Data.DBModels.Roles;
 
 namespace MyBlog.App
 {
@@ -31,7 +32,7 @@ namespace MyBlog.App
             var assembly = Assembly.GetAssembly(typeof(MapperProfile));
             builder.Services.AddAutoMapper(assembly);
 
-            builder.Services.AddIdentity<User, IdentityRole<int>>(cfg => {
+            builder.Services.AddIdentity<User, Role>(cfg => {
                 //заглушка
                 cfg.Password.RequiredLength = 8;
                 cfg.Password.RequireNonAlphanumeric = false;

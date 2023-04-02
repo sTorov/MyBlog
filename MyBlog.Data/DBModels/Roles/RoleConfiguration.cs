@@ -8,6 +8,11 @@ namespace MyBlog.Data.DBModels.Roles
         public void Configure(EntityTypeBuilder<Role> builder)
         {
             builder.ToTable("Roles").HasKey(c => c.Id);
+            //builder.HasData(
+            //        new Role("User") { Id = 1 },
+            //        new Role("Moder") { Id = 2 },
+            //        new Role("Admin") { Id = 3 }
+            //    );
         }
     }
 }

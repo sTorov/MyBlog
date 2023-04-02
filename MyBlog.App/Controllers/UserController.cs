@@ -33,6 +33,7 @@ namespace MyBlog.App.Controllers
 
                 if (result.Succeeded)
                 {
+                    
                     //заглушка(SignIn)
                     return RedirectToAction("GetUser");
                 }
