@@ -2,6 +2,7 @@
 using MyBlog.App.ViewModels.Tags;
 using MyBlog.Data.DBModels.Posts;
 using MyBlog.Data.DBModels.Tags;
+using MyBlog.Data.Repositories;
 
 namespace MyBlog.App.Utils.Services.Interfaces
 {
@@ -9,6 +10,7 @@ namespace MyBlog.App.Utils.Services.Interfaces
     {
         Task<TagsViewModel?> GetTagsViewModelAsync(int? id);
         Task<Tag?> GetTagByIdAsync(int id);
+        Task<List<Tag>> GetAllTags();
         Task<Post?> CheckDataAtCreateTagAsync(TagController controller, TagCreateViewModel model);
         Task<Tag?> CheckDataAtEditTagAsync(TagController controller, TagEditViewModel model);
         Task CreateTagAsync(TagCreateViewModel model, Post post);

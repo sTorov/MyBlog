@@ -4,8 +4,12 @@ namespace MyBlog.App.ViewModels.Posts
 {
     public class PostCreateViewModel
     {
+        [Required(ErrorMessage = "Поле обязательно для заполнения!")]
         [Display(Name = "UserId")]
-        public int UsertId { get; set; }
+        public int UserId { get; set; }
+
+        [Display(Name = "Теги (указать через запятую)")]
+        public string? PostTags { get; set; }
 
         [Required(ErrorMessage = "Поле обязательно для заполнения!")]
         [Display(Name = "Заголовок")]

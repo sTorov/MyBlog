@@ -4,9 +4,8 @@ namespace MyBlog.App.ViewModels.Tags
 {
     public class TagCreateViewModel
     {
-        [Required(ErrorMessage = "Поле обязательно для заполнения!")]
         [Display(Name = "PostId")]
-        public int PostId { get; set; }
+        public int? PostId { get; set; }
 
         [Required(ErrorMessage = "Поле обязательно для заполнения!")]
         [Display(Name = "Имя тега")]

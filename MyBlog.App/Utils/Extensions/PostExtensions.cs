@@ -1,5 +1,7 @@
 ﻿using MyBlog.App.ViewModels.Posts;
 using MyBlog.Data.DBModels.Posts;
+using MyBlog.Data.DBModels.Tags;
+using System.Text.RegularExpressions;
 
 namespace MyBlog.App.Utils.Extensions
 {

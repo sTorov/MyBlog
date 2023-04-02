@@ -1,6 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Migrations.Internal;
 using MyBlog.App.Utils.Services.Interfaces;
 using MyBlog.App.ViewModels.Posts;
+using MyBlog.Data.DBModels.Tags;
+using System.Text.RegularExpressions;
 
 namespace MyBlog.App.Controllers
 {
@@ -25,7 +28,11 @@ namespace MyBlog.App.Controllers
 
             if (ModelState.IsValid)
             {
-                await _postService.CreatePost(creater!, model);
+                List<Tag> tags = null!;
+                if (!string.IsNullOrEmpty(model.PostTags))
+                    tags = await _postService.CreateTagAtPostAsync(model.PostTags);
+
+                await _postService.CreatePost(creater!, model, tags);
                 return RedirectToAction("GetPost");
             }
             else

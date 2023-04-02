@@ -34,14 +34,20 @@
         <div asp-validation-summary="ModelOnly" class="warning"></div>
 
         <div class="wrapper">
-            <label asp-for="UsertId"></label>
-            <input asp-for="UsertId" />
+            <label asp-for="UserId"></label>
+            <input asp-for="UserId" />
+            <span asp-validation-for="UserId" class="warning"></span>
         </div>
 
         <div class="wrapper">
             <label asp-for="Title"></label>
             <input asp-for="Title" />
             <span asp-validation-for="Title" class="warning"></span>
+        </div>
+
+        <div class="wrapper">
+            <label asp-for="PostTags"></label>
+            <input asp-for="PostTags" />
         </div>
 
         <div class="wrapper">

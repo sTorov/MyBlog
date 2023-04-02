@@ -8,5 +8,12 @@ namespace MyBlog.Data.DBModels.Tags
         public string Name { get; set; }
 
         public List<Post> Posts { get; set; }
+
+        public Tag() { }
+
+        public Tag(string name) 
+        {
+            Name = name;
+        }
     }
 }

@@ -31,12 +31,14 @@ namespace MyBlog.App.Utils.Services
 
         public async Task<Tag?> GetTagByIdAsync(int id) => await _tagRepository.GetAsync(id);
 
+        public async Task<List<Tag>> GetAllTags() => await _tagRepository.GetAllAsync();
+
         public async Task<TagsViewModel?> GetTagsViewModelAsync(int? id)
         {
             var model = new TagsViewModel();
 
             if(id == null)
-                model.Tags = await _tagRepository.GetAllAsync();
+                model.Tags = await GetAllTags();
             else
             {
                 var tag = await GetTagByIdAsync((int)id);
@@ -58,30 +60,34 @@ namespace MyBlog.App.Utils.Services
 
         public async Task<Post?> CheckDataAtCreateTagAsync(TagController controller, TagCreateViewModel model)
         {
-            var checkTag = await _tagRepository.GetTagByName(model.Name);
+            var checkTag = await _tagRepository.GetTagByNameAsync(model.Name);
             if (checkTag != null)
                 controller.ModelState.AddModelError(string.Empty, $"Тег с именем [{model.Name}] уже существует!");
 
-            var checkPost = await _postService.GetPostByIdAsync(model.PostId);
-            if (checkPost == null)
-                controller.ModelState.AddModelError(string.Empty, $"Пост с идентификатором [{model.PostId}] не найден!");
+            Post? checkPost = null!;
+            if (model.PostId != null)
+            {
+                checkPost = await _postService.GetPostByIdAsync((int)model.PostId);
+                if (checkPost == null)
+                    controller.ModelState.AddModelError(string.Empty, $"Пост с идентификатором [{model.PostId}] не найден!");
+            }
 
             return checkPost;
         }
 
         public async Task<Tag?> CheckDataAtEditTagAsync(TagController controller, TagEditViewModel model)
         {
-            var checkTag = await _tagRepository.GetTagByName(model.Name);
+            var checkTag = await _tagRepository.GetTagByNameAsync(model.Name);
             if (checkTag != null)
                 controller.ModelState.AddModelError(string.Empty, $"Тег с именем [{model.Name}] уже существует!");
 
             return checkTag;
         }
 
-        public async Task CreateTagAsync(TagCreateViewModel model, Post post)
+        public async Task CreateTagAsync(TagCreateViewModel model, Post? post)
         {
             var tag = _mapper.Map<Tag>(model);
-            tag.Posts = new List<Post> { post };
+            if(post != null) tag.Posts = new List<Post> { post };
 
             await _tagRepository.CreateAsync(tag);
         }

@@ -22,7 +22,8 @@ namespace MyBlog.App.Utils
                 .ForMember(u => u.Login, opt => opt.MapFrom(m => m.UserName));
 
             CreateMap<PostCreateViewModel, Post>();
-            CreateMap<Post, PostEditViewModel>();
+            CreateMap<Post, PostEditViewModel>()
+                .ForMember(m => m.PostTags, opt => opt.MapFrom(p => string.Join(", ", p.Tags.Select(p => p.Name))));
 
             CreateMap<CommentCreateViewModel, Comment>();
             CreateMap<Comment, CommentEditViewModel>();

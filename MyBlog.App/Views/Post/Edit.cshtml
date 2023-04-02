@@ -40,6 +40,11 @@
         </div>
 
         <div class="wrapper">
+            <label asp-for="PostTags"></label>
+            <input asp-for="PostTags" value="@Model.PostTags" />
+        </div>
+
+        <div class="wrapper">
             <label asp-for="Content"></label>
             <textarea asp-for="Content" rows="4" cols="80" >@Model.Content</textarea>
             <span asp-validation-for="Content" class="warning"></span>

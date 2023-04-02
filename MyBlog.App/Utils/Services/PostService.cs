@@ -4,9 +4,11 @@ using MyBlog.App.Utils.Extensions;
 using MyBlog.App.Utils.Services.Interfaces;
 using MyBlog.App.ViewModels.Posts;
 using MyBlog.Data.DBModels.Posts;
+using MyBlog.Data.DBModels.Tags;
 using MyBlog.Data.DBModels.Users;
 using MyBlog.Data.Repositories;
 using MyBlog.Data.Repositories.Interfaces;
+using System.Text.RegularExpressions;
 
 namespace MyBlog.App.Utils.Services
 {
@@ -17,6 +19,7 @@ namespace MyBlog.App.Utils.Services
         private readonly IUserService _userService;
 
         private readonly PostRepository _postRepository;
+        private readonly TagRepository _tagRepository;
 
         public PostService(IUnitOfWork unitOfWork, IMapper mapper, IUserService userService) 
         {
@@ -24,10 +27,9 @@ namespace MyBlog.App.Utils.Services
             _mapper = mapper;
             _userService = userService;
 
-            _postRepository = GetPostRepository();
+            _postRepository = (PostRepository)_unitOfWork.GetRepository<Post>();
+            _tagRepository = (TagRepository)_unitOfWork.GetRepository<Tag>();
         }
-
-        private PostRepository GetPostRepository() => (PostRepository)_unitOfWork.GetRepository<Post>();
 
         public async Task<User?> CheckDataAtCreated(PostController controller, PostCreateViewModel model)
         {
@@ -35,19 +37,20 @@ namespace MyBlog.App.Utils.Services
             //_ = int.TryParse(_userManager.GetUserId(user), out int userId);
             //model.UsertId = userId;
 
-            var creater = await _userService.GetUserByIdAsync(model.UsertId);
+            var creater = await _userService.GetUserByIdAsync(model.UserId);
             if (creater == null)
-                controller.ModelState.AddModelError(string.Empty, $"Пользователя с ID [{model.UsertId}] не существует!");
+                controller.ModelState.AddModelError(string.Empty, $"Пользователя с ID [{model.UserId}] не существует!");
             return creater;
         }
 
         /// <summary>
         /// Доработать (User Auth)
         /// </summary>
-        public async Task CreatePost(User user, PostCreateViewModel model)
+        public async Task CreatePost(User user, PostCreateViewModel model, List<Tag> tags)
         {
             var post = _mapper.Map<Post>(model);
             post.User = user;
+            if(tags != null) post.Tags = tags;
 
             await _postRepository.CreateAsync(post);
         }
@@ -90,8 +93,35 @@ namespace MyBlog.App.Utils.Services
                 return false;
 
             currentPost.Convert(model);
+            if (!string.IsNullOrEmpty(model.PostTags))
+            {
+                var list = await CreateTagAtPostAsync(model.PostTags);
+                currentPost.Tags = list;
+            }
+
             await _postRepository.UpdateAsync(currentPost);
             return true;
+        }
+
+        public async Task<List<Tag>> CreateTagAtPostAsync(string postTags)
+        {
+            var normalizedStringTags = Regex.Replace(postTags, @"\s*", "");
+            var tagSetName = normalizedStringTags.Split(",").ToHashSet();
+            
+            var allTags = (await _tagRepository.GetAllAsync()).Select(t => t.Name);
+
+            var createdTags = tagSetName.Except(allTags);
+            foreach (var tag in createdTags)
+                await _tagRepository.CreateAsync(new Tag(tag));
+            
+            var tags = new List<Tag>();
+            foreach (var tagName in tagSetName)
+            {
+                var tag = await _tagRepository.GetTagByNameAsync(tagName);
+                if(tag != null) tags.Add(tag);
+            }
+
+            return tags;
         }
     }
 }
