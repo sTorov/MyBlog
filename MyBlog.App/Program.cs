@@ -10,6 +10,8 @@ using MyBlog.Data.Repositories;
 using MyBlog.App.Utils;
 using System.Reflection;
 using MyBlog.Data.DBModels.Roles;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using System.Security.Claims;
 
 namespace MyBlog.App
 {
@@ -40,6 +42,14 @@ namespace MyBlog.App
                 cfg.Password.RequireLowercase = false;
                 cfg.Password.RequireDigit = false;
             }).AddEntityFrameworkStores<MyBlogContext>();
+
+            builder.Services.ConfigureApplicationCookie(opt =>
+            {
+                opt.LoginPath = Constants.LOGIN_PATH;
+                opt.AccessDeniedPath = Constants.ACCESS_DENIED_PATH;
+            });
+
+            builder.Services.AddAuthorization();
 
             var app = builder.Build();
 

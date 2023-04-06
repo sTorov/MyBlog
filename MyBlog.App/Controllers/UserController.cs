@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using MyBlog.App.Utils.Services.Interfaces;
 using MyBlog.App.ViewModels.Users;
 using MyBlog.Data.DBModels.Users;
+using System.Net;
 
 namespace MyBlog.App.Controllers
 {
@@ -19,10 +21,12 @@ namespace MyBlog.App.Controllers
             _roleService = roleService;
         }
 
+        [AllowAnonymous]
         [HttpGet]
         [Route("Register")]
         public IActionResult Register() => View();
 
+        [AllowAnonymous]
         [HttpPost]
         [Route("Register")]
         public async Task<IActionResult> PostRegister(UserRegisterViewModel model)
@@ -35,7 +39,7 @@ namespace MyBlog.App.Controllers
 
                 if (result.Succeeded)
                 {
-                    var claims = await _roleService.GetRoleClaims(user);
+                    var claims = _roleService.GetRoleClaims(user);
 
                     await _signInManager.SignInWithClaimsAsync(user, false, claims);
                     return RedirectToAction("Index", "Home");
@@ -49,23 +53,28 @@ namespace MyBlog.App.Controllers
             return View("Register", model);
         }
 
+        [AllowAnonymous]
         [HttpGet]
         [Route("Login")]
         public IActionResult Login() => View();
 
+        [AllowAnonymous]
         [HttpPost]
         [Route("Login")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> PostLogin(UserLoginViewModel model)
         {
             var user = await _userService.GetUserByEmailAsync(model.UserEmail);
+
             if(user != null)
             {
+                user.Roles = await _roleService.GetRolesByUserAsync(user.Id);
+
                 var result = await _signInManager.CheckPasswordSignInAsync(user, model.Password, false);
 
                 if (result.Succeeded)
                 {
-                    await _signInManager.SignInWithClaimsAsync(user, false, await _roleService.GetRoleClaims(user));
+                    await _signInManager.SignInWithClaimsAsync(user, false, _roleService.GetRoleClaims(user));
                     return RedirectToAction("Index", "Home");
                 }
                 else
@@ -75,6 +84,7 @@ namespace MyBlog.App.Controllers
             return View("Login", model);
         }
 
+        [Authorize]
         [HttpPost]
         [Route("Logout")]
         [ValidateAntiForgeryToken]
@@ -84,6 +94,7 @@ namespace MyBlog.App.Controllers
             return RedirectToAction("Index", "Home");
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         [Route("GetUser/{id?}")]
         public async Task<IActionResult> GetUser([FromRoute] int? id = null)
@@ -101,6 +112,7 @@ namespace MyBlog.App.Controllers
             return View(model);
         }
 
+        [Authorize(Roles = "Moderator, Admin")]
         [HttpPost]
         public async Task<IActionResult> Remove(int id)
         {

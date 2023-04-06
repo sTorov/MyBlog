@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using MyBlog.Data.DBModels.Comments;
 using MyBlog.Data.DBModels.Posts;
 using MyBlog.Data.DBModels.Roles;
@@ -7,7 +8,7 @@ using MyBlog.Data.DBModels.Users;
 
 namespace MyBlog.Data
 {
-    public class MyBlogContext : DbContext
+    public class MyBlogContext : IdentityDbContext<User, Role, int>
     {
         public MyBlogContext(DbContextOptions<MyBlogContext> contextOptions) : base(contextOptions) =>
             Database.Migrate();

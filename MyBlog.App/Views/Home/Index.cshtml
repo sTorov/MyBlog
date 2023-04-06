@@ -1,8 +1,22 @@
-﻿@{
+﻿@using System.Security.Claims;
+@{
     ViewData["Title"] = "Home Page";
+    var user = (ClaimsPrincipal)ViewData["User"];
+
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    @if(user == null)
+    {
+        <h1 class="display-4">Welcome</h1>
+        <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    }
+    else
+    {
+        <h2>Hello @(user.Identity!.Name)</h2>
+        foreach(var claim in user.Claims)
+        {
+            <p>@(claim.Type) + @(claim.Value)</p>
+        }            
+    }
 </div>

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using MyBlog.App.ViewModels;
 using System.Diagnostics;
 
@@ -6,22 +7,23 @@ namespace MyBlog.App.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
-
-        public HomeController(ILogger<HomeController> logger)
-        {
-            _logger = logger;
-        }
-
         public IActionResult Index()
         {
-            return View();
+            if (User.Identity!.IsAuthenticated)
+            {
+                var user = User;
+                ViewData["User"] = user;
+                return View();
+            }
+            else
+                return View();
         }
 
-        public IActionResult Privacy()
-        {
-            return View();
-        }
+        public IActionResult Privacy() => View();
+
+        [Authorize]
+        [Route("AccessDenied")]
+        public IActionResult AccessDenied() => View();
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

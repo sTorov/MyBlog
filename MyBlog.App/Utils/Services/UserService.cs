@@ -27,7 +27,7 @@ namespace MyBlog.App.Utils.Services
         {
             var user = _mapper.Map<User>(model);
             
-            var defaultRole = await _roleManager.FindByIdAsync("1");
+            var defaultRole = await _roleManager.FindByNameAsync("User");
             if (defaultRole != null) 
                 user.Roles = new List<Role> { defaultRole };
 
