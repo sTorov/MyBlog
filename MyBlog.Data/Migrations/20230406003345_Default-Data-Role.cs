@@ -14,22 +14,22 @@ namespace MyBlog.Data.Migrations
                 table: "Roles",
                 keyColumn: "Id",
                 keyValue: 1,
-                column: "ConcurrencyStamp",
-                value: "3794c9b0-4a17-4206-b12c-cee7f23c7d01");
+                columns: new[] { "ConcurrencyStamp", "NormalizedName" },
+                values: new object[] { "8c885150-92e7-4d34-bc96-f70e3063875f", "USER" });
 
             migrationBuilder.UpdateData(
                 table: "Roles",
                 keyColumn: "Id",
                 keyValue: 2,
-                column: "ConcurrencyStamp",
-                value: "3e3c21a4-8f19-4359-b7ef-90553de1fd9b");
+                columns: new[] { "ConcurrencyStamp", "NormalizedName" },
+                values: new object[] { "6414bd2f-f40f-46c2-80b2-ba7dcbac22e7", "MODER" });
 
             migrationBuilder.UpdateData(
                 table: "Roles",
                 keyColumn: "Id",
                 keyValue: 3,
-                column: "ConcurrencyStamp",
-                value: "708222ab-15dd-4b0d-9e07-9ae45d68300f");
+                columns: new[] { "ConcurrencyStamp", "NormalizedName" },
+                values: new object[] { "c3246603-f2cf-4a8c-b376-3040c8c7138b", "ADMIN" });
         }
 
         /// <inheritdoc />
@@ -39,22 +39,22 @@ namespace MyBlog.Data.Migrations
                 table: "Roles",
                 keyColumn: "Id",
                 keyValue: 1,
-                column: "ConcurrencyStamp",
-                value: "888a7e11-ff86-4e84-aaa6-eef3c4e8feab");
+                columns: new[] { "ConcurrencyStamp", "NormalizedName" },
+                values: new object[] { null, null });
 
             migrationBuilder.UpdateData(
                 table: "Roles",
                 keyColumn: "Id",
                 keyValue: 2,
-                column: "ConcurrencyStamp",
-                value: "2c35be61-cb14-4a0e-a079-60b9ac977a42");
+                columns: new[] { "ConcurrencyStamp", "NormalizedName" },
+                values: new object[] { null, null });
 
             migrationBuilder.UpdateData(
                 table: "Roles",
                 keyColumn: "Id",
                 keyValue: 3,
-                column: "ConcurrencyStamp",
-                value: "48ef1709-4eda-4e6d-8ba4-8845b42e2d10");
+                columns: new[] { "ConcurrencyStamp", "NormalizedName" },
+                values: new object[] { null, null });
         }
     }
 }

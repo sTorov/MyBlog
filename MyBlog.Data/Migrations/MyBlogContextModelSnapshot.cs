@@ -90,6 +90,29 @@ namespace MyBlog.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Roles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            ConcurrencyStamp = "8c885150-92e7-4d34-bc96-f70e3063875f",
+                            Name = "User",
+                            NormalizedName = "USER"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            ConcurrencyStamp = "6414bd2f-f40f-46c2-80b2-ba7dcbac22e7",
+                            Name = "Moder",
+                            NormalizedName = "MODER"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            ConcurrencyStamp = "c3246603-f2cf-4a8c-b376-3040c8c7138b",
+                            Name = "Admin",
+                            NormalizedName = "ADMIN"
+                        });
                 });
 
             modelBuilder.Entity("MyBlog.Data.DBModels.Tags.Tag", b =>

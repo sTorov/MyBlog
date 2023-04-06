@@ -1,9 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.Migrations.Internal;
 using MyBlog.App.Utils.Services.Interfaces;
 using MyBlog.App.ViewModels.Posts;
 using MyBlog.Data.DBModels.Tags;
-using System.Text.RegularExpressions;
 
 namespace MyBlog.App.Controllers
 {

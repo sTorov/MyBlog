@@ -23,15 +23,17 @@ namespace MyBlog.App.Utils.Services
             _roleManager = roleManager;
         }
 
-        public async Task<IdentityResult> CreateUserAsync(UserRegisterViewModel model)
+        public async Task<(IdentityResult, User)> CreateUserAsync(UserRegisterViewModel model)
         {
             var user = _mapper.Map<User>(model);
             
-            var defaultRole = await _roleManager.FindByNameAsync("User");
+            var defaultRole = await _roleManager.FindByIdAsync("1");
             if (defaultRole != null) 
-                user.Roles.Add(defaultRole);
+                user.Roles = new List<Role> { defaultRole };
 
-            return await _userManager.CreateAsync(user, model.PasswordReg);
+            var result = await _userManager.CreateAsync(user, model.PasswordReg);
+
+            return (result, user);
         }
 
         public async Task<IdentityResult> UpdateUserAsync(UserEditViewModel model, User user)
@@ -43,6 +45,8 @@ namespace MyBlog.App.Utils.Services
         public async Task<List<User>> GetAllUsersAsync() => await _userManager.Users.ToListAsync();
 
         public async Task<User?> GetUserByIdAsync(int? id) => await _userManager.FindByIdAsync(id?.ToString() ?? string.Empty);
+
+        public async Task<User?> GetUserByEmailAsync(string email) => await _userManager.FindByEmailAsync(email);
 
         public async Task<bool> DeleteByIdAsync(int id)
         {
@@ -81,6 +85,5 @@ namespace MyBlog.App.Utils.Services
             if (checkEmail != null && checkEmail != currentUser.Email)
                 controller.ModelState.AddModelError(string.Empty, $"Адрес [{model.Email}] уже зарегистрирован!");
         }
-
     }
 }

@@ -10,16 +10,18 @@ namespace MyBlog.App.Controllers
     {
         private readonly SignInManager<User> _signInManager;
         private readonly IUserService _userService;
+        private readonly IRoleService _roleService;
 
-        public UserController(SignInManager<User> signInManager, IUserService userService)
+        public UserController(SignInManager<User> signInManager, IUserService userService, IRoleService roleService)
         {
             _signInManager = signInManager;
             _userService = userService;
+            _roleService = roleService;
         }
 
         [HttpGet]
         [Route("Register")]
-        public IActionResult Register(UserRegisterViewModel? model = null) => View(model);
+        public IActionResult Register() => View();
 
         [HttpPost]
         [Route("Register")]
@@ -29,13 +31,14 @@ namespace MyBlog.App.Controllers
 
             if (ModelState.IsValid)
             {
-                var result = await _userService.CreateUserAsync(model);
+                var (result, user) = await _userService.CreateUserAsync(model);
 
                 if (result.Succeeded)
                 {
-                    
-                    //заглушка(SignIn)
-                    return RedirectToAction("GetUser");
+                    var claims = await _roleService.GetRoleClaims(user);
+
+                    await _signInManager.SignInWithClaimsAsync(user, false, claims);
+                    return RedirectToAction("Index", "Home");
                 }
                 else
                 {
@@ -44,6 +47,41 @@ namespace MyBlog.App.Controllers
                 }
             }
             return View("Register", model);
+        }
+
+        [HttpGet]
+        [Route("Login")]
+        public IActionResult Login() => View();
+
+        [HttpPost]
+        [Route("Login")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> PostLogin(UserLoginViewModel model)
+        {
+            var user = await _userService.GetUserByEmailAsync(model.UserEmail);
+            if(user != null)
+            {
+                var result = await _signInManager.CheckPasswordSignInAsync(user, model.Password, false);
+
+                if (result.Succeeded)
+                {
+                    await _signInManager.SignInWithClaimsAsync(user, false, await _roleService.GetRoleClaims(user));
+                    return RedirectToAction("Index", "Home");
+                }
+                else
+                    ModelState.AddModelError(string.Empty, "Неверный email и(или) пароль!");
+            }
+
+            return View("Login", model);
+        }
+
+        [HttpPost]
+        [Route("Logout")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Logout()
+        {
+            await _signInManager.SignOutAsync();
+            return RedirectToAction("Index", "Home");
         }
 
         [HttpGet]

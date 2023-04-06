@@ -7,6 +7,9 @@ namespace MyBlog.Data.DBModels.Roles
     {
         public List<User> Users { get; set; }
 
-        public Role(string name) : base(name) { }
+        public Role(string name) : base(name) 
+        {
+            NormalizedName = name.ToUpper();
+        }
     }
 }

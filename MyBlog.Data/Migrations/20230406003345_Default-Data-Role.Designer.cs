@@ -11,7 +11,7 @@ using MyBlog.Data;
 namespace MyBlog.Data.Migrations
 {
     [DbContext(typeof(MyBlogContext))]
-    [Migration("20230402031303_Default-Data-Role")]
+    [Migration("20230406003345_Default-Data-Role")]
     partial class DefaultDataRole
     {
         /// <inheritdoc />
@@ -98,23 +98,23 @@ namespace MyBlog.Data.Migrations
                         new
                         {
                             Id = 1,
-                            ConcurrencyStamp = "3794c9b0-4a17-4206-b12c-cee7f23c7d01",
+                            ConcurrencyStamp = "8c885150-92e7-4d34-bc96-f70e3063875f",
                             Name = "User",
                             NormalizedName = "USER"
                         },
                         new
                         {
                             Id = 2,
-                            ConcurrencyStamp = "3e3c21a4-8f19-4359-b7ef-90553de1fd9b",
-                            Name = "Moderator",
-                            NormalizedName = "MODERATOR"
+                            ConcurrencyStamp = "6414bd2f-f40f-46c2-80b2-ba7dcbac22e7",
+                            Name = "Moder",
+                            NormalizedName = "MODER"
                         },
                         new
                         {
                             Id = 3,
-                            ConcurrencyStamp = "708222ab-15dd-4b0d-9e07-9ae45d68300f",
-                            Name = "Administrator",
-                            NormalizedName = "ADMINISTRATOR"
+                            ConcurrencyStamp = "c3246603-f2cf-4a8c-b376-3040c8c7138b",
+                            Name = "Admin",
+                            NormalizedName = "ADMIN"
                         });
                 });
 
