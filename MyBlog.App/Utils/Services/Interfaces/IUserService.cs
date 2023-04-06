@@ -13,9 +13,11 @@ namespace MyBlog.App.Utils.Services.Interfaces
         Task<List<User>> GetAllUsersAsync();
         Task<User?> GetUserByIdAsync(int id);
         Task<User?> GetUserByEmailAsync(string email);
+        Task<User?> GetUserByNameAsync(string name);
         Task<bool> DeleteByIdAsync(int id);
         Task<UserEditViewModel?> GetUserEditViewModelAsync(int id);
+        Task<UsersViewModel?> GetUsersViewModelAsync(int? id, bool isAdmin, string userName);
         Task CheckDataAtRegistration(UserController controller, UserRegisterViewModel model);
-        Task CheckDataAtEdition(UserController controller, UserEditViewModel model, User currentUser);
+        Task<User?> CheckDataAtEdition(UserController controller, UserEditViewModel model);
     }
 }

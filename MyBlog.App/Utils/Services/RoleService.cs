@@ -41,7 +41,7 @@ namespace MyBlog.App.Utils.Services
         public async Task<UserRolesViewModel?> GetUserRolesViewModelAsync(int id)
         {
             UserRolesViewModel? model = null;
-            var user = await _userManager.FindByIdAsync(id.ToString());
+            var user = await _userManager.Users.Include(u => u.Roles).FirstOrDefaultAsync(u => u.Id == id);
             if (user != null)
             {
                 model = new UserRolesViewModel { UserId = id };

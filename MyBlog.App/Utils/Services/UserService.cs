@@ -7,6 +7,7 @@ using MyBlog.App.Utils.Services.Interfaces;
 using MyBlog.App.ViewModels.Users;
 using MyBlog.Data.DBModels.Roles;
 using MyBlog.Data.DBModels.Users;
+using System.Security.Claims;
 
 namespace MyBlog.App.Utils.Services
 {
@@ -51,6 +52,8 @@ namespace MyBlog.App.Utils.Services
 
         public async Task<User?> GetUserByEmailAsync(string email) => await _userManager.FindByEmailAsync(email);
 
+        public async Task<User?> GetUserByNameAsync(string name) => await _userManager.FindByNameAsync(name);
+
         public async Task<bool> DeleteByIdAsync(int id)
         {
             var user = await _userManager.FindByIdAsync(id.ToString());
@@ -67,6 +70,28 @@ namespace MyBlog.App.Utils.Services
             return null;
         }
 
+        public async Task<UsersViewModel?> GetUsersViewModelAsync(int? id, bool isAdmin, string userName)
+        {
+            var model = new UsersViewModel();
+            if (!isAdmin)
+            {
+                var user = await _userManager.FindByNameAsync(userName);
+                if(user != null)
+                    model.Users = new List<User> { user };
+                return model;
+            }
+
+            if (id == null)
+                model.Users = await _userManager.Users.ToListAsync();
+            else
+            {
+                var user = await _userManager.FindByIdAsync(id?.ToString() ?? "");
+                if (user != null) model.Users.Add(user);
+            }
+
+            return model;
+        }
+
         public async Task CheckDataAtRegistration(UserController controller, UserRegisterViewModel model)
         {
             var checkName = (await _userManager.FindByNameAsync(model.Login))?.UserName;
@@ -78,8 +103,15 @@ namespace MyBlog.App.Utils.Services
                 controller.ModelState.AddModelError(string.Empty, $"Адрес [{model.EmailReg}] уже зарегистрирован!");
         }
 
-        public async Task CheckDataAtEdition(UserController controller, UserEditViewModel model, User currentUser)
+        public async Task<User?> CheckDataAtEdition(UserController controller, UserEditViewModel model)
         {
+            var currentUser = await _userManager.FindByIdAsync(model.Id.ToString());
+            if (currentUser == null)
+            {
+                controller.ModelState.AddModelError(string.Empty, $"Произошла непредвиденная ошибка! Пользователь не найден!");
+                return null;
+            }
+
             var checkLogin = (await _userManager.FindByNameAsync(model.Login))?.UserName;
             if (checkLogin != null && checkLogin != currentUser.UserName)
                 controller.ModelState.AddModelError(string.Empty, $"Никнейм [{model.Login}] уже используется!");
@@ -87,6 +119,8 @@ namespace MyBlog.App.Utils.Services
             var checkEmail = (await _userManager.FindByEmailAsync(model.Email))?.Email;
             if (checkEmail != null && checkEmail != currentUser.Email)
                 controller.ModelState.AddModelError(string.Empty, $"Адрес [{model.Email}] уже зарегистрирован!");
+
+            return currentUser;
         }
     }
 }

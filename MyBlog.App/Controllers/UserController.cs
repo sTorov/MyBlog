@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using MyBlog.App.Utils;
+using MyBlog.App.Utils.Services;
 using MyBlog.App.Utils.Services.Interfaces;
 using MyBlog.App.ViewModels.Users;
 using MyBlog.Data.DBModels.Roles;
@@ -14,12 +16,14 @@ namespace MyBlog.App.Controllers
         private readonly SignInManager<User> _signInManager;
         private readonly IUserService _userService;
         private readonly IRoleService _roleService;
+        private readonly CheckDataService _checkDataService;
 
-        public UserController(SignInManager<User> signInManager, IUserService userService, IRoleService roleService)
+        public UserController(SignInManager<User> signInManager, IUserService userService, IRoleService roleService, CheckDataService checkDataService)
         {
             _signInManager = signInManager;
             _userService = userService;
             _roleService = roleService;
+            _checkDataService = checkDataService;
         }
 
         [AllowAnonymous]
@@ -92,37 +96,43 @@ namespace MyBlog.App.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize]
         [HttpGet]
         [Route("GetUser/{id?}")]
         public async Task<IActionResult> GetUser([FromRoute] int? id = null)
         {
-            var model = new UsersViewModel();
+            var isAdmin = await _checkDataService.CheckEditUser(this, id ?? 0);
 
-            if (id == null)
-                model.Users = await _userService.GetAllUsersAsync();
-            else
-            {
-                var user = await _userService.GetUserByIdAsync((int)id);
-                if (user != null) model.Users.Add(user);
-            }
+            var userName = User.Identity!.Name;
+            var model = await _userService.GetUsersViewModelAsync(id, isAdmin, userName!);
 
             return View(model);
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> Remove(int id)
         {
+            var check = await _checkDataService.CheckEditUser(this, id);
+            if (!check)
+                return Redirect(Constants.ACCESS_DENIED_PATH);
+
             _ = await _userService.DeleteByIdAsync(id);
 
-            return RedirectToAction("GetUser");
+            if(User.IsInRole("Admin"))
+                return RedirectToAction("GetUser");
+
+            await _signInManager.SignOutAsync();
+            return RedirectToAction("Index", "Home");
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize]
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
+            if (!await _checkDataService.CheckEditUser(this, id))
+                return Redirect(Constants.ACCESS_DENIED_PATH);
+
             var model = await _userService.GetUserEditViewModelAsync(id);
             if (model != null)
                 return View(model);
@@ -130,31 +140,29 @@ namespace MyBlog.App.Controllers
                 return RedirectToAction("GetUser");
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> Edit(UserEditViewModel model)
         {
-            var currentUser = await _userService.GetUserByIdAsync(model.Id);
-            if (currentUser != null)
+            if (!await _checkDataService.CheckEditUser(this, model.Id))
+                return Redirect(Constants.ACCESS_DENIED_PATH);
+        
+            var currentUser = await _userService.CheckDataAtEdition(this, model);
+
+            if (ModelState.IsValid)
             {
-                await _userService.CheckDataAtEdition(this, model, currentUser);
+                var result = await _userService.UpdateUserAsync(model, currentUser!);
 
-                if (ModelState.IsValid)
+                if (result.Succeeded)
+                    return RedirectToAction("GetUser");
+                else
                 {
-                    var result = await _userService.UpdateUserAsync(model, currentUser);
-
-                    if (result.Succeeded)
-                        return RedirectToAction("GetUser");
-                    else
-                    {
-                        foreach (var error in result.Errors)
-                            ModelState.AddModelError(string.Empty, error.Description);
-
-                        return View(model);
-                    }
+                    foreach (var error in result.Errors)
+                        ModelState.AddModelError(string.Empty, error.Description);
                 }
             }
-            return RedirectToAction("GetUser");
+
+            return View(model);
         }
 
         [Authorize(Roles = "Admin")]
