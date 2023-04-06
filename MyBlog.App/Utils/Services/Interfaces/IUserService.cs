@@ -9,8 +9,9 @@ namespace MyBlog.App.Utils.Services.Interfaces
     {
         Task<(IdentityResult, User)> CreateUserAsync(UserRegisterViewModel model);
         Task<IdentityResult> UpdateUserAsync(UserEditViewModel model, User user);
+        Task<IdentityResult> UpdateUserAsync(User user);
         Task<List<User>> GetAllUsersAsync();
-        Task<User?> GetUserByIdAsync(int? id);
+        Task<User?> GetUserByIdAsync(int id);
         Task<User?> GetUserByEmailAsync(string email);
         Task<bool> DeleteByIdAsync(int id);
         Task<UserEditViewModel?> GetUserEditViewModelAsync(int id);

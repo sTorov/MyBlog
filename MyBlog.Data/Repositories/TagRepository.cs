@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MyBlog.Data.DBModels.Posts;
 using MyBlog.Data.DBModels.Tags;
+using MyBlog.Data.DBModels.Users;
 
 namespace MyBlog.Data.Repositories
 {

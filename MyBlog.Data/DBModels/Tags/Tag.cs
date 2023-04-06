@@ -1,4 +1,5 @@
 ﻿using MyBlog.Data.DBModels.Posts;
+using MyBlog.Data.DBModels.Users;
 
 namespace MyBlog.Data.DBModels.Tags
 {

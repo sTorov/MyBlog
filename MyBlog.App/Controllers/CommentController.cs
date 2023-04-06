@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using MyBlog.App.Utils.Services.Interfaces;
 using MyBlog.App.ViewModels.Comments;
 
 namespace MyBlog.App.Controllers
 {
+    [Authorize]
     public class CommentController : Controller
     {
         private readonly ICommentService _commentService;
@@ -46,16 +48,16 @@ namespace MyBlog.App.Controllers
         {
             var model = await _commentService.GetCommentEditViewModel(id);
 
-            if (model != null)
-                return View(model);
-            else
+            if (model == null)
                 return RedirectToAction("GetComment");
+
+            return View(model);
         }
 
         [HttpPost]
         public async Task<IActionResult> Edit(CommentEditViewModel model)
         {
-            await _commentService.UpdateComment(model);
+            _ = await _commentService.UpdateComment(model);
 
             return RedirectToAction("GetComment");
         }
@@ -63,7 +65,7 @@ namespace MyBlog.App.Controllers
         [HttpPost]
         public async Task<IActionResult> Remove(int id)
         {
-            await _commentService.DeleteComment(id);
+            _ = await _commentService.DeleteComment(id);
 
             return RedirectToAction("GetComment");
         }

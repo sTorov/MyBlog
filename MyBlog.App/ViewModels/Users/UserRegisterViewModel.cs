@@ -33,7 +33,6 @@ namespace MyBlog.App.ViewModels.Users
         [DataType(DataType.Password)]
         [Display(Name = "Пароль")]
         [StringLength(30, ErrorMessage = "{0} - Минимальная длина пароля: {1}, Максимальная: {2}", MinimumLength = 8)]
-        //[CustomValidation()]
         public string PasswordReg { get; set; }
 
         [Required(ErrorMessage = "Поле обязательно для заполнения!")]

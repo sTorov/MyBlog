@@ -22,10 +22,8 @@ namespace MyBlog.App.Utils.Services
             _unitOfWork = unitOfWork;
             _mapper = mapper;
 
-            _tagRepository = GetTagRepository();
-
+            _tagRepository = (TagRepository)_unitOfWork.GetRepository<Tag>();
         }
-        private TagRepository GetTagRepository() => (TagRepository)_unitOfWork.GetRepository<Tag>();
 
         public async Task<Tag?> GetTagByIdAsync(int id) => await _tagRepository.GetAsync(id);
 

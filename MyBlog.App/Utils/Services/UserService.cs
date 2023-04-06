@@ -42,9 +42,12 @@ namespace MyBlog.App.Utils.Services
             return await _userManager.UpdateAsync(user);
         }
 
+        public async Task<IdentityResult> UpdateUserAsync(User user) => await _userManager.UpdateAsync(user);
+
         public async Task<List<User>> GetAllUsersAsync() => await _userManager.Users.ToListAsync();
 
-        public async Task<User?> GetUserByIdAsync(int? id) => await _userManager.FindByIdAsync(id?.ToString() ?? string.Empty);
+        public async Task<User?> GetUserByIdAsync(int id) => 
+            await Task.Run(() => _userManager.Users.Include(u => u.Roles).AsEnumerable().FirstOrDefault(u => u.Id == id));
 
         public async Task<User?> GetUserByEmailAsync(string email) => await _userManager.FindByEmailAsync(email);
 

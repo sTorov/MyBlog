@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using MyBlog.App.Utils.Services.Interfaces;
 using MyBlog.App.ViewModels.Tags;
 
 namespace MyBlog.App.Controllers
 {
+    [Authorize]
     public class TagController : Controller
     {
         private readonly ITagService _tagService;
@@ -45,6 +47,8 @@ namespace MyBlog.App.Controllers
         public async Task<IActionResult> Edit(int id)
         {
             var model = await _tagService.GetTagEditViewModelAsync(id);
+            if (model == null)
+                return RedirectToAction("GetTag");
 
             return View(model);
         }
@@ -52,7 +56,7 @@ namespace MyBlog.App.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(TagEditViewModel model)
         {
-            var tag = await _tagService.CheckDataAtEditTagAsync(this, model);
+            _ = await _tagService.CheckDataAtEditTagAsync(this, model);
 
             if (ModelState.IsValid)
             {

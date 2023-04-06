@@ -33,19 +33,12 @@ namespace MyBlog.App.Utils.Services
 
         public async Task<User?> CheckDataAtCreated(PostController controller, PostCreateViewModel model)
         {
-            //var user = User;
-            //_ = int.TryParse(_userManager.GetUserId(user), out int userId);
-            //model.UsertId = userId;
-
             var creater = await _userService.GetUserByIdAsync(model.UserId);
             if (creater == null)
                 controller.ModelState.AddModelError(string.Empty, $"Пользователя с ID [{model.UserId}] не существует!");
             return creater;
         }
 
-        /// <summary>
-        /// Доработать (User Auth)
-        /// </summary>
         public async Task CreatePost(User user, PostCreateViewModel model, List<Tag> tags)
         {
             var post = _mapper.Map<Post>(model);

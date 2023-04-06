@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using MyBlog.App.Utils.Services.Interfaces;
 using MyBlog.App.ViewModels.Users;
+using MyBlog.Data.DBModels.Roles;
 using MyBlog.Data.DBModels.Users;
 using System.Net;
 
@@ -39,9 +40,7 @@ namespace MyBlog.App.Controllers
 
                 if (result.Succeeded)
                 {
-                    var claims = _roleService.GetRoleClaims(user);
-
-                    await _signInManager.SignInWithClaimsAsync(user, false, claims);
+                    await _signInManager.SignInWithClaimsAsync(user, false, _roleService.GetRoleClaims(user));
                     return RedirectToAction("Index", "Home");
                 }
                 else
@@ -69,7 +68,6 @@ namespace MyBlog.App.Controllers
             if(user != null)
             {
                 user.Roles = await _roleService.GetRolesByUserAsync(user.Id);
-
                 var result = await _signInManager.CheckPasswordSignInAsync(user, model.Password, false);
 
                 if (result.Succeeded)
@@ -105,14 +103,14 @@ namespace MyBlog.App.Controllers
                 model.Users = await _userService.GetAllUsersAsync();
             else
             {
-                var user = await _userService.GetUserByIdAsync(id);
+                var user = await _userService.GetUserByIdAsync((int)id);
                 if (user != null) model.Users.Add(user);
             }
 
             return View(model);
         }
 
-        [Authorize(Roles = "Moderator, Admin")]
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<IActionResult> Remove(int id)
         {
@@ -121,6 +119,7 @@ namespace MyBlog.App.Controllers
             return RedirectToAction("GetUser");
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
@@ -131,6 +130,7 @@ namespace MyBlog.App.Controllers
                 return RedirectToAction("GetUser");
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<IActionResult> Edit(UserEditViewModel model)
         {
@@ -154,6 +154,33 @@ namespace MyBlog.App.Controllers
                     }
                 }
             }
+            return RedirectToAction("GetUser");
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpGet]
+        public async Task<IActionResult> GetRoles(int id)
+        {
+            var model = await _roleService.GetUserRolesViewModelAsync(id);
+            if(model == null)
+                return RedirectToAction("GetUser");
+
+            return View("Roles", model);
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPost]
+        public async Task<IActionResult> SetRoles(UserRolesViewModel model)
+        {
+            var roles = await _roleService.GetRolesFromModelAsync(model);
+            var user = await _userService.GetUserByIdAsync(model.UserId);
+
+            if (user != null)
+            {
+                user.Roles = roles;
+                await _userService.UpdateUserAsync(user);
+            }
+
             return RedirectToAction("GetUser");
         }
     }

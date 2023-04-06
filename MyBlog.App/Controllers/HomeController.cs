@@ -13,10 +13,9 @@ namespace MyBlog.App.Controllers
             {
                 var user = User;
                 ViewData["User"] = user;
-                return View();
             }
-            else
-                return View();
+            
+            return View();
         }
 
         public IActionResult Privacy() => View();

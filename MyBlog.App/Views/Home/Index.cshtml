@@ -2,7 +2,6 @@
 @{
     ViewData["Title"] = "Home Page";
     var user = (ClaimsPrincipal)ViewData["User"];
-
 }
 
 <div class="text-center">
@@ -13,10 +12,6 @@
     }
     else
     {
-        <h2>Hello @(user.Identity!.Name)</h2>
-        foreach(var claim in user.Claims)
-        {
-            <p>@(claim.Type) + @(claim.Value)</p>
-        }            
+        <h2>Hello @(user.Identity!.Name)</h2>    
     }
 </div>

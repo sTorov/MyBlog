@@ -32,6 +32,7 @@
             <th>Фото</th>
             <th></th>
             <th></th>
+            <th></th>
         </tr>
         @foreach(var user in Model.Users)
         {
@@ -52,6 +53,11 @@
                 <td>
                     <form method="get" asp-controller="User" asp-action="Edit" asp-route-id="@user.Id">
                         <button type="submit">Изменить</button>
+                    </form>
+                </td>
+                <td>
+                    <form method="get" asp-controller="User" asp-action="GetRoles" asp-route-id="@user.Id">
+                        <button type="submit">Роли</button>
                     </form>
                 </td>
             </tr>

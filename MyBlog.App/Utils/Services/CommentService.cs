@@ -27,14 +27,9 @@ namespace MyBlog.App.Utils.Services
             _userService = userService;
             _postService = postService;
 
-            _commentRepository = GetCommentRepository();
+            _commentRepository = (CommentRepository)_unitOfWork.GetRepository<Comment>();
         }
 
-        private CommentRepository GetCommentRepository() => (CommentRepository)_unitOfWork.GetRepository<Comment>();
-
-        /// <summary>
-        /// Переделать
-        /// </summary>
         public async Task<(User?, Post?)> CheckDataAtCreateComment(CommentController controller, CommentCreateViewModel model)
         {
             var checkUser = await _userService.GetUserByIdAsync(model.UserId);

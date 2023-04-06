@@ -1,0 +1,51 @@
+﻿@model MyBlog.App.ViewModels.Users.UserRolesViewModel
+@{
+    ViewData["Title"] = "Роли пользователя";
+}
+
+<style>
+    .wrapper {
+        display: flex;
+    }
+
+    input {
+        margin-left: 5px;
+    }
+
+    .warning {
+        color: red;
+        font-size: 12px;
+        margin-left: 10px;
+    }
+</style>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.1/jquery.validate.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.11/jquery.validate.unobtrusive.js"></script>
+
+<div>
+    <h1>Роли пользователя</h1>
+
+    <form method="post" asp-controller="User" asp-action="SetRoles">
+        <div asp-validation-summary="ModelOnly" class="warning"></div>
+
+        <input type="hidden" asp-for="UserId" value="@Model.UserId"/>
+
+        <div class="wrapper">
+            <input type="checkbox" asp-for="IsUser"/>
+            <label asp-for="IsUser"></label>
+        </div>
+
+        <div class="wrapper">
+            <input type="checkbox" asp-for="IsModer" />
+            <label asp-for="IsModer"></label>
+        </div>
+
+        <div class="wrapper">
+            <input type="checkbox" asp-for="IsAdmin" />
+            <label asp-for="IsAdmin"></label>
+        </div>
+
+        <button type="submit">Сохранить</button>
+    </form>
+</div>

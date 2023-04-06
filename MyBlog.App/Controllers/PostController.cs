@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using MyBlog.App.Utils.Services.Interfaces;
 using MyBlog.App.ViewModels.Posts;
 using MyBlog.Data.DBModels.Tags;
 
 namespace MyBlog.App.Controllers
 {
+    [Authorize]
     public class PostController : Controller
     {
         private readonly IPostService _postService;
@@ -59,10 +61,10 @@ namespace MyBlog.App.Controllers
         {
             var model = await _postService.GetPostEditViewModel(id);
 
-            if (model != null)
-                return View(model);
-            else
+            if (model == null)
                 return RedirectToAction("GetPost");
+
+            return View(model);
         }
 
         [HttpPost]

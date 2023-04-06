@@ -11,7 +11,7 @@ using MyBlog.Data;
 namespace MyBlog.Data.Migrations
 {
     [DbContext(typeof(MyBlogContext))]
-    [Migration("20230406033042_Init")]
+    [Migration("20230406150426_Init")]
     partial class Init
     {
         /// <inheritdoc />
