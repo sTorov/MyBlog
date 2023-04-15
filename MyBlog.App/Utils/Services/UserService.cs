@@ -50,7 +50,8 @@ namespace MyBlog.App.Utils.Services
         public async Task<User?> GetUserByIdAsync(int id) => 
             await Task.Run(() => _userManager.Users.Include(u => u.Roles).AsEnumerable().FirstOrDefault(u => u.Id == id));
 
-        public async Task<User?> GetUserByEmailAsync(string email) => await _userManager.FindByEmailAsync(email);
+        public async Task<User?> GetUserByEmailAsync(string email) => 
+            await _userManager.Users.Include(u => u.Roles).FirstOrDefaultAsync(u => u.Email == email);
 
         public async Task<User?> GetUserByNameAsync(string name) => await _userManager.FindByNameAsync(name);
 
@@ -70,17 +71,10 @@ namespace MyBlog.App.Utils.Services
             return null;
         }
 
-        public async Task<UsersViewModel?> GetUsersViewModelAsync(int? id, bool isAdmin, string userName)
+        public async Task<UsersViewModel?> GetUsersViewModelAsync(int? id)
         {
             var model = new UsersViewModel();
-            if (!isAdmin)
-            {
-                var user = await _userManager.FindByNameAsync(userName);
-                if(user != null)
-                    model.Users = new List<User> { user };
-                return model;
-            }
-
+            
             if (id == null)
                 model.Users = await _userManager.Users.ToListAsync();
             else

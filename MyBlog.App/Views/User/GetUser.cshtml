@@ -46,12 +46,14 @@
                 <td>@user.Email</td>
                 <td>@user.Photo</td>
                 <td>
-                    <form method="post" asp-controller="User" asp-action="Remove" asp-route-id="@user.Id">
+                    <form method="post" asp-controller="User" asp-action="Remove">
+                        <input type="hidden" value="@user.Id" name="id"/>
                         <button type="submit">Удалить</button>
                     </form>
                 </td>
                 <td>
-                    <form method="get" asp-controller="User" asp-action="Edit" asp-route-id="@user.Id">
+                    <form method="get" asp-controller="User" asp-action="Edit">
+                        <input type="hidden" name="id" value="@user.Id" />
                         <button type="submit">Изменить</button>
                     </form>
                 </td>

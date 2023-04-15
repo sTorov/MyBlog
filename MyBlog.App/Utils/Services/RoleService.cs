@@ -19,12 +19,14 @@ namespace MyBlog.App.Utils.Services
             _userManager = userManager;
         }
 
-        public List<Claim> GetRoleClaims(User user)
+        public async Task<List<Claim>> GetClaims(User user)
         {
+            var userId = await _userManager.GetUserIdAsync(user);
             var claims = new List<Claim>();
 
             foreach (var role in user.Roles)
                 claims.Add(new Claim(ClaimsIdentity.DefaultRoleClaimType, role.Name!));
+            claims.Add(new Claim("UserID", userId));
 
             return claims;
         }

@@ -16,7 +16,7 @@ namespace MyBlog.App.Utils.Services.Interfaces
         Task<User?> GetUserByNameAsync(string name);
         Task<bool> DeleteByIdAsync(int id);
         Task<UserEditViewModel?> GetUserEditViewModelAsync(int id);
-        Task<UsersViewModel?> GetUsersViewModelAsync(int? id, bool isAdmin, string userName);
+        Task<UsersViewModel?> GetUsersViewModelAsync(int? id);
         Task CheckDataAtRegistration(UserController controller, UserRegisterViewModel model);
         Task<User?> CheckDataAtEdition(UserController controller, UserEditViewModel model);
     }

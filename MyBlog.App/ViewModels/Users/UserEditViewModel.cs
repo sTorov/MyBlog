@@ -2,7 +2,7 @@
 
 namespace MyBlog.App.ViewModels.Users
 {
-    public class UserEditViewModel
+    public class UserEditViewModel /*: IValidatableObject*/
     {
         public int Id { get; init; }
 
@@ -35,5 +35,10 @@ namespace MyBlog.App.ViewModels.Users
         [DataType(DataType.ImageUrl)]
         [Display(Name = "Ссыока на изображение")]
         public string Photo { get; set; }
+
+        //public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        //{
+            
+        //}
     }
 }

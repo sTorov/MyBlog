@@ -7,7 +7,7 @@ namespace MyBlog.App.Utils.Services.Interfaces
 {
     public interface IRoleService
     {
-        List<Claim> GetRoleClaims(User user);
+        Task<List<Claim>> GetClaims(User user);
         Task<List<Role>> GetRolesByUserAsync(int userId);
         Task<Role?> GetRoleByNameAsync(string roleName);
         Task<UserRolesViewModel?> GetUserRolesViewModelAsync(int id);
