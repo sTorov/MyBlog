@@ -57,29 +57,36 @@ namespace MyBlog.App.Controllers
         public async Task<IActionResult> Login(UserLoginViewModel model)
         {
             var user = await _userService.GetUserByEmailAsync(model.UserEmail);
-            if(user != null)
+            if (user == null)
+                ModelState.AddModelError(string.Empty, "Неверный email или(и) пароль!");
+
+            if(ModelState.IsValid)
             {
-                var result = await _signInManager.CheckPasswordSignInAsync(user, model.Password, false);
+                var result = await _signInManager.CheckPasswordSignInAsync(user!, model.Password, false);
+
                 if (result.Succeeded)
                 {
-                    await _signInManager.SignInWithClaimsAsync(user, false, await _userService.GetClaims(user));
+                    await _signInManager.SignInWithClaimsAsync(user!, false, await _userService.GetClaims(user!));
+
+                    if (!string.IsNullOrEmpty(model.ReturnUrl) && Url.IsLocalUrl(model.ReturnUrl))
+                        return Redirect(model.ReturnUrl);
                     return RedirectToAction("Index", "Home");
                 }
                 else
-                    ModelState.AddModelError(string.Empty, "Неверный email и(или) пароль!");
+                    ModelState.AddModelError(string.Empty, "Неверный email или(и) пароль!");
             }
 
-            return View("Login", model);
+            return View(model);
         }
 
         [Authorize]
         [HttpPost]
         [Route("Logout")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Logout()
+        public async Task<IActionResult> Logout(string returnUrl)
         {
             await _signInManager.SignOutAsync();
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Login", new { returnUrl });
         }
 
         [Authorize, CheckUserId(parameterName: "id", actionName: "GetUser", fullAccess: "Admin")]

@@ -27,6 +27,8 @@
     <form method="post" asp-controller="User" asp-action="Login">
         <div asp-validation-summary="ModelOnly" class="warning"></div>
 
+        <input type="hidden" asp-for="ReturnUrl" value="@Context.Request.Query["ReturnUrl"].ToString()"/>
+
         <div class="wrapper">
             <label asp-for="UserEmail"></label>
             <input asp-for="UserEmail" />
