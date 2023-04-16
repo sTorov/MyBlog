@@ -68,6 +68,13 @@
                         <button type="submit">Редактировать</button>
                     </form>
                 </td>
+                <td>
+                    <form method="get" asp-controller="Comment" asp-action="Create">
+                        <input type="hidden" value="@post.Id" name="postId"/>
+                        <input type="hidden" value="@User.Claims.FirstOrDefault(c => c.Type == "UserID")?.Value" name="userId" />
+                        <button type="submit">Добавить комментарий</button>
+                    </form>
+                </td>
             </tr>
         }
     </table>

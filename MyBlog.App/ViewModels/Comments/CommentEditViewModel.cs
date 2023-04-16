@@ -4,6 +4,7 @@ namespace MyBlog.App.ViewModels.Comments
 {
     public class CommentEditViewModel
     {
+        public int UserId { get; set; }
         public int Id { get; set; }
 
         [Required(ErrorMessage = "Добавьте текст комментария!")]

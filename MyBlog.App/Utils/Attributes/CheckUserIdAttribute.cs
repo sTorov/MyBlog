@@ -54,12 +54,12 @@ namespace MyBlog.App.Utils.Attributes
         private void GetMethod(string userId, AuthorizationFilterContext context)
         {
             var path = context.HttpContext.Request.Path.ToString().ToLower() +
-                context.HttpContext.Request.QueryString;
+                (context.HttpContext.Request.QueryString.Value == "?" ? "" : context.HttpContext.Request.QueryString.Value);
             string? paramValue = context.HttpContext.Request.Query[ParameterName];
-
-            if (path == $"/{ActionName}?{ParameterName}={userId}")
+            
+            if (path.StartsWith($"/{ActionName}") && path.EndsWith($"?{ParameterName}={userId}"))
                 return;
-            else if (path == $"/{ActionName}" && paramValue == null)
+            else if (path.StartsWith($"/{ActionName}") && paramValue == null)
                 context.Result = new RedirectResult($"{path}?{ParameterName}={userId}");
             else
                 context.Result = new NotFoundResult();

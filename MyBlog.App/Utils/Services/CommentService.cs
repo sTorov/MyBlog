@@ -8,6 +8,8 @@ using MyBlog.Data.DBModels.Users;
 using MyBlog.App.Utils.Extensions;
 using MyBlog.Data.Repositories;
 using MyBlog.Data.Repositories.Interfaces;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Primitives;
 
 namespace MyBlog.App.Utils.Services
 {
@@ -30,37 +32,49 @@ namespace MyBlog.App.Utils.Services
             _commentRepository = (CommentRepository)_unitOfWork.GetRepository<Comment>();
         }
 
-        public async Task<(User?, Post?)> CheckDataAtCreateComment(CommentController controller, CommentCreateViewModel model)
+        public async Task<IActionResult?> CheckDataAtCreateComment(CommentController controller)
         {
-            var checkUser = await _userService.GetUserByIdAsync(model.UserId);
-            if (checkUser == null)
-                controller.ModelState.AddModelError(string.Empty, $"Пользователь с ID [{model.UserId}] не найден!");
+            if (!int.TryParse(controller.Request.Query["userId"].ToString(), out int userId) ||
+                await _userService.GetUserByIdAsync(userId) == null)
+                    return new NotFoundResult();
 
-            var checkPost = await _postService.GetPostByIdAsync(model.PostId);
-            if (checkPost == null)
-                controller.ModelState.AddModelError(string.Empty, $"Пост с ID [{model.PostId}] не найден!");
+            if (!int.TryParse(controller.Request.Query["postId"].ToString(), out int postId) ||
+                await _postService.GetPostByIdAsync(postId) == null)
+                    return new NotFoundResult();
 
-            return (checkUser, checkPost);
+            return null;
         }
 
-        public async Task CreateComment(User user, Post post, CommentCreateViewModel model)
+        public async Task<bool> CreateComment(CommentCreateViewModel model)
         {
+            var user = await _userService.GetUserByIdAsync(model.UserId);
+            if (user == null) return false;
+
+            var post = await _postService.GetPostByIdAsync(model.PostId);
+            if (post == null) return false;
+
             var comment = _mapper.Map<Comment>(model);
             comment.Post = post;
             comment.User = user;
 
             await _commentRepository.CreateAsync(comment);
+            return true;
         }
 
-        public async Task<CommentsViewModel> GetCommentsViewModel(int? postId)
+        public async Task<CommentsViewModel> GetCommentsViewModel(int? postId, string? userId)
         {
-            var model = new CommentsViewModel
-            {
-                Comments = postId == null
-                ? await _commentRepository.GetAllAsync()
-                : await _commentRepository.GetCommentsByPostId((int)postId)
-            };
+            var model = new CommentsViewModel();
 
+            if (postId == null && userId == null)
+                model.Comments = await _commentRepository.GetAllAsync();
+            else if (postId != null && userId == null)
+                model.Comments = await _commentRepository.GetCommentsByPostId((int)postId);
+            else if (postId == null && userId != null)
+                model.Comments = await _commentRepository.GetCommentsByUserId(Helper.GetIntValue(userId));
+            else
+                model.Comments = (await _commentRepository.GetCommentsByPostId((int)postId!))
+                    .Where(c => c.UserId == Helper.GetIntValue(userId!)).ToList();
+            
             return model;
         }
 

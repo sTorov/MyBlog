@@ -30,20 +30,11 @@
 <div>
     <h1>Создание комментария</h1>
 
-    <form method="post" asp-controller="Comment" asp-action="PostCreate">
+    <form method="post" asp-controller="Comment" asp-action="Create">
         <div asp-validation-summary="ModelOnly" class="warning"></div>
 
-        <div class="wrapper">
-            <label asp-for="PostId"></label>
-            <input asp-for="PostId" />
-            <span asp-validation-for="PostId" class="warning"></span>
-        </div>
-
-        <div class="wrapper">
-            <label asp-for="UserId"></label>
-            <input asp-for="UserId" />
-            <span asp-validation-for="UserId" class="warning"></span>
-        </div>
+        <input type="hidden" asp-for="PostId" value="@Context.Request.Query["postId"]" />
+        <input type="hidden" asp-for="UserId" value="@Context.Request.Query["userId"]" />
 
         <div class="wrapper">
             <label asp-for="Text"></label>

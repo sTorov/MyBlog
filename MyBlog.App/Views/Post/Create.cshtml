@@ -33,11 +33,7 @@
     <form method="post" asp-controller="Post" asp-action="PostCreate">
         <div asp-validation-summary="ModelOnly" class="warning"></div>
 
-        <div class="wrapper">
-            <label asp-for="UserId"></label>
-            <input asp-for="UserId" />
-            <span asp-validation-for="UserId" class="warning"></span>
-        </div>
+        <input type="hidden" asp-for="UserId" value="@Context.Request.Query["userId"]" />
 
         <div class="wrapper">
             <label asp-for="Title"></label>

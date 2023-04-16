@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MyBlog.App.Utils.Attributes;
 using MyBlog.App.Utils.Services.Interfaces;
 using MyBlog.App.ViewModels.Posts;
 using MyBlog.Data.DBModels.Tags;
@@ -16,6 +17,7 @@ namespace MyBlog.App.Controllers
             _postService = postService;
         }
 
+        [CheckUserId(parameterName: "userId", actionName: "CreatePost")]
         [HttpGet]
         [Route("CreatePost")]
         public IActionResult Create() => View();
