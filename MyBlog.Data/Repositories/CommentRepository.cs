@@ -7,10 +7,10 @@ namespace MyBlog.Data.Repositories
     {
         public CommentRepository(MyBlogContext context) : base(context) { }
 
-        public async Task<List<Comment>> GetCommentsByPostId(int postId) =>
+        public async Task<List<Comment>> GetCommentsByPostIdAsync(int postId) =>
             await Set.Where(c => c.PostId == postId).ToListAsync();
 
-        public async Task<List<Comment>> GetCommentsByUserId(int userId) =>
+        public async Task<List<Comment>> GetCommentsByUserIdAsync(int userId) =>
             await Set.Where(c => c.UserId == userId).ToListAsync();
     }
 }

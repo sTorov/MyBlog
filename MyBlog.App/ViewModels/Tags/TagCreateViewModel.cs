@@ -1,8 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using MyBlog.App.ViewModels.Tags.Interfaces;
+using System.ComponentModel.DataAnnotations;
 
 namespace MyBlog.App.ViewModels.Tags
 {
-    public class TagCreateViewModel
+    public class TagCreateViewModel : ITagViewModel
     {
         [Required(ErrorMessage = "Поле обязательно для заполнения!")]
         [Display(Name = "Имя тега")]

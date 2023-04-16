@@ -10,10 +10,12 @@ namespace MyBlog.App.Controllers
     public class PostController : Controller
     {
         private readonly IPostService _postService;
+        private readonly ITagService _tagService;
 
-        public PostController(IPostService postService)
+        public PostController(IPostService postService, ITagService tagService)
         {
             _postService = postService;
+            _tagService = tagService;
         }
 
         [CheckUserId(parameterName: "userId", actionName: "CreatePost")]
@@ -25,7 +27,7 @@ namespace MyBlog.App.Controllers
         [Route("CreatePost")]
         public async Task<IActionResult> Create(PostCreateViewModel model)
         {
-            var tags = await _postService.CreateTagAtPostAsync(model.PostTags);
+            var tags = await _tagService.CreateTagForPostAsync(model.PostTags);
 
             var result = await _postService.CreatePost(model, tags);
             if (!result)

@@ -3,10 +3,12 @@ using MyBlog.App.Controllers;
 using MyBlog.App.Utils.Extensions;
 using MyBlog.App.Utils.Services.Interfaces;
 using MyBlog.App.ViewModels.Tags;
+using MyBlog.App.ViewModels.Tags.Interfaces;
 using MyBlog.Data.DBModels.Posts;
 using MyBlog.Data.DBModels.Tags;
 using MyBlog.Data.Repositories;
 using MyBlog.Data.Repositories.Interfaces;
+using System.Text.RegularExpressions;
 
 namespace MyBlog.App.Utils.Services
 {
@@ -27,18 +29,22 @@ namespace MyBlog.App.Utils.Services
 
         public async Task<Tag?> GetTagByIdAsync(int id) => await _tagRepository.GetAsync(id);
 
-        public async Task<List<Tag>> GetAllTags() => await _tagRepository.GetAllAsync();
-
-        public async Task<TagsViewModel?> GetTagsViewModelAsync(int? id)
+        public async Task<TagsViewModel?> GetTagsViewModelAsync(int? tagId, string? postId)
         {
             var model = new TagsViewModel();
 
-            if(id == null)
-                model.Tags = await GetAllTags();
+            if(tagId == null)
+            {
+                model.Tags = postId == null
+                    ? await _tagRepository.GetAllAsync()
+                    : await _tagRepository.GetTagsByPostIdAsync(Helper.GetIntValue(postId));
+            }
             else
             {
-                var tag = await GetTagByIdAsync((int)id);
-                if(tag != null) model.Tags.Add(tag);
+                var tag = postId == null
+                    ? await GetTagByIdAsync(tagId ?? 0)
+                    : (await _tagRepository.GetTagsByPostIdAsync(Helper.GetIntValue(postId))).FirstOrDefault(t => t.Id == tagId);
+                if (tag != null) model.Tags.Add(tag);
             }
 
             return model;
@@ -47,26 +53,19 @@ namespace MyBlog.App.Utils.Services
         public async Task<TagEditViewModel?> GetTagEditViewModelAsync(int id)
         {
             var tag = await GetTagByIdAsync(id);
-            var model = tag == null 
-                ? null   
-                : _mapper.Map<TagEditViewModel>(tag);
+            var model = tag == null ? null : _mapper.Map<TagEditViewModel>(tag);
 
             return model;
         }
 
-        public async Task<Tag?> CheckDataAtCreateTagAsync(TagController controller, TagCreateViewModel model)
+        public async Task<Tag?> CheckTagNameAsync<T>(TagController controller, T model)
+            where T : ITagViewModel
         {
             var checkTag = await _tagRepository.GetTagByNameAsync(model.Name);
-            if (checkTag != null)
-                controller.ModelState.AddModelError(string.Empty, $"Тег с именем [{model.Name}] уже существует!");
+            var check = model is TagEditViewModel editModel 
+                ? (checkTag != null && checkTag.Id != editModel.Id) : checkTag != null;
 
-            return checkTag;
-        }
-
-        public async Task<Tag?> CheckDataAtEditTagAsync(TagController controller, TagEditViewModel model)
-        {
-            var checkTag = await _tagRepository.GetTagByNameAsync(model.Name);
-            if (checkTag != null)
+            if(check)
                 controller.ModelState.AddModelError(string.Empty, $"Тег с именем [{model.Name}] уже существует!");
 
             return checkTag;
@@ -77,6 +76,22 @@ namespace MyBlog.App.Utils.Services
             var tag = _mapper.Map<Tag>(model);
 
             await _tagRepository.CreateAsync(tag);
+        }
+
+        public async Task<List<Tag>?> CreateTagForPostAsync(string? postTags)
+        {
+            if (postTags == null) return null;
+
+            var tagSet = await CreateUndefinedTags(postTags ?? "");
+
+            var tags = new List<Tag>();
+            foreach (var tagName in tagSet)
+            {
+                var tag = await _tagRepository.GetTagByNameAsync(tagName);
+                if (tag != null) tags.Add(tag);
+            }
+
+            return tags;
         }
 
         public async Task<bool> UpdateTagAsync(TagEditViewModel model)
@@ -100,5 +115,16 @@ namespace MyBlog.App.Utils.Services
             return true;
         }
 
+        private async Task<IEnumerable<string>> CreateUndefinedTags(string stringTags)
+        {
+            var tagSet = Regex.Replace(stringTags, @"\s+", " ").Trim().Split(" ").ToHashSet();
+            var allTagsName = (await _tagRepository.GetAllAsync()).Select(t => t.Name);
+            var createdTags = tagSet.Except(allTagsName);
+
+            foreach (var tagName in createdTags)
+                await _tagRepository.CreateAsync(new Tag(tagName));
+
+            return tagSet;
+        }
     }
 }

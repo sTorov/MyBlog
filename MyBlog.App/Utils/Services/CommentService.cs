@@ -65,11 +65,11 @@ namespace MyBlog.App.Utils.Services
             if (postId == null && userId == null)
                 model.Comments = await _commentRepository.GetAllAsync();
             else if (postId != null && userId == null)
-                model.Comments = await _commentRepository.GetCommentsByPostId((int)postId);
+                model.Comments = await _commentRepository.GetCommentsByPostIdAsync((int)postId);
             else if (postId == null && userId != null)
-                model.Comments = await _commentRepository.GetCommentsByUserId(Helper.GetIntValue(userId));
+                model.Comments = await _commentRepository.GetCommentsByUserIdAsync(Helper.GetIntValue(userId));
             else
-                model.Comments = (await _commentRepository.GetCommentsByPostId((int)postId!))
+                model.Comments = (await _commentRepository.GetCommentsByPostIdAsync((int)postId!))
                     .Where(c => c.UserId == Helper.GetIntValue(userId!)).ToList();
             
             return model;

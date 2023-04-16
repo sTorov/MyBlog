@@ -5,7 +5,6 @@ using MyBlog.App.ViewModels.Tags;
 
 namespace MyBlog.App.Controllers
 {
-    [Authorize]
     public class TagController : Controller
     {
         private readonly ITagService _tagService;
@@ -15,49 +14,52 @@ namespace MyBlog.App.Controllers
             _tagService = tagService;
         }
 
+        [Authorize]
         [HttpGet]
         [Route("CreateTag")]
         public IActionResult Create() => View();
 
+        [Authorize]
         [HttpPost]
         [Route("CreateTag")]
-        public async Task<IActionResult> CreatePost(TagCreateViewModel model)
+        public async Task<IActionResult> Create(TagCreateViewModel model)
         {
-            _ = await _tagService.CheckDataAtCreateTagAsync(this, model);
-
+            _ = await _tagService.CheckTagNameAsync(this, model);
             if (ModelState.IsValid)
             {
                 await _tagService.CreateTagAsync(model);
                 return RedirectToAction("GetTag");
             }
             else
-                return View("Create", model);
+                return View(model);
         }
 
+        [Authorize]
         [HttpGet]
         [Route("GetTag/{id?}")]
         public async Task<IActionResult> GetTag([FromRoute] int? id)
         {
-            var model = await _tagService.GetTagsViewModelAsync(id);
+            var model = await _tagService.GetTagsViewModelAsync(id, Request.Query["postId"]);
 
             return View(model);
         }
 
+        [Authorize(Roles = "Admin, Moderator")]
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
             var model = await _tagService.GetTagEditViewModelAsync(id);
-            if (model == null)
-                return RedirectToAction("GetTag");
+
+            if (model == null) return NotFound();
 
             return View(model);
         }
 
+        [Authorize(Roles = "Admin, Moderator")]
         [HttpPost]
         public async Task<IActionResult> Edit(TagEditViewModel model)
         {
-            _ = await _tagService.CheckDataAtEditTagAsync(this, model);
-
+            _ = await _tagService.CheckTagNameAsync(this, model);
             if (ModelState.IsValid)
             {
                 await _tagService.UpdateTagAsync(model);
@@ -67,6 +69,7 @@ namespace MyBlog.App.Controllers
                 return View(model);
         }
 
+        [Authorize(Roles = "Admin, Moderator")]
         [HttpPost]
         public async Task<IActionResult> Remove(int id)
         {

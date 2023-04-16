@@ -14,5 +14,10 @@ namespace MyBlog.Data.Repositories
 
         public async Task<Tag?> GetTagByNameAsync(string name) => 
             await Set.Include(t => t.Posts).FirstOrDefaultAsync(t => t.Name == name);
+
+        public async Task<List<Tag>> GetTagsByPostIdAsync(int postId) =>
+            await Set.Include(t => t.Posts)
+            .SelectMany(t => t.Posts, (t, p) => new { Tag = t, PostId = p.Id })
+            .Where(o => o.PostId == postId).Select(o => o.Tag).ToListAsync();
     }
 }

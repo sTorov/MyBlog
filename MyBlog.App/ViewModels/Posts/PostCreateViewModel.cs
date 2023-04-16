@@ -6,7 +6,7 @@ namespace MyBlog.App.ViewModels.Posts
     {
         public int UserId { get; set; }
 
-        [Display(Name = "Теги (указать через запятую)")]
+        [Display(Name = "Теги (указать через пробел)")]
         public string? PostTags { get; set; }
 
         [Required(ErrorMessage = "Поле обязательно для заполнения!")]

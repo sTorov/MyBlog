@@ -10,7 +10,7 @@ namespace MyBlog.App.ViewModels.Posts
         [Display(Name = "Заголовок")]
         public string Title { get; set; }
 
-        [Display(Name = "Таги (указать через запятую)")]
+        [Display(Name = "Тэги (указать через пробел)")]
         public string? PostTags { get; set; }
 
         [Required(ErrorMessage = "Добавьте контент!")]

@@ -14,6 +14,5 @@ namespace MyBlog.App.Utils.Services.Interfaces
         Task<bool> DeletePost(int id);
         Task<Post?> GetPostByIdAsync(int id);
         Task<bool> UpdatePostAsync(PostEditViewModel model);
-        Task<List<Tag>?> CreateTagAtPostAsync(string? postTags);
     }
 }

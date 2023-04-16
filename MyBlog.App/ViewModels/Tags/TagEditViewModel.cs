@@ -1,8 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using MyBlog.App.ViewModels.Tags.Interfaces;
+using System.ComponentModel.DataAnnotations;
 
 namespace MyBlog.App.ViewModels.Tags
 {
-    public class TagEditViewModel
+    public class TagEditViewModel : ITagViewModel
     {
         public int Id { get; set; }
 
