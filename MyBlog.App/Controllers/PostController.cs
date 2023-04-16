@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using MyBlog.App.Utils.Attributes;
 using MyBlog.App.Utils.Services.Interfaces;
 using MyBlog.App.ViewModels.Posts;
-using MyBlog.Data.DBModels.Tags;
 
 namespace MyBlog.App.Controllers
 {
@@ -24,32 +23,29 @@ namespace MyBlog.App.Controllers
 
         [HttpPost]
         [Route("CreatePost")]
-        public async Task<IActionResult> PostCreate(PostCreateViewModel model)
+        public async Task<IActionResult> Create(PostCreateViewModel model)
         {
-            var creater = await _postService.CheckDataAtCreated(this, model);
+            var tags = await _postService.CreateTagAtPostAsync(model.PostTags);
 
-            if (ModelState.IsValid)
+            var result = await _postService.CreatePost(model, tags);
+            if (!result)
             {
-                List<Tag> tags = null!;
-                if (!string.IsNullOrEmpty(model.PostTags))
-                    tags = await _postService.CreateTagAtPostAsync(model.PostTags);
-
-                await _postService.CreatePost(creater!, model, tags);
-                return RedirectToAction("GetPost");
+                ModelState.AddModelError(string.Empty, "Не удалось создать статью!");
+                return View(model);
             }
-            else
-                return View("Create", model);
+            return RedirectToAction("GetPost");
         }
 
         [HttpGet]
-        [Route("GetPost/{userId?}")]
-        public async Task<IActionResult> GetPost([FromRoute]int? userId)
+        [Route("GetPost/{id?}")]
+        public async Task<IActionResult> GetPost([FromRoute] int? id)
         {
-            var model = await _postService.GetPostViewModel(userId);
+            var model = await _postService.GetPostViewModel(id, Request.Query["userId"]);
 
             return View(model);
         }
 
+        [CheckUserId(parameterName: "userId", fullAccess: "Admin, Moderator")]
         [HttpPost]
         public async Task<IActionResult> Remove(int id)
         {
@@ -58,13 +54,13 @@ namespace MyBlog.App.Controllers
             return RedirectToAction("GetPost");
         }
 
+        [CheckUserId(parameterName: "userId", actionName: "Post/Edit", fullAccess: "Admin, Moderator")]
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
-            var model = await _postService.GetPostEditViewModel(id);
+            var model = await _postService.GetPostEditViewModel(id, Request.Query["userId"]);
 
-            if (model == null)
-                return RedirectToAction("GetPost");
+            if (model == null) return NotFound();
 
             return View(model);
         }

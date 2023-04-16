@@ -8,7 +8,7 @@ using MyBlog.Data.DBModels.Posts;
 using MyBlog.Data.DBModels.Tags;
 using MyBlog.Data.DBModels.Users;
 
-namespace MyBlog.App.Utils
+namespace MyBlog.App
 {
     public class MapperProfile : Profile
     {

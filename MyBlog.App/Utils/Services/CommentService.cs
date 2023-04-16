@@ -3,13 +3,10 @@ using MyBlog.App.Controllers;
 using MyBlog.App.Utils.Services.Interfaces;
 using MyBlog.App.ViewModels.Comments;
 using MyBlog.Data.DBModels.Comments;
-using MyBlog.Data.DBModels.Posts;
-using MyBlog.Data.DBModels.Users;
 using MyBlog.App.Utils.Extensions;
 using MyBlog.Data.Repositories;
 using MyBlog.Data.Repositories.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Primitives;
 
 namespace MyBlog.App.Utils.Services
 {

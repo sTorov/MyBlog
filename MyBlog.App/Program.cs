@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using MyBlog.App.Utils.Extensions;
 using MyBlog.Data;
@@ -7,11 +6,8 @@ using MyBlog.Data.DBModels.Posts;
 using MyBlog.Data.DBModels.Tags;
 using MyBlog.Data.DBModels.Users;
 using MyBlog.Data.Repositories;
-using MyBlog.App.Utils;
 using System.Reflection;
 using MyBlog.Data.DBModels.Roles;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using System.Security.Claims;
 
 namespace MyBlog.App
 {
@@ -45,8 +41,8 @@ namespace MyBlog.App
 
             builder.Services.ConfigureApplicationCookie(opt =>
             {
-                opt.LoginPath = Constants.LOGIN_PATH;
-                opt.AccessDeniedPath = Constants.ACCESS_DENIED_PATH;
+                opt.LoginPath = "/Login";
+                opt.AccessDeniedPath = "/AccessDenied";
             });
 
             builder.Services.AddAuthorization();

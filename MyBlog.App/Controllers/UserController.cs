@@ -27,7 +27,7 @@ namespace MyBlog.App.Controllers
 
         [HttpPost]
         [Route("Register")]
-        public async Task<IActionResult> PostRegister(UserRegisterViewModel model)
+        public async Task<IActionResult> Register(UserRegisterViewModel model)
         {
             await _userService.CheckDataAtRegistration(this, model);
             if (ModelState.IsValid)
@@ -35,7 +35,7 @@ namespace MyBlog.App.Controllers
                 var (result, user) = await _userService.CreateUserAsync(model);
                 if (result.Succeeded)
                 {
-                    await _signInManager.SignInWithClaimsAsync(user, false, await _roleService.GetClaims(user));
+                    await _signInManager.SignInWithClaimsAsync(user, false, await _userService.GetClaims(user));
                     return RedirectToAction("Index", "Home");
                 }
                 else
@@ -54,7 +54,7 @@ namespace MyBlog.App.Controllers
         [HttpPost]
         [Route("Login")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> PostLogin(UserLoginViewModel model)
+        public async Task<IActionResult> Login(UserLoginViewModel model)
         {
             var user = await _userService.GetUserByEmailAsync(model.UserEmail);
             if(user != null)
@@ -62,7 +62,7 @@ namespace MyBlog.App.Controllers
                 var result = await _signInManager.CheckPasswordSignInAsync(user, model.Password, false);
                 if (result.Succeeded)
                 {
-                    await _signInManager.SignInWithClaimsAsync(user, false, await _roleService.GetClaims(user));
+                    await _signInManager.SignInWithClaimsAsync(user, false, await _userService.GetClaims(user));
                     return RedirectToAction("Index", "Home");
                 }
                 else
@@ -116,7 +116,7 @@ namespace MyBlog.App.Controllers
                 return NotFound();
         }
 
-        [Authorize, CheckUserId(parameterName: "Id", fullAccess: "Admin")]
+        [Authorize]
         [HttpPost]
         [Route("EditUser")]
         public async Task<IActionResult> Edit(UserEditViewModel model)

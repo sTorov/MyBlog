@@ -8,13 +8,12 @@ namespace MyBlog.App.Utils.Services.Interfaces
 {
     public interface IPostService
     {
-        Task<User?> CheckDataAtCreated(PostController controller, PostCreateViewModel model);
-        Task CreatePost(User user, PostCreateViewModel model, List<Tag> tags);
-        Task<PostsViewModel> GetPostViewModel(int? userId);
-        Task<PostEditViewModel?> GetPostEditViewModel(int id);
+        Task<bool> CreatePost(PostCreateViewModel model, List<Tag>? tags);
+        Task<PostsViewModel> GetPostViewModel(int? postId, string? userId);
+        Task<PostEditViewModel?> GetPostEditViewModel(int id, string? userId);
         Task<bool> DeletePost(int id);
         Task<Post?> GetPostByIdAsync(int id);
         Task<bool> UpdatePostAsync(PostEditViewModel model);
-        Task<List<Tag>> CreateTagAtPostAsync(string postTags);
+        Task<List<Tag>?> CreateTagAtPostAsync(string? postTags);
     }
 }

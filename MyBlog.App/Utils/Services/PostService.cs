@@ -1,11 +1,9 @@
 ﻿using AutoMapper;
-using MyBlog.App.Controllers;
 using MyBlog.App.Utils.Extensions;
 using MyBlog.App.Utils.Services.Interfaces;
 using MyBlog.App.ViewModels.Posts;
 using MyBlog.Data.DBModels.Posts;
 using MyBlog.Data.DBModels.Tags;
-using MyBlog.Data.DBModels.Users;
 using MyBlog.Data.Repositories;
 using MyBlog.Data.Repositories.Interfaces;
 using System.Text.RegularExpressions;
@@ -31,40 +29,44 @@ namespace MyBlog.App.Utils.Services
             _tagRepository = (TagRepository)_unitOfWork.GetRepository<Tag>();
         }
 
-        public async Task<User?> CheckDataAtCreated(PostController controller, PostCreateViewModel model)
+        public async Task<bool> CreatePost(PostCreateViewModel model, List<Tag>? tags)
         {
-            var creater = await _userService.GetUserByIdAsync(model.UserId);
-            if (creater == null)
-                controller.ModelState.AddModelError(string.Empty, $"Пользователя с ID [{model.UserId}] не существует!");
-            return creater;
-        }
+            var user = await _userService.GetUserByIdAsync(model.UserId);
+            if (user == null) return false;
 
-        public async Task CreatePost(User user, PostCreateViewModel model, List<Tag> tags)
-        {
             var post = _mapper.Map<Post>(model);
             post.User = user;
             if(tags != null) post.Tags = tags;
 
             await _postRepository.CreateAsync(post);
+            return true;
         }
 
-        public async Task<PostsViewModel> GetPostViewModel(int? userId) 
+        public async Task<PostsViewModel> GetPostViewModel(int? postId, string? userId) 
         {
             var model = new PostsViewModel();
 
-            model.Posts = userId == null
-                ? model.Posts = await _postRepository.GetAllAsync()
-                : model.Posts = await _postRepository.GetPostsByUserIdAsync((int)userId);  
+            if (postId == null && userId == null)
+                model.Posts = await _postRepository.GetAllAsync();
+            else if (postId == null && userId != null)
+                model.Posts = await _postRepository.GetPostsByUserIdAsync(Helper.GetIntValue(userId));
+            else
+            {
+                var post = await _postRepository.GetAsync(postId ?? 0);
+                if (post != null)
+                    model.Posts = new List<Post> { post };
+            }
             
             return model;
         }
 
-        public async Task<PostEditViewModel?> GetPostEditViewModel(int id)
+        public async Task<PostEditViewModel?> GetPostEditViewModel(int id, string? userId)
         {
             var post = await GetPostByIdAsync(id);
-            var model = post == null ? null : _mapper.Map<PostEditViewModel>(post);
+            if (post != null && post.UserId == Helper.GetIntValue(userId!))
+                return _mapper.Map<PostEditViewModel>(post);
 
-             return model;
+            return null;
         }
 
         public async Task<Post?> GetPostByIdAsync(int id) => await _postRepository.GetAsync(id);
@@ -96,8 +98,10 @@ namespace MyBlog.App.Utils.Services
             return true;
         }
 
-        public async Task<List<Tag>> CreateTagAtPostAsync(string postTags)
+        public async Task<List<Tag>?> CreateTagAtPostAsync(string? postTags)
         {
+            if (postTags == null) return null;
+            
             var normalizedStringTags = Regex.Replace(postTags, @"\s*", "");
             var tagSetName = normalizedStringTags.Split(",").ToHashSet();
             

@@ -60,11 +60,13 @@
                 </td>
                 <td>
                     <form method="post" asp-controller="Post" asp-action="Remove" asp-route-id="@post.Id">
+                        <input type="hidden" value="@post.UserId" name="userId"/>
                         <button type="submit">Удалить</button>
                     </form>
                 </td>
                 <td>
                     <form method="get" asp-controller="Post" asp-action="Edit" asp-route-id="@post.Id">
+                        <input type="hidden" value="@post.UserId" name="userId"/>
                         <button type="submit">Редактировать</button>
                     </form>
                 </td>

@@ -30,10 +30,10 @@
 <div>
     <h1>Создание статьи</h1>
 
-    <form method="post" asp-controller="Post" asp-action="PostCreate">
+    <form method="post" asp-controller="Post" asp-action="Create">
         <div asp-validation-summary="ModelOnly" class="warning"></div>
 
-        <input type="hidden" asp-for="UserId" value="@Context.Request.Query["userId"]" />
+        <input type="hidden" asp-for="UserId" value="@User.Claims.FirstOrDefault(c => c.Type == "UserID")?.Value" />
 
         <div class="wrapper">
             <label asp-for="Title"></label>

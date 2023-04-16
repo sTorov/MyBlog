@@ -62,7 +62,6 @@ namespace MyBlog.App.Controllers
             return View(model);
         }
 
-        [CheckUserId(parameterName: "userId", fullAccess: "Admin, Moderator")]
         [HttpPost]
         public async Task<IActionResult> Edit(CommentEditViewModel model)
         {
@@ -71,7 +70,7 @@ namespace MyBlog.App.Controllers
             return RedirectToAction("GetComment");
         }
 
-        [CheckUserId(parameterName: "UserId", fullAccess: "Admin, Moderator")]
+        [CheckUserId(parameterName: "userId", fullAccess: "Admin, Moderator")]
         [HttpPost]
         public async Task<IActionResult> Remove(int id)
         {

@@ -1,4 +1,4 @@
-﻿namespace MyBlog.App.Utils.Services
+﻿namespace MyBlog.App.Utils
 {
     public class Helper
     {

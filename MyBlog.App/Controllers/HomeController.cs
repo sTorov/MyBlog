@@ -9,7 +9,6 @@ namespace MyBlog.App.Controllers
     {
         public IActionResult Index()
         {
-            Console.WriteLine(HttpContext.Request.Method);
             if (User.Identity!.IsAuthenticated)
             {
                 var user = User;
