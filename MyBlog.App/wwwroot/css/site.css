@@ -53,6 +53,9 @@ body {
 .max-width-550 {
     max-width: 550px;
 }
+.max-width-450 {
+    max-width: 450px;
+}
 
 .error-message {
     position: absolute;
@@ -70,4 +73,8 @@ body {
 }
 .validation-summary-errors > ul{
     list-style: none;
+}
+
+.input-primary-board:focus{
+    border-color: var(--bs-primary);
 }

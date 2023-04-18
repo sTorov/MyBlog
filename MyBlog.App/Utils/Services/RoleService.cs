@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using MyBlog.App.Controllers;
 using MyBlog.App.Utils.Services.Interfaces;
+using MyBlog.App.ViewModels.Roles;
 using MyBlog.App.ViewModels.Users;
 using MyBlog.Data.DBModels.Roles;
 using MyBlog.Data.DBModels.Users;
-using System.Security.Claims;
 
 namespace MyBlog.App.Utils.Services
 {
@@ -12,11 +14,13 @@ namespace MyBlog.App.Utils.Services
     {
         private readonly RoleManager<Role> _roleManager;
         private readonly UserManager<User> _userManager;
+        private readonly IMapper _mapper;
 
-        public RoleService(RoleManager<Role> roleManager, UserManager<User> userManager)
+        public RoleService(RoleManager<Role> roleManager, UserManager<User> userManager, IMapper mapper)
         {
             _roleManager = roleManager;
             _userManager = userManager;
+            _mapper = mapper;
         }
 
         public async Task<List<Role>> GetRolesByUserAsync(int userId) =>
@@ -62,6 +66,38 @@ namespace MyBlog.App.Utils.Services
             }
 
             return roles;
+        }
+
+        public async Task<RolesViewModel?> GetRolesViewModelAsync(int? id)
+        {
+            var model = new RolesViewModel();
+            if (id == null) 
+                model.Roles = await _roleManager.Roles.ToListAsync();
+            else 
+            {
+                var role = await _roleManager.FindByIdAsync(id.ToString() ?? "");
+                if (role == null) return null;
+
+                model.Roles = new List<Role> { role };
+            }
+
+            return model;
+        }
+
+        public async Task<bool> CreateRoleAsync(RoleCreateViewModel model)
+        {
+            var role = _mapper.Map<Role>(model);
+            var result = await _roleManager.CreateAsync(role);
+
+            return result.Succeeded;
+        }
+
+        public async Task<Role?> CheckDataForCreateTag(RoleController controller, RoleCreateViewModel model)
+        {
+            var checkRole = await _roleManager.FindByNameAsync(model.Name);
+            if (checkRole != null)
+                controller.ModelState.AddModelError(string.Empty, $"Роль с именем [{model.Name}] уже существует!");
+            return checkRole;
         }
     }
 }

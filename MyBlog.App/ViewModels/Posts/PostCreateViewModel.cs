@@ -1,10 +1,13 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using MyBlog.Data.DBModels.Tags;
+using System.ComponentModel.DataAnnotations;
 
 namespace MyBlog.App.ViewModels.Posts
 {
     public class PostCreateViewModel
     {
         public int UserId { get; set; }
+
+        public List<Tag> AllTags { get; set; }
 
         [Display(Name = "Теги (указать через пробел)")]
         public string? PostTags { get; set; }

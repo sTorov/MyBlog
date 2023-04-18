@@ -1,0 +1,39 @@
+﻿@model MyBlog.App.ViewModels.Roles.RoleCreateViewModel
+@{
+    ViewData["Title"] = "Создание роли";
+}
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.1/jquery.validate.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.11/jquery.validate.unobtrusive.js"></script>
+
+<div class="max-width-450 m-auto">
+    <form class="mt-5" method="post" asp-controller="Role" asp-action="Create">
+        <h3>Добавление роли</h3>
+        <hr class="hr" />
+        <div asp-validation-summary="ModelOnly" class="text-danger fs-6"></div>
+
+        <div class="form-group mb-4 position-relative">
+            <div class="row">
+                <label asp-for="Name" class="form-label col-sm-3 col-form-label"></label>
+                <div class="col-sm-9">
+                    <input asp-for="Name" class="form-control" />
+                </div>
+            </div>
+            <span asp-validation-for="Name" class="text-danger error-message"></span>
+        </div>
+
+        <div class="form-group mb-4">
+            <div class="row">
+                <label asp-for="Description" class="form-label col-sm-3 col-form-label"></label>
+                <div class="col-sm-9">
+                    <textarea asp-for="Description" class="form-control textarea" rows="4"></textarea>
+                </div>
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary mb-2">Добавить</button>
+        <p class="form-text"><a asp-action="GetRole" asp-controller="Role" class="text-decoration-none">Перейти к списку всех ролей</a></p>
+    </form>
+</div>
+

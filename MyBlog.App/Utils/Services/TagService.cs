@@ -29,6 +29,8 @@ namespace MyBlog.App.Utils.Services
 
         public async Task<Tag?> GetTagByIdAsync(int id) => await _tagRepository.GetAsync(id);
 
+        public async Task<List<Tag>> GetAllTagsAsync() => await _tagRepository.GetAllAsync();
+
         public async Task<TagsViewModel?> GetTagsViewModelAsync(int? tagId, string? postId)
         {
             var model = new TagsViewModel();

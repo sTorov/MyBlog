@@ -1,0 +1,12 @@
+﻿@model MyBlog.App.ViewModels.Roles.RolesViewModel
+@{
+    ViewData["Title"] = "Роли";
+}
+
+<h3>Роли</h3>
+<div>
+    @foreach(var role in Model.Roles)
+    {
+        <p>@(role.Id) - @(role.Name)</p>
+    }
+</div>

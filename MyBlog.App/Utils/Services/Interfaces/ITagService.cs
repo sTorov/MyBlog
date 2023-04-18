@@ -11,6 +11,7 @@ namespace MyBlog.App.Utils.Services.Interfaces
     {
         Task<TagsViewModel?> GetTagsViewModelAsync(int? tagId, string? postId);
         Task<Tag?> GetTagByIdAsync(int id);
+        Task<List<Tag>> GetAllTagsAsync();
         Task<Tag?> CheckTagNameAsync<T>(TagController controller, T model) where T : ITagViewModel;
         Task CreateTagAsync(TagCreateViewModel model);
         Task<List<Tag>?> CreateTagForPostAsync(string? postTags);

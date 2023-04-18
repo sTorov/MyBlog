@@ -21,7 +21,11 @@ namespace MyBlog.App.Controllers
         [CheckUserId(parameterName: "userId", actionName: "CreatePost")]
         [HttpGet]
         [Route("CreatePost")]
-        public IActionResult Create() => View();
+        public async Task<IActionResult> Create()
+        {
+            var model = new PostCreateViewModel { AllTags = await _tagService.GetAllTagsAsync() };
+            return View(model);
+        }
 
         [HttpPost]
         [Route("CreatePost")]
