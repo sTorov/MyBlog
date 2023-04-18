@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MyBlog.App.Controllers;
 using MyBlog.App.Utils.Extensions;
@@ -40,7 +41,24 @@ namespace MyBlog.App.Utils.Services
         public async Task<IdentityResult> UpdateUserAsync(UserEditViewModel model, User user)
         {
             user.Convert(model);
-            return await _userManager.UpdateAsync(user);
+
+            var roles = new List<Role>();
+            foreach(var pair in model.AllRoles!)
+            {
+                if(pair.Value)
+                {
+                    var role = await _roleManager.FindByNameAsync(pair.Key);
+                    if(role != null)
+                        roles.Add(role);
+                }    
+            }
+            user.Roles = roles;
+            
+            var result = await _userManager.UpdateAsync(user);
+            if(result.Succeeded) 
+                return await _userManager.UpdateSecurityStampAsync(user);
+
+            return result;
         }
 
         public async Task<IdentityResult> UpdateUserAsync(User user) => await _userManager.UpdateAsync(user);
@@ -97,9 +115,9 @@ namespace MyBlog.App.Utils.Services
                 controller.ModelState.AddModelError(string.Empty, $"Адрес [{model.EmailReg}] уже зарегистрирован!");
         }
 
-        public async Task<User?> CheckDataAtEdition(UserController controller, UserEditViewModel model)
+        public async Task<User?> CheckDataAtEditionAsync(UserController controller, UserEditViewModel model)
         {
-            var currentUser = await _userManager.FindByIdAsync(model.Id.ToString());
+            var currentUser = await _userManager.Users.Include(u => u.Roles).FirstOrDefaultAsync(u => u.Id == model.Id);
             if (currentUser == null)
             {
                 controller.ModelState.AddModelError(string.Empty, $"Произошла непредвиденная ошибка! Пользователь не найден!");
@@ -115,6 +133,17 @@ namespace MyBlog.App.Utils.Services
                 controller.ModelState.AddModelError(string.Empty, $"Адрес [{model.Email}] уже зарегистрирован!");
 
             return currentUser;
+        }
+
+        public async Task<Dictionary<string, bool>> UpdateRoleStateForEditUserAsync(UserController controller)
+        {
+            var dict = new Dictionary<string, bool>();
+            var allRoles = await _roleManager.Roles.ToListAsync();
+
+            foreach (var role in allRoles)
+                dict.Add(role.Name!, controller.Request.Form[$"role{role.Name}"] == "on");
+
+            return dict;
         }
 
         public async Task<List<Claim>> GetClaims(User user)

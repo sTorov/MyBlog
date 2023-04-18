@@ -20,6 +20,7 @@ namespace MyBlog.App.Utils.Services.Interfaces
         Task<UserEditViewModel?> GetUserEditViewModelAsync(int id);
         Task<UsersViewModel?> GetUsersViewModelAsync(int? id);
         Task CheckDataAtRegistration(UserController controller, UserRegisterViewModel model);
-        Task<User?> CheckDataAtEdition(UserController controller, UserEditViewModel model);
+        Task<User?> CheckDataAtEditionAsync(UserController controller, UserEditViewModel model);
+        Task<Dictionary<string, bool>> UpdateRoleStateForEditUserAsync(UserController controller);
     }
 }

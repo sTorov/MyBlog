@@ -16,5 +16,6 @@ namespace MyBlog.App.Utils.Services.Interfaces
         Task<UserRolesViewModel?> GetUserRolesViewModelAsync(int id);
         
         Task<List<Role>> GetRolesFromModelAsync(UserRolesViewModel model);
+        Task<Dictionary<string, bool>> GetEnabledRolesForUser(int id);
     }
 }

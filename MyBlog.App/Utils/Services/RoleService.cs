@@ -24,12 +24,10 @@ namespace MyBlog.App.Utils.Services
         }
 
         public async Task<List<Role>> GetRolesByUserAsync(int userId) =>
-            await Task.Run(() => 
-                _roleManager.Roles.Include(r => r.Users).AsEnumerable()
+            await _roleManager.Roles.Include(r => r.Users)
                 .SelectMany(r => r.Users, (r, u) => new { Role = r, UserId = u.Id })
-                .Where(o => o.UserId == userId).Select(o => o.Role).ToList()
-            );
-
+                .Where(o => o.UserId == userId).Select(o => o.Role).ToListAsync();
+            
         public async Task<Role?> GetRoleByNameAsync(string roleName) => await _roleManager.FindByNameAsync(roleName);
 
         public async Task<UserRolesViewModel?> GetUserRolesViewModelAsync(int id)
@@ -98,6 +96,27 @@ namespace MyBlog.App.Utils.Services
             if (checkRole != null)
                 controller.ModelState.AddModelError(string.Empty, $"Роль с именем [{model.Name}] уже существует!");
             return checkRole;
+        }
+
+        public async Task<Dictionary<string, bool>> GetEnabledRolesForUser(int id)
+        {
+            var dictionary = new Dictionary<string, bool>();
+            var userRoles = await _roleManager.Roles.Include(r => r.Users)
+                .SelectMany(r => r.Users, (r, u) => new { r.Name, u.Id }).Where(o => o.Id == id)
+                .Select(i => i.Name).ToListAsync();
+
+            var allRoles = await _roleManager.Roles.Select(r => r.Name).ToListAsync();
+            var missRoles = allRoles.Except(userRoles);
+            
+            foreach(var role in missRoles)
+            {
+                if(role == null) continue;
+                dictionary.Add(role, false);
+            }
+            foreach (var role in userRoles)
+                dictionary.Add(role, true);
+
+            return dictionary.OrderBy(p => p.Key).ToDictionary(x => x.Key, x => x.Value);
         }
     }
 }

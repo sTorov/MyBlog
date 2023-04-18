@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using MyBlog.App.Utils.Attributes;
 using MyBlog.App.Utils.Services.Interfaces;
 using MyBlog.App.ViewModels.Users;
 using MyBlog.Data.DBModels.Users;
+using System.Security.Claims;
 
 namespace MyBlog.App.Controllers
 {
@@ -118,7 +120,10 @@ namespace MyBlog.App.Controllers
         {
             var model = await _userService.GetUserEditViewModelAsync(id);
             if (model != null)
+            {
+                model.AllRoles = await _roleService.GetEnabledRolesForUser(id);
                 return View(model);
+            }
             else
                 return NotFound();
         }
@@ -128,10 +133,11 @@ namespace MyBlog.App.Controllers
         [Route("EditUser")]
         public async Task<IActionResult> Edit(UserEditViewModel model)
         {
-            var currentUser = await _userService.CheckDataAtEdition(this, model);
+            var currentUser = await _userService.CheckDataAtEditionAsync(this, model);
 
             if (ModelState.IsValid)
             {
+                model.AllRoles = await _userService.UpdateRoleStateForEditUserAsync(this);
                 var result = await _userService.UpdateUserAsync(model, currentUser!);
 
                 if (result.Succeeded)
@@ -143,6 +149,7 @@ namespace MyBlog.App.Controllers
                 }
             }
 
+            model.AllRoles = await _roleService.GetEnabledRolesForUser(model.Id);
             return View(model);
         }
 

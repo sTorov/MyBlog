@@ -2,9 +2,11 @@
 
 namespace MyBlog.App.ViewModels.Users
 {
-    public class UserEditViewModel /*: IValidatableObject*/
+    public class UserEditViewModel
     {
-        public int Id { get; init; }
+        public int Id { get; set; }
+
+        public Dictionary<string, bool>? AllRoles { get; set; }
 
         [Required(ErrorMessage = "Поле обязательно для заполнения!")]
         [Display(Name = "Имя")]
@@ -33,12 +35,7 @@ namespace MyBlog.App.ViewModels.Users
 
         [Required(ErrorMessage = "Поле обязательно для заполнения!")]
         [DataType(DataType.ImageUrl)]
-        [Display(Name = "Ссыока на изображение")]
+        [Display(Name = "Ссылка на изображение")]
         public string Photo { get; set; }
-
-        //public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
-        //{
-            
-        //}
     }
 }
