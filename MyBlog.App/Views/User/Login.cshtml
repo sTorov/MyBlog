@@ -7,7 +7,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.1/jquery.validate.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.11/jquery.validate.unobtrusive.js"></script>
 
-<div class="form-width-30 m-auto">
+<div class="max-width-350 m-auto">
     <form class="mt-5" method="post" asp-controller="User" asp-action="Login">
         <h3>Вход в приложение</h3>
         <hr class="hr"/>
@@ -16,14 +16,22 @@
         <input type="hidden" asp-for="ReturnUrl" value="@Context.Request.Query["ReturnUrl"].ToString()"/>
 
         <div class="form-group mb-4 position-relative">
-            <label asp-for="UserEmail" class="form-label"></label>
-            <input asp-for="UserEmail" class="form-control" />
+            <div class="row">
+                <label asp-for="UserEmail" class="form-label col-sm-3 col-form-label"></label>
+                <div class="col-sm-9">
+                    <input asp-for="UserEmail" class="form-control" />
+                </div>
+            </div>
             <span asp-validation-for="UserEmail" class="text-danger error-message"></span>
         </div>
 
         <div class="form-group mb-4 position-relative">
-            <label asp-for="Password" class="form-label"></label>
-            <input asp-for="Password" class="form-control" />
+            <div class="row">
+                <label asp-for="Password" class="form-label col-sm-3 col-form-label"></label>
+                <div class="col-sm-9">
+                    <input asp-for="Password" class="form-control" />
+                </div>
+            </div>
             <span asp-validation-for="Password" class="text-danger error-message"></span>
         </div>
 

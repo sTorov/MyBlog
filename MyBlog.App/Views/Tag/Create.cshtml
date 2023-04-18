@@ -3,42 +3,27 @@
     ViewData["Title"] = "Создание тега";
 }
 
-<style>
-    .wrapper {
-        display: flex;
-    }
-
-    input, textarea {
-        margin-left: 5px;
-    }
-
-    textarea{
-        resize: none;
-    }
-
-    .warning {
-        color: red;
-        font-size: 12px;
-        margin-left: 10px;
-    }
-</style>
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.1/jquery.validate.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.11/jquery.validate.unobtrusive.js"></script>
 
-<div>
-    <h1>Создание тега</h1>
+<div class="max-width-350 m-auto">
+    <form class="mt-5" method="post" asp-controller="Tag" asp-action="Create">
+        <h3>Добавление тега</h3>
+        <hr class="hr" />
+        <div asp-validation-summary="ModelOnly" class="text-danger fs-6"></div>
 
-    <form method="post" asp-controller="Tag" asp-action="Create">
-        <div asp-validation-summary="ModelOnly" class="warning"></div>
-
-        <div class="wrapper">
-            <label asp-for="Name"></label>
-            <input asp-for="Name" />
-            <span asp-validation-for="Name" class="warning"></span>
+        <div class="form-group mb-4 position-relative">
+            <div class="row">
+                <label asp-for="Name" class="form-label col-sm-3 col-form-label"></label>
+                <div class="col-sm-9">
+                    <input asp-for="Name" class="form-control" />
+                </div>
+            </div>
+            <span asp-validation-for="Name" class="text-danger error-message"></span>
         </div>
 
-        <button type="submit">Создать</button>
+        <button type="submit" class="btn btn-primary mb-2">Добавить</button>
+        <p class="form-text"><a asp-action="GetTag" asp-controller="Tag" class="text-decoration-none">Перейти к списку всех тегов</a></p>
     </form>
 </div>

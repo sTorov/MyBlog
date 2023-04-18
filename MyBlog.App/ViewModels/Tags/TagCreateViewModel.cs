@@ -6,7 +6,7 @@ namespace MyBlog.App.ViewModels.Tags
     public class TagCreateViewModel : ITagViewModel
     {
         [Required(ErrorMessage = "Поле обязательно для заполнения!")]
-        [Display(Name = "Имя тега")]
+        [Display(Name = "Название")]
         public string Name { get; set; }
     }
 }

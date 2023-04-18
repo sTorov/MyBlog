@@ -5,10 +5,18 @@
 @if (SignInManager.IsSignedIn(User))
 {
     <ul class="navbar-nav flex-grow-1">
-        @if (User.IsInRole("Admin") || User.IsInRole("Moderator"))
-        {
-            <partial name="_Navbar"/>
-        }
+        <li class="nav-item">
+            <a class="nav-link" asp-action="GetTag" asp-controller="Tag">Теги</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" asp-action="GetComment" asp-controller="Comment">Комментарии</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" asp-action="GetUser" asp-controller="User">Пользователи</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" asp-action="GetRoles" asp-controller="User">Роли</a>
+        </li>
     </ul>
 
     <ul class="navbar-nav">
