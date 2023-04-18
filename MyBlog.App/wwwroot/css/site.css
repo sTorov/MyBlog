@@ -8,9 +8,9 @@ html {
   }
 }
 
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+/*.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
   box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
-}
+}*/
 
 html {
   position: relative;
@@ -19,4 +19,52 @@ html {
 
 body {
   margin-bottom: 60px;
+}
+
+/*.btn-text-gray {
+    color: var(--bs-gray-400);
+    transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out;
+}
+    .btn-text-gray:hover {
+        color: var(--bs-gray-500);
+        transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out;
+    }*/
+
+.hr{
+    background-color: gray;
+}
+
+.dropdown-menu-dark .dropdown-item:active {
+    color: #fff;
+    background-color: var(--bs-gray-600);
+}
+
+.form-width-30{
+    width: 30%;
+    min-width:350px;
+    max-width:450px;
+}
+@media(max-width:400px){
+    .form-width-30{
+        width: auto;
+        min-width: initial;
+    }
+}
+
+.error-message {
+    position: absolute;
+    font-size: 11px;
+    right: 0;
+}
+@media(max-width: 300px){
+    .error-message{
+        display: none;
+    }
+}
+
+.input-validation-error {
+    border-color: var(--bs-danger);
+}
+.validation-summary-errors > ul{
+    list-style: none;
 }

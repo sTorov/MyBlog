@@ -39,6 +39,8 @@ namespace MyBlog.App.Controllers
         [Route("GetTag/{id?}")]
         public async Task<IActionResult> GetTag([FromRoute] int? id)
         {
+            var r = Request.RouteValues;
+
             var model = await _tagService.GetTagsViewModelAsync(id, Request.Query["postId"]);
 
             return View(model);

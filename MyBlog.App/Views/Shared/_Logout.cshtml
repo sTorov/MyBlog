@@ -1,0 +1,51 @@
+﻿@using Microsoft.AspNetCore.Identity;
+@using MyBlog.Data.DBModels.Users;
+@inject SignInManager<User> SignInManager
+
+@if (SignInManager.IsSignedIn(User))
+{
+    <ul class="navbar-nav flex-grow-1">
+        @if (User.IsInRole("Admin") || User.IsInRole("Moderator"))
+        {
+            <partial name="_Navbar"/>
+        }
+    </ul>
+
+    <ul class="navbar-nav">
+
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-bs-toggle="dropdown">
+                @User.Identity!.Name
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark" id="navbarDropdownMenuLink">
+                <li>
+                    <a class="dropdown-item @(Context.Request.Path == "/EditUser" ? "disabled" : "")" asp-action="Edit" asp-controller="User"
+                   asp-route-id="@User.Claims.FirstOrDefault(c => c.Type == "UserID")?.Value">Профиль</a></li>
+                <li>
+                    <hr class="dropdown-divider" />
+                </li>
+                <li>
+                    <a class="dropdown-item" href="#" onclick="document.getElementById('logout').submit()">Выход</a>
+                    <form id="logout" method="post" asp-controller="User" asp-action="Logout" asp-route-returnUrl="@(Context.Request.Path + Context.Request.QueryString)"></form>
+                </li>
+            </ul>
+        </li>
+    </ul>    
+}
+else
+{
+    <ul class="navbar-nav flex-grow-1 justify-content-end">
+        @if(Context.Request.Path != "/Register")
+        {
+            <li class="nav-item">
+                <a class="nav-link" asp-controller="User" asp-action="Register">Регистрация</a>
+            </li>
+        }
+        @if(Context.Request.Path != "/Login")
+        {
+            <li class="nav-item">
+                <a class="nav-link" asp-controller="User" asp-action="Login">Войти</a>
+            </li>
+        }        
+    </ul>
+}

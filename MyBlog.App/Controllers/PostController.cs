@@ -60,6 +60,8 @@ namespace MyBlog.App.Controllers
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
+            var r = Request.RouteValues;
+
             var model = await _postService.GetPostEditViewModel(id, Request.Query["userId"]);
 
             if (model == null) return NotFound();

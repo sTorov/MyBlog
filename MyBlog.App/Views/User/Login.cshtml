@@ -3,45 +3,34 @@
     ViewData["Title"] = "Авторизация"; 
 }
 
-<style>
-    .wrapper{
-        display: flex;
-    }
-    input{
-        margin-left: 5px;
-    }
-    .warning{
-        color: red;
-        font-size: 12px;
-        margin-left: 10px;
-    }
-</style>
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.1/jquery.validate.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.11/jquery.validate.unobtrusive.js"></script>
 
-<div>
-    <h1>Авторизация пользователя</h1>
-
-    <form method="post" asp-controller="User" asp-action="Login">
-        <div asp-validation-summary="ModelOnly" class="warning"></div>
+<div class="form-width-30 m-auto">
+    <form class="mt-5" method="post" asp-controller="User" asp-action="Login">
+        <h3>Вход в приложение</h3>
+        <hr class="hr"/>
+        <div asp-validation-summary="ModelOnly" class="text-danger fs-6"></div>
 
         <input type="hidden" asp-for="ReturnUrl" value="@Context.Request.Query["ReturnUrl"].ToString()"/>
 
-        <div class="wrapper">
-            <label asp-for="UserEmail"></label>
-            <input asp-for="UserEmail" />
-            <span asp-validation-for="UserEmail" class="warning"></span>
+        <div class="form-group mb-4 position-relative">
+            <label asp-for="UserEmail" class="form-label"></label>
+            <input asp-for="UserEmail" class="form-control" />
+            <span asp-validation-for="UserEmail" class="text-danger error-message"></span>
         </div>
 
-        <div class="wrapper">
-            <label asp-for="Password"></label>
-            <input asp-for="Password" />
-            <span asp-validation-for="Password" class="warning"></span>
+        <div class="form-group mb-4 position-relative">
+            <label asp-for="Password" class="form-label"></label>
+            <input asp-for="Password" class="form-control" />
+            <span asp-validation-for="Password" class="text-danger error-message"></span>
         </div>
 
-        <button type="submit">Войти</button>
+        <button type="submit" class="btn btn-primary mb-2">Войти</button>
+        <p class="form-text">Еще нет аккаунта? <a asp-action="Register" asp-controller="User" class="text-decoration-none">Зарегистрируйтесь</a></p>
     </form>
 </div>
+
+
 

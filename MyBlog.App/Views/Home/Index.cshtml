@@ -4,14 +4,14 @@
     var user = (ClaimsPrincipal)ViewData["User"];
 }
 
-<div class="text-center">
+<div class="text-start">
     @if(user == null)
     {
-        <h1 class="display-4">Welcome</h1>
-        <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+        <h1 class="mt-5 mb-5 display-5 text-center">Добро пожаловать в MyBlog</h1>
     }
     else
     {
-        <h2>Hello @(user.Identity!.Name)</h2>    
+        <h3 class="mt-5">Все статьи</h3>
+        <a href="#" class="text-decoration-none">Добавить статью</a>
     }
 </div>
