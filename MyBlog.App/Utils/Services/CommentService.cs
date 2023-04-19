@@ -29,20 +29,7 @@ namespace MyBlog.App.Utils.Services
             _commentRepository = (CommentRepository)_unitOfWork.GetRepository<Comment>();
         }
 
-        public async Task<IActionResult?> CheckDataAtCreateComment(CommentController controller)
-        {
-            if (!int.TryParse(controller.Request.Query["userId"].ToString(), out int userId) ||
-                await _userService.GetUserByIdAsync(userId) == null)
-                    return new NotFoundResult();
-
-            if (!int.TryParse(controller.Request.Query["postId"].ToString(), out int postId) ||
-                await _postService.GetPostByIdAsync(postId) == null)
-                    return new NotFoundResult();
-
-            return null;
-        }
-
-        public async Task<bool> CreateComment(CommentCreateViewModel model)
+        public async Task<bool> CreateCommentAsync(CommentCreateViewModel model)
         {
             var user = await _userService.GetUserByIdAsync(model.UserId);
             if (user == null) return false;
@@ -54,11 +41,11 @@ namespace MyBlog.App.Utils.Services
             comment.Post = post;
             comment.User = user;
 
-            await _commentRepository.CreateAsync(comment);
+            if(await _commentRepository.CreateAsync(comment) == 0) return false;
             return true;
         }
 
-        public async Task<CommentsViewModel> GetCommentsViewModel(int? postId, string? userId)
+        public async Task<CommentsViewModel> GetCommentsViewModelAsync(int? postId, int? userId)
         {
             var model = new CommentsViewModel();
 
@@ -67,42 +54,49 @@ namespace MyBlog.App.Utils.Services
             else if (postId != null && userId == null)
                 model.Comments = await _commentRepository.GetCommentsByPostIdAsync((int)postId);
             else if (postId == null && userId != null)
-                model.Comments = await _commentRepository.GetCommentsByUserIdAsync(Helper.GetIntValue(userId));
+                model.Comments = await _commentRepository.GetCommentsByUserIdAsync((int)userId);
             else
                 model.Comments = (await _commentRepository.GetCommentsByPostIdAsync((int)postId!))
-                    .Where(c => c.UserId == Helper.GetIntValue(userId!)).ToList();
+                    .Where(c => c.UserId == (int)userId!).ToList();
             
             return model;
         }
 
         public async Task<Comment?> GetCommentByIdAsync(int id) => await _commentRepository.GetAsync(id);
 
-        public async Task<bool> DeleteComment(int id)
+        public async Task<bool> DeleteCommentAsync(int id, int? userId, bool fullAccess)
         {
             var deletedComment = await GetCommentByIdAsync(id);
-            if (deletedComment == null)
-                return false;
+            var check = fullAccess
+                ? deletedComment != null
+                : deletedComment != null && deletedComment.UserId == userId;
 
-            await _commentRepository.DeleteAsync(deletedComment);
+            if (!check) return false;
+
+            if(await _commentRepository.DeleteAsync(deletedComment!) == 0) return false;
             return true;
         }
 
-        public async Task<CommentEditViewModel?> GetCommentEditViewModel(int id)
+        public async Task<CommentEditViewModel?> GetCommentEditViewModelAsync(int id, int? userId, bool fullAccess)
         {
             var comment = await GetCommentByIdAsync(id);
-            var model = comment == null ? null : _mapper.Map<CommentEditViewModel>(comment);
+            var check = fullAccess
+                ? comment != null
+                : comment != null && comment.UserId == userId;
+
+            var model = !check ? null : _mapper.Map<CommentEditViewModel>(comment);
 
             return model;
         }
 
-        public async Task<bool> UpdateComment(CommentEditViewModel model)
+        public async Task<bool> UpdateCommentAsync(CommentEditViewModel model)
         {
             var currentComment = await GetCommentByIdAsync(model.Id);
             if (currentComment == null)
                 return false;
 
             currentComment.Convert(model);
-            await _commentRepository.UpdateAsync(currentComment);
+            if(await _commentRepository.UpdateAsync(currentComment) == 0) return false;
             return true;
         }
     }

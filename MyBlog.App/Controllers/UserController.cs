@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using MyBlog.App.Utils.Attributes;
@@ -30,13 +29,13 @@ namespace MyBlog.App.Controllers
         [Route("Register")]
         public async Task<IActionResult> Register(UserRegisterViewModel model)
         {
-            await _userService.CheckDataAtRegistration(this, model);
+            await _userService.CheckDataAtRegistrationAsync(this, model);
             if (ModelState.IsValid)
             {
                 var (result, user) = await _userService.CreateUserAsync(model);
                 if (result.Succeeded)
                 {
-                    await _signInManager.SignInWithClaimsAsync(user, false, await _userService.GetClaims(user));
+                    await _signInManager.SignInWithClaimsAsync(user, false, await _userService.GetClaimsAsync(user));
                     return RedirectToAction("Index", "Home");
                 }
                 else
@@ -49,28 +48,28 @@ namespace MyBlog.App.Controllers
         }
 
         [HttpGet]
-        [Route("Login")]
+        [Route("Login/{userId?}")]
         public IActionResult Login() => View();
 
         [HttpPost]
-        [Route("Login")]
+        [Route("Login/{userId?}")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Login(UserLoginViewModel model)
+        public async Task<IActionResult> Login(UserLoginViewModel model, [FromRoute] int? userId)
         {
-            var user = await _userService.GetUserByEmailAsync(model.UserEmail);
-            if (user == null)
-                ModelState.AddModelError(string.Empty, "Неверный email или(и) пароль!");
-
+            var user = await _userService.CheckDataAtLoginAsync(this, model);
             if(ModelState.IsValid)
             {
                 var result = await _signInManager.CheckPasswordSignInAsync(user!, model.Password, false);
 
                 if (result.Succeeded)
                 {
-                    await _signInManager.SignInWithClaimsAsync(user!, false, await _userService.GetClaims(user!));
+                    var claims = await _userService.GetClaimsAsync(user!);
+                    await _signInManager.SignInWithClaimsAsync(user!, false, claims);
 
-                    if (!string.IsNullOrEmpty(model.ReturnUrl) && Url.IsLocalUrl(model.ReturnUrl))
+                    var check = userId != null && claims.FirstOrDefault(c => c.Type == "UserID")?.Value == userId.ToString();
+                    if (!string.IsNullOrEmpty(model.ReturnUrl) && Url.IsLocalUrl(model.ReturnUrl) && check)
                         return Redirect(model.ReturnUrl);
+
                     return RedirectToAction("Index", "Home");
                 }
                 else
@@ -84,63 +83,64 @@ namespace MyBlog.App.Controllers
         [HttpPost]
         [Route("Logout")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Logout(string returnUrl)
+        public async Task<IActionResult> Logout([FromQuery] string returnUrl,[FromQuery] int? userId)
         {
             await _signInManager.SignOutAsync();
-            return RedirectToAction("Login", new { returnUrl });
+            return RedirectToAction("Login", new { returnUrl, userId });
         }
 
-        [Authorize, CheckUserId(parameterName: "id", actionName: "GetUser", fullAccess: "Admin")]
+        [Authorize(Roles = "Admin")]
         [HttpGet]
-        [Route("GetUser")]
-        public async Task<IActionResult> GetUser(int? id = null)
+        [Route("GetUsers/{id?}")]
+        public async Task<IActionResult> GetUsers([FromRoute] int? id)
         {
             var model = await _userService.GetUsersViewModelAsync(id);
             return View(model);
         }
 
-        [Authorize, CheckUserId(parameterName: "id", fullAccess: "Admin")]
+        [Authorize]
         [HttpPost]
-        public async Task<IActionResult> Remove(int id)
+        public async Task<IActionResult> Remove([FromRoute] int id, [FromForm] int? userId)
         {
-            _ = await _userService.DeleteByIdAsync(id);
+            var result = await _userService.DeleteByIdAsync(id, userId,  User.IsInRole("Admin"));
+            if (!result)
+                return BadRequest();
 
-            if(User.IsInRole("Admin"))
-                return RedirectToAction("GetUser");
+            if(User.IsInRole("Admin")) return RedirectToAction("GetUsers");
 
             await _signInManager.SignOutAsync();
             return RedirectToAction("Index", "Home");
         }
 
-        [Authorize, CheckUserId(parameterName: "id", actionName: "EditUser", fullAccess: "Admin")]
+        [Authorize, CheckParameter(parameterName: "userId", path: "EditUser")]
         [HttpGet]
-        [Route("EditUser")]
-        public async Task<IActionResult> Edit(int id)
+        [Route("EditUser/{id?}")]
+        public async Task<IActionResult> Edit([FromRoute]int id, [FromQuery] int? userId)
         {
-            var model = await _userService.GetUserEditViewModelAsync(id);
-            if (model != null)
-            {
-                model.AllRoles = await _roleService.GetEnabledRolesForUser(id);
-                return View(model);
-            }
-            else
-                return NotFound();
+            var model = await _userService.GetUserEditViewModelAsync(id, userId, User.IsInRole("Admin"));
+            if(model == null)
+                return BadRequest();
+
+            model.AllRoles = await _roleService.GetEnabledRolesForUserAsync(id);
+            return View(model);
         }
 
         [Authorize]
         [HttpPost]
-        [Route("EditUser")]
+        [Route("EditUser/{id}")]
         public async Task<IActionResult> Edit(UserEditViewModel model)
         {
             var currentUser = await _userService.CheckDataAtEditionAsync(this, model);
-
             if (ModelState.IsValid)
             {
                 model.AllRoles = await _userService.UpdateRoleStateForEditUserAsync(this);
                 var result = await _userService.UpdateUserAsync(model, currentUser!);
 
                 if (result.Succeeded)
-                    return RedirectToAction("GetUser");
+                {
+                    if(User.IsInRole("Admin")) return RedirectToAction("GetUsers");
+                    return RedirectToAction("Index", "Home");
+                }
                 else
                 {
                     foreach (var error in result.Errors)
@@ -148,7 +148,7 @@ namespace MyBlog.App.Controllers
                 }
             }
 
-            model.AllRoles = await _roleService.GetEnabledRolesForUser(model.Id);
+            model.AllRoles = await _roleService.GetEnabledRolesForUserAsync(model.Id);
             return View(model);
         }
     }

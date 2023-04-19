@@ -12,6 +12,9 @@ namespace MyBlog.Data.Repositories
         public async override Task<List<Tag>> GetAllAsync() =>
             await Set.Include(t => t.Posts).ToListAsync();
 
+        public override async Task<Tag?> GetAsync(int id) => 
+            await Set.Include(t => t.Posts).FirstOrDefaultAsync(t => t.Id == id);
+
         public async Task<Tag?> GetTagByNameAsync(string name) => 
             await Set.Include(t => t.Posts).FirstOrDefaultAsync(t => t.Name == name);
 

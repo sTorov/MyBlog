@@ -51,7 +51,7 @@ namespace MyBlog.App.Utils.Services
             return result.Succeeded;
         }
 
-        public async Task<Role?> CheckDataForCreateTag(RoleController controller, RoleCreateViewModel model)
+        public async Task<Role?> CheckDataForCreateTagAsync(RoleController controller, RoleCreateViewModel model)
         {
             var checkRole = await _roleManager.FindByNameAsync(model.Name);
             if (checkRole != null)
@@ -59,7 +59,7 @@ namespace MyBlog.App.Utils.Services
             return checkRole;
         }
 
-        public async Task<Dictionary<string, bool>> GetEnabledRolesForUser(int id)
+        public async Task<Dictionary<string, bool>> GetEnabledRolesForUserAsync(int id)
         {
             var dictionary = new Dictionary<string, bool>();
             var userRoles = await _roleManager.Roles.Include(r => r.Users)

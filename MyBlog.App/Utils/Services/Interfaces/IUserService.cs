@@ -14,11 +14,12 @@ namespace MyBlog.App.Utils.Services.Interfaces
         Task<List<User>> GetAllUsersAsync();
         Task<User?> GetUserByIdAsync(int id);
         Task<User?> GetUserByEmailAsync(string email);
-        Task<bool> DeleteByIdAsync(int id);
-        Task<List<Claim>> GetClaims(User user);
-        Task<UserEditViewModel?> GetUserEditViewModelAsync(int id);
+        Task<bool> DeleteByIdAsync(int id, int? userId, bool fullAccess);
+        Task<List<Claim>> GetClaimsAsync(User user);
+        Task<UserEditViewModel?> GetUserEditViewModelAsync(int id, int? userId, bool fullAccess);
         Task<UsersViewModel?> GetUsersViewModelAsync(int? id);
-        Task CheckDataAtRegistration(UserController controller, UserRegisterViewModel model);
+        Task CheckDataAtRegistrationAsync(UserController controller, UserRegisterViewModel model);
+        Task<User?> CheckDataAtLoginAsync(UserController controller, UserLoginViewModel model);
         Task<User?> CheckDataAtEditionAsync(UserController controller, UserEditViewModel model);
         Task<Dictionary<string, bool>> UpdateRoleStateForEditUserAsync(UserController controller);
     }

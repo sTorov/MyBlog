@@ -10,12 +10,11 @@ namespace MyBlog.App.Utils.Services.Interfaces
 {
     public interface ICommentService
     {
-        Task<IActionResult?> CheckDataAtCreateComment(CommentController controller);
-        Task<bool> CreateComment(CommentCreateViewModel model);
-        Task<CommentsViewModel> GetCommentsViewModel(int? postId, string? userId);
+        Task<bool> CreateCommentAsync(CommentCreateViewModel model);
+        Task<CommentsViewModel> GetCommentsViewModelAsync(int? postId, int? userId);
         Task<Comment?> GetCommentByIdAsync(int id);
-        Task<CommentEditViewModel?> GetCommentEditViewModel(int id);
-        Task<bool> UpdateComment(CommentEditViewModel model);
-        Task<bool> DeleteComment(int id);
+        Task<CommentEditViewModel?> GetCommentEditViewModelAsync(int id, int? userId, bool fullAccess);
+        Task<bool> UpdateCommentAsync(CommentEditViewModel model);
+        Task<bool> DeleteCommentAsync(int id, int? userId, bool fullAccess);
     }
 }

@@ -19,45 +19,38 @@ namespace MyBlog.App.Controllers
 
         }
 
-        [HttpGet]
-        [Route("CreateComment")]
-        public async Task<IActionResult> Create()
-        {
-            var result = await _commentService.CheckDataAtCreateComment(this);
-            return result ?? View();
-        }
-
         [HttpPost]
         [Route("CreateComment")]
         public async Task<IActionResult> Create(CommentCreateViewModel model)
         {
-            var result = await _commentService.CreateComment(model);
-
+            var result = await _commentService.CreateCommentAsync(model);
             if (!result)
                 return BadRequest();
 
-            return RedirectToAction("GetComment");
+            return RedirectToAction("GetComments");
         }
 
-        [CheckUserId(parameterName: "userId", actionName: "GetComment", fullAccess: "Admin, Moderator")]
+        [Authorize(Roles = "Admin, Moderator")]
         [HttpGet]
-        [Route("GetComment/{postId?}")]
-        public async Task<IActionResult> GetComment([FromRoute] int? postId)
+        [Route("GetComments/{postId?}")]
+        public async Task<IActionResult> GetComments([FromRoute] int? postId, [FromQuery] int? userId)
         {
             if(postId != null && await _postService.GetPostByIdAsync((int)postId) == null)
                 return NotFound();
 
-            var model = await _commentService.GetCommentsViewModel(postId, Request.Query["userId"]);
+            var model = await _commentService.GetCommentsViewModelAsync(postId, userId);
                 return View(model);
         }
 
-        [CheckUserId(parameterName: "userId", actionName: "Comment/Edit", fullAccess: "Admin, Moderator")]
+        [CheckParameter(parameterName: "userId", path: "Comment/Edit")]
         [HttpGet]
-        public async Task<IActionResult> Edit(int id)
+        public async Task<IActionResult> Edit([FromRoute] int id, [FromQuery] int? userId)
         {
-            var model = await _commentService.GetCommentEditViewModel(id);
+            var access = User.IsInRole("Admin") || User.IsInRole("Moderator");
+            var model = await _commentService.GetCommentEditViewModelAsync(id, userId, access);
 
-            if (model == null) return NotFound();
+            if (model == null)
+                return BadRequest();
 
             return View(model);
         }
@@ -65,18 +58,22 @@ namespace MyBlog.App.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(CommentEditViewModel model)
         {
-            _ = await _commentService.UpdateComment(model);
+            var result = await _commentService.UpdateCommentAsync(model);
+            if(!result)
+                return BadRequest();
 
-            return RedirectToAction("GetComment");
+            return RedirectToAction("GetComments");
         }
 
-        [CheckUserId(parameterName: "userId", fullAccess: "Admin, Moderator")]
         [HttpPost]
-        public async Task<IActionResult> Remove(int id)
+        public async Task<IActionResult> Remove([FromRoute] int id, [FromForm] int? userId)
         {
-            _ = await _commentService.DeleteComment(id);
+            var access = User.IsInRole("Admin") || User.IsInRole("Moderator");
+            var result = await _commentService.DeleteCommentAsync(id, userId, access);
+            if(!result)
+                return BadRequest();
 
-            return RedirectToAction("GetComment");
+            return RedirectToAction("GetComments");
         }
     }
 }

@@ -18,7 +18,6 @@ namespace MyBlog.App.Controllers
             _tagService = tagService;
         }
 
-        [CheckUserId(parameterName: "userId", actionName: "CreatePost")]
         [HttpGet]
         [Route("CreatePost")]
         public async Task<IActionResult> Create()
@@ -33,44 +32,44 @@ namespace MyBlog.App.Controllers
         {
             var tags = await _tagService.CreateTagForPostAsync(model.PostTags);
 
-            var result = await _postService.CreatePost(model, tags);
+            var result = await _postService.CreatePostAsync(model, tags);
             if (!result)
             {
                 ModelState.AddModelError(string.Empty, "Не удалось создать статью!");
                 return View(model);
             }
-            return RedirectToAction("GetPost");
+            return RedirectToAction("GetPosts");
         }
 
         [HttpGet]
-        [Route("GetPost/{id?}")]
-        public async Task<IActionResult> GetPost([FromRoute] int? id)
+        [Route("GetPosts")]
+        public async Task<IActionResult> GetPosts([FromQuery] int? userId)
         {
-            var model = await _postService.GetPostViewModel(id, Request.Query["userId"]);
-
+            var model = await _postService.GetPostViewModelAsync(userId);
             return View(model);
         }
 
-        [CheckUserId(parameterName: "userId", fullAccess: "Admin, Moderator")]
         [HttpPost]
-        public async Task<IActionResult> Remove(int id)
+        public async Task<IActionResult> Remove([FromRoute] int id, [FromForm] int userId)
         {
-            var result = await _postService.DeletePost(id);
-            if (!result)
-                return BadRequest();
+            var access = User.IsInRole("Admin") || User.IsInRole("Moderator");
+            var result = await _postService.DeletePostAsync(id, userId, access);
 
-            return RedirectToAction("GetPost");
+            if (!result) return BadRequest();
+
+            return RedirectToAction("GetPosts");
         }
 
-        [CheckUserId(parameterName: "userId", actionName: "Post/Edit", fullAccess: "Admin, Moderator")]
+        [CheckParameter(parameterName: "userId", path: "Post/Edit")]
         [HttpGet]
-        public async Task<IActionResult> Edit(int id)
+        public async Task<IActionResult> Edit([FromRoute] int id, [FromQuery] int? userId)
         {
-            var model = await _postService.GetPostEditViewModel(id, Request.Query["userId"], User.IsInRole("Admin") || User.IsInRole("Moderator"));
-            if (model == null) 
-                return NotFound();
-            model.AllTags = await _tagService.GetAllTagsAsync();
+            var access = User.IsInRole("Admin") || User.IsInRole("Moderator");
+            var model = await _postService.GetPostEditViewModelAsync(id, userId, access);
 
+            if (model == null) return BadRequest();
+
+            model.AllTags = await _tagService.GetAllTagsAsync();
             return View(model);
         }
 
@@ -84,7 +83,7 @@ namespace MyBlog.App.Controllers
                 if (!result)
                     return BadRequest();
 
-                return RedirectToAction("GetPost");
+                return RedirectToAction("GetPosts");
             }
 
             model.AllTags = await _tagService.GetAllTagsAsync();

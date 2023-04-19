@@ -13,6 +13,8 @@
         <hr class="hr" />
         <div asp-validation-summary="ModelOnly" class="text-danger fs-6"></div>
 
+        <input type="hidden" asp-for="Id" />
+
         <div class="form-group mb-4 position-relative">
             <div class="row">
                 <label asp-for="Name" class="form-label col-sm-3 col-form-label"></label>
@@ -33,7 +35,7 @@
         </div>
 
         <button type="submit" class="btn btn-primary mb-2">Сохранить</button>
-        <p class="form-text"><a asp-action="GetRole" asp-controller="Role" class="text-decoration-none">Перейти к списку всех ролей</a></p>
+        <p class="form-text"><a asp-action="GetRoles" asp-controller="Role" class="text-decoration-none">Перейти к списку всех ролей</a></p>
     </form>
 </div>
 

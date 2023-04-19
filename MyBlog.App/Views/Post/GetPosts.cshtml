@@ -1,8 +1,10 @@
 ﻿@model MyBlog.App.ViewModels.Posts.PostsViewModel
 @{
     ViewData["Title"] = "Список статей";
+    var checkRole = User.IsInRole("Admin") || User.IsInRole("Moderator");
+    var claimUserId = User.Claims.FirstOrDefault(c => c.Type == "UserID")?.Value;
 
-    string labelClasses = User.IsInRole("Admin") || User.IsInRole("Moderator")
+    string labelClasses = checkRole
         ? "col-sm-4 mb-0 font-m75 form-text text-end"
         : "col-12 mb-0 font-m75 form-text text-end";
 }
@@ -23,10 +25,11 @@
                     }
                 </div>
                 <div class="row">
-                    @if(User.IsInRole("Admin") || User.IsInRole("Moderator"))
+                    @if(checkRole || (!checkRole && claimUserId == post.UserId.ToString()))
                     {
                         <div class="col-sm-8" >
-                            <form method="post" asp-action="Remove" asp-controller="Post" asp-route-id="@post.Id">
+                            <form method="post" asp-action="Remove" asp-controller="Post" asp-route-id="@post.Id" >
+                            <input type="hidden" name="userId" value="@claimUserId" />
                                 <div class="btn-group">
                                     <a class="btn btn-outline-success btn-sm" asp-action="Edit" asp-controller="Post" asp-route-id="@post.Id">
                                         Редактировать

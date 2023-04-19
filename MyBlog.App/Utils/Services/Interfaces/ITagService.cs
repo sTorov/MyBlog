@@ -9,11 +9,11 @@ namespace MyBlog.App.Utils.Services.Interfaces
 {
     public interface ITagService
     {
-        Task<TagsViewModel?> GetTagsViewModelAsync(int? tagId, string? postId);
+        Task<TagsViewModel?> GetTagsViewModelAsync(int? tagId, int? postId);
         Task<Tag?> GetTagByIdAsync(int id);
         Task<List<Tag>> GetAllTagsAsync();
         Task<Tag?> CheckTagNameAsync<T>(TagController controller, T model) where T : ITagViewModel;
-        Task CreateTagAsync(TagCreateViewModel model);
+        Task<bool> CreateTagAsync(TagCreateViewModel model);
         Task<List<Tag>?> CreateTagForPostAsync(string? postTags);
         Task<TagEditViewModel?> GetTagEditViewModelAsync(int id);
         Task<bool> UpdateTagAsync(TagEditViewModel model);

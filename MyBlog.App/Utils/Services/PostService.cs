@@ -7,7 +7,6 @@ using MyBlog.Data.DBModels.Posts;
 using MyBlog.Data.DBModels.Tags;
 using MyBlog.Data.Repositories;
 using MyBlog.Data.Repositories.Interfaces;
-using System.Text.RegularExpressions;
 
 namespace MyBlog.App.Utils.Services
 {
@@ -30,7 +29,7 @@ namespace MyBlog.App.Utils.Services
             _postRepository = (PostRepository)_unitOfWork.GetRepository<Post>();
         }
 
-        public async Task<bool> CreatePost(PostCreateViewModel model, List<Tag>? tags)
+        public async Task<bool> CreatePostAsync(PostCreateViewModel model, List<Tag>? tags)
         {
             var user = await _userService.GetUserByIdAsync(model.UserId);
             if (user == null) return false;
@@ -43,30 +42,24 @@ namespace MyBlog.App.Utils.Services
             return true;
         }
 
-        public async Task<PostsViewModel> GetPostViewModel(int? postId, string? userId) 
+        public async Task<PostsViewModel> GetPostViewModelAsync(int? userId) 
         {
             var model = new PostsViewModel();
 
-            if (postId == null && userId == null)
+            if (userId == null)
                 model.Posts = await _postRepository.GetAllAsync();
-            else if (postId == null && userId != null)
-                model.Posts = await _postRepository.GetPostsByUserIdAsync(Helper.GetIntValue(userId));
             else
-            {
-                var post = await _postRepository.GetAsync(postId ?? 0);
-                if (post != null)
-                    model.Posts = new List<Post> { post };
-            }
+                model.Posts = await _postRepository.GetPostsByUserIdAsync((int)userId);
             
             return model;
         }
 
-        public async Task<PostEditViewModel?> GetPostEditViewModel(int id, string? userId, bool fullAccess)
+        public async Task<PostEditViewModel?> GetPostEditViewModelAsync(int id, int? userId, bool fullAccess)
         {
             var post = await GetPostByIdAsync(id);
             var check = fullAccess
                 ? post != null
-                : post != null && post.UserId == Helper.GetIntValue(userId!);
+                : post != null && post.UserId == (int)userId!;
 
             if (!check)
                 return null;
@@ -75,13 +68,16 @@ namespace MyBlog.App.Utils.Services
 
         public async Task<Post?> GetPostByIdAsync(int id) => await _postRepository.GetAsync(id);
 
-        public async Task<bool> DeletePost(int id)
+        public async Task<bool> DeletePostAsync(int id, int userId, bool fullAccess)
         {
             var post = await GetPostByIdAsync(id);
-            if (post == null)
-                return false;
+            var check = fullAccess
+                ? post != null
+                : post != null && post.UserId == userId;
+            if (!check) return false;
 
-            await _postRepository.DeleteAsync(post!);
+            if(await _postRepository.DeleteAsync(post!) == 0) return false;
+            
             return true;
         }
 

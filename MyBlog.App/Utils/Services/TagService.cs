@@ -31,7 +31,7 @@ namespace MyBlog.App.Utils.Services
 
         public async Task<List<Tag>> GetAllTagsAsync() => await _tagRepository.GetAllAsync();
 
-        public async Task<TagsViewModel?> GetTagsViewModelAsync(int? tagId, string? postId)
+        public async Task<TagsViewModel?> GetTagsViewModelAsync(int? tagId, int? postId)
         {
             var model = new TagsViewModel();
 
@@ -39,13 +39,13 @@ namespace MyBlog.App.Utils.Services
             {
                 model.Tags = postId == null
                     ? await _tagRepository.GetAllAsync()
-                    : await _tagRepository.GetTagsByPostIdAsync(Helper.GetIntValue(postId));
+                    : await _tagRepository.GetTagsByPostIdAsync((int)postId);
             }
             else
             {
                 var tag = postId == null
                     ? await GetTagByIdAsync(tagId ?? 0)
-                    : (await _tagRepository.GetTagsByPostIdAsync(Helper.GetIntValue(postId))).FirstOrDefault(t => t.Id == tagId);
+                    : (await _tagRepository.GetTagsByPostIdAsync((int)postId)).FirstOrDefault(t => t.Id == tagId);
                 if (tag != null) model.Tags.Add(tag);
             }
 
@@ -73,11 +73,12 @@ namespace MyBlog.App.Utils.Services
             return checkTag;
         }
 
-        public async Task CreateTagAsync(TagCreateViewModel model)
+        public async Task<bool> CreateTagAsync(TagCreateViewModel model)
         {
             var tag = _mapper.Map<Tag>(model);
 
-            await _tagRepository.CreateAsync(tag);
+            if(await _tagRepository.CreateAsync(tag) == 0) return false;
+            return true;
         }
 
         public async Task<List<Tag>?> CreateTagForPostAsync(string? postTags)
@@ -103,17 +104,16 @@ namespace MyBlog.App.Utils.Services
                 return false;
 
             currentTag.Convert(model);
-            await _tagRepository.UpdateAsync(currentTag);
+            if(await _tagRepository.UpdateAsync(currentTag) == 0) return false;
             return true;
         }
 
         public async Task<bool> DeleteTagAsync(int id)
         {
             var currentTag = await GetTagByIdAsync(id);
-            if (currentTag == null)
-                return false;
+            if (currentTag == null) return false;
 
-            await _tagRepository.DeleteAsync(currentTag);
+            if(await _tagRepository.DeleteAsync(currentTag) == 0) return false;
             return true;
         }
 

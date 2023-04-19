@@ -8,10 +8,10 @@ namespace MyBlog.App.Utils.Services.Interfaces
 {
     public interface IPostService
     {
-        Task<bool> CreatePost(PostCreateViewModel model, List<Tag>? tags);
-        Task<PostsViewModel> GetPostViewModel(int? postId, string? userId);
-        Task<PostEditViewModel?> GetPostEditViewModel(int id, string? userId, bool fullAccess);
-        Task<bool> DeletePost(int id);
+        Task<bool> CreatePostAsync(PostCreateViewModel model, List<Tag>? tags);
+        Task<PostsViewModel> GetPostViewModelAsync(int? userId);
+        Task<PostEditViewModel?> GetPostEditViewModelAsync(int id, int? userId, bool fullAccess);
+        Task<bool> DeletePostAsync(int id, int userId, bool fullAccess);
         Task<Post?> GetPostByIdAsync(int id);
         Task<bool> UpdatePostAsync(PostEditViewModel model, Post post);
         Task<Post?> CheckDataAtUpdatePostAsync(PostController controller, PostEditViewModel model);

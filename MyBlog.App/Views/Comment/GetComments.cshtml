@@ -46,7 +46,7 @@
                 <td>@comment.CreatedDate.ToString("dd-MM-yyyy hh:mm")</td>
                 <td>
                     <form method="post" asp-controller="Comment" asp-action="Remove" asp-route-id="@comment.Id">
-                        <input type="hidden" value="@comment.UserId" name="userId"/>
+                        <input type="hidden" value="@User.Claims.FirstOrDefault(u => u.Type == "UserID")?.Value" name="userId" />
                         <button type="submit">Удалить</button>
                     </form>
                 </td>

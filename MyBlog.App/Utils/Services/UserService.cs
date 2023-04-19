@@ -71,20 +71,27 @@ namespace MyBlog.App.Utils.Services
         public async Task<User?> GetUserByEmailAsync(string email) => 
             await _userManager.Users.Include(u => u.Roles).FirstOrDefaultAsync(u => u.Email == email);
 
-        public async Task<bool> DeleteByIdAsync(int id)
+        public async Task<bool> DeleteByIdAsync(int id, int? userId, bool fullAccess)
         {
             var user = await _userManager.FindByIdAsync(id.ToString());
-            if (user != null) 
-                return (await _userManager.DeleteAsync(user)).Succeeded;
+            var check = fullAccess
+                ? user != null
+                : user != null && user.Id == userId;
+
+            if (check) return (await _userManager.DeleteAsync(user!)).Succeeded;
             return false;
         }
 
-        public async Task<UserEditViewModel?> GetUserEditViewModelAsync(int id)
+        public async Task<UserEditViewModel?> GetUserEditViewModelAsync(int id, int? userId, bool fullAccess)
         {
             var user = await GetUserByIdAsync(id);
-            if(user != null)
-                return _mapper.Map<UserEditViewModel>(user);
-            return null;
+            var check = fullAccess
+                ? user != null
+                : user != null && user.Id == userId;
+
+            if(!check)
+                return null;
+            return _mapper.Map<UserEditViewModel>(user);
         }
 
         public async Task<UsersViewModel?> GetUsersViewModelAsync(int? id)
@@ -102,7 +109,7 @@ namespace MyBlog.App.Utils.Services
             return model;
         }
 
-        public async Task CheckDataAtRegistration(UserController controller, UserRegisterViewModel model)
+        public async Task CheckDataAtRegistrationAsync(UserController controller, UserRegisterViewModel model)
         {
             var checkName = (await _userManager.FindByNameAsync(model.Login))?.UserName;
             if (checkName != null)
@@ -111,6 +118,15 @@ namespace MyBlog.App.Utils.Services
             var checkEmail = (await _userManager.FindByEmailAsync(model.EmailReg))?.Email;
             if (checkEmail != null)
                 controller.ModelState.AddModelError(string.Empty, $"Адрес [{model.EmailReg}] уже зарегистрирован!");
+        }
+
+        public async Task<User?> CheckDataAtLoginAsync(UserController controller, UserLoginViewModel model)
+        {
+            var user = await _userManager.Users.Include(u => u.Roles).FirstOrDefaultAsync(u => u.Email == model.UserEmail);
+            if (user == null)
+                controller.ModelState.AddModelError(string.Empty, "Неверный email или(и) пароль!");
+
+            return user;
         }
 
         public async Task<User?> CheckDataAtEditionAsync(UserController controller, UserEditViewModel model)
@@ -144,7 +160,7 @@ namespace MyBlog.App.Utils.Services
             return dict;
         }
 
-        public async Task<List<Claim>> GetClaims(User user)
+        public async Task<List<Claim>> GetClaimsAsync(User user)
         {
             var userId = await _userManager.GetUserIdAsync(user);
             var claims = new List<Claim>();

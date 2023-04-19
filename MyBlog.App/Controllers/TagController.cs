@@ -27,8 +27,11 @@ namespace MyBlog.App.Controllers
             _ = await _tagService.CheckTagNameAsync(this, model);
             if (ModelState.IsValid)
             {
-                await _tagService.CreateTagAsync(model);
-                return RedirectToAction("GetTag");
+                var result = await _tagService.CreateTagAsync(model);
+                if (!result)
+                    return BadRequest();
+
+                return RedirectToAction("GetTags");
             }
             else
                 return View(model);
@@ -36,13 +39,10 @@ namespace MyBlog.App.Controllers
 
         [Authorize]
         [HttpGet]
-        [Route("GetTag/{id?}")]
-        public async Task<IActionResult> GetTag([FromRoute] int? id)
+        [Route("GetTags/{id?}")]
+        public async Task<IActionResult> GetTags([FromRoute] int? id, [FromQuery] int? postId)
         {
-            var r = Request.RouteValues;
-
-            var model = await _tagService.GetTagsViewModelAsync(id, Request.Query["postId"]);
-
+            var model = await _tagService.GetTagsViewModelAsync(id, postId);
             return View(model);
         }
 
@@ -51,8 +51,8 @@ namespace MyBlog.App.Controllers
         public async Task<IActionResult> Edit(int id)
         {
             var model = await _tagService.GetTagEditViewModelAsync(id);
-
-            if (model == null) return NotFound();
+            if (model == null) 
+                return NotFound();
 
             return View(model);
         }
@@ -64,8 +64,11 @@ namespace MyBlog.App.Controllers
             _ = await _tagService.CheckTagNameAsync(this, model);
             if (ModelState.IsValid)
             {
-                await _tagService.UpdateTagAsync(model);
-                return RedirectToAction("GetTag");
+                var result = await _tagService.UpdateTagAsync(model);
+                if (!result) 
+                    return BadRequest();
+
+                return RedirectToAction("GetTags");
             }
             else
                 return View(model);
@@ -75,9 +78,11 @@ namespace MyBlog.App.Controllers
         [HttpPost]
         public async Task<IActionResult> Remove(int id)
         {
-            await _tagService.DeleteTagAsync(id);
+            var reselt = await _tagService.DeleteTagAsync(id);
+            if(!reselt)
+                return BadRequest();
 
-            return RedirectToAction("GetTag");
+            return RedirectToAction("GetTags");
         }
     }
 }

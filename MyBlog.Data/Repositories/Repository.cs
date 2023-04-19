@@ -17,26 +17,26 @@ namespace MyBlog.Data.Repositories
             Set = set;
         }
 
-        public virtual async Task CreateAsync(T item)
+        public virtual async Task<int> CreateAsync(T item)
         {
             await Set.AddAsync(item);
-            await _dbContext.SaveChangesAsync();
+            return await _dbContext.SaveChangesAsync();
         }
 
-        public virtual async Task DeleteAsync(T item)
+        public virtual async Task<int> DeleteAsync(T item)
         {
             await Task.Run(() => Set.Remove(item));
-            await _dbContext.SaveChangesAsync();
+            return await _dbContext.SaveChangesAsync();
         }
 
         public virtual async Task<List<T>> GetAllAsync() => await Set.ToListAsync();
 
         public virtual async Task<T?> GetAsync(int id) => await Set.FindAsync(id);
 
-        public virtual async Task UpdateAsync(T item)
+        public virtual async Task<int> UpdateAsync(T item)
         {
             await Task.Run(() => Set.Update(item));
-            await _dbContext.SaveChangesAsync();
+            return await _dbContext.SaveChangesAsync();
         }
     }
 }

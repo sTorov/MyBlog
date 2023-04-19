@@ -16,46 +16,50 @@ namespace MyBlog.App.Controllers
         }
 
         [HttpGet]
-        [Route("/GetRole/{id?}")]
-        public async Task<IActionResult> GetRole(int? id)
+        [Route("GetRoles/{id?}")]
+        public async Task<IActionResult> GetRoles([FromRoute]int? id)
         {
             var model = await _roleService.GetRolesViewModelAsync(id);
-
-            if(model == null) return NotFound();
+            if(model == null) 
+                return NotFound();
 
             return View(model);
         }
 
         [HttpGet]
-        [Route("/CreateRole")]
+        [Route("CreateRole")]
         public IActionResult Create() => View();
 
         [HttpPost]
-        [Route("/CreateRole")]
+        [Route("CreateRole")]
         public async Task<IActionResult> Create(RoleCreateViewModel model)
         {
-            _ = await _roleService.CheckDataForCreateTag(this, model);
-
+            _ = await _roleService.CheckDataForCreateTagAsync(this, model);
             if (ModelState.IsValid)
             {
-                await _roleService.CreateRoleAsync(model);
-                return RedirectToAction("GetRole");
+                var result = await _roleService.CreateRoleAsync(model);
+                if (!result)
+                    return BadRequest();
+
+                return RedirectToAction("GetRoles");
             }
 
             return View(model);
         }
 
         [HttpGet]
+        [Route("EditRole")]
         public async Task<IActionResult> Edit(int id)
         {
             var model = await _roleService.GetRoleEditViewModelAsync(id);
-
-            if (model == null) return NotFound();
+            if (model == null) 
+                return NotFound();
 
             return View(model);
         }
 
         [HttpPost]
+        [Route("EditRole")]
         public async Task<IActionResult> Edit(RoleEditViewModel model)
         {
             var currentRole = await _roleService.CheckDataAtEditAsync(this, model);
@@ -65,7 +69,7 @@ namespace MyBlog.App.Controllers
                 if(!result) 
                     return BadRequest();
 
-                return RedirectToAction("GetRole");
+                return RedirectToAction("GetRoles");
             }
 
             return View(model);
@@ -78,7 +82,7 @@ namespace MyBlog.App.Controllers
             if(!result)
                 return BadRequest();
 
-            return RedirectToAction("GetRole");
+            return RedirectToAction("GetRoles");
         }
     }
 }
