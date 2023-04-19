@@ -10,7 +10,7 @@ namespace MyBlog.App.Utils.Services.Interfaces
     {
         Task<bool> CreatePost(PostCreateViewModel model, List<Tag>? tags);
         Task<PostsViewModel> GetPostViewModel(int? postId, string? userId);
-        Task<PostEditViewModel?> GetPostEditViewModel(int id, string? userId);
+        Task<PostEditViewModel?> GetPostEditViewModel(int id, string? userId, bool fullAccess);
         Task<bool> DeletePost(int id);
         Task<Post?> GetPostByIdAsync(int id);
         Task<bool> UpdatePostAsync(PostEditViewModel model, Post post);

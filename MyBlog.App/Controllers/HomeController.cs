@@ -10,11 +10,7 @@ namespace MyBlog.App.Controllers
         public IActionResult Index()
         {
             if (User.Identity!.IsAuthenticated)
-            {
-                var user = User;
-                ViewData["User"] = user;
-            }
-            
+                return RedirectToAction("GetPost", "Post");
             return View();
         }
 

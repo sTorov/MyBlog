@@ -1,84 +1,44 @@
 ﻿@model MyBlog.App.ViewModels.Posts.PostsViewModel
 @{
     ViewData["Title"] = "Список статей";
+
+    string labelClasses = User.IsInRole("Admin") || User.IsInRole("Moderator")
+        ? "col-sm-4 mb-0 font-m75 form-text text-end"
+        : "col-12 mb-0 font-m75 form-text text-end";
 }
 
-<style>
-    table {
-        border: 2px solid gray;
-    }
+<h3 class="mt-5">Все статьи</h3>
+<a asp-action="Create" asp-controller="Post" class="mb-3 text-decoration-none">Добавить статью</a>
 
-    th {
-        border: 2px solid gray;
-        padding: 3px;
-        background-color: cornflowerblue;
+<div class="row justify-content-center">
+    @foreach (var post in Model.Posts)
+    {
+        <div class="card m-3 col-10">
+            <div class="card-body">
+                <a class="fs-5 mb-0 link-primary text-decoration-none" href="#">@post.Title</a>
+                <div class="mb-4">
+                    @foreach (var tag in post.Tags)
+                    {
+                        <span class="badge bg-primary">@tag.Name</span>
+                    }
+                </div>
+                <div class="row">
+                    @if(User.IsInRole("Admin") || User.IsInRole("Moderator"))
+                    {
+                        <div class="col-sm-8" >
+                            <form method="post" asp-action="Remove" asp-controller="Post" asp-route-id="@post.Id">
+                                <div class="btn-group">
+                                    <a class="btn btn-outline-success btn-sm" asp-action="Edit" asp-controller="Post" asp-route-id="@post.Id">
+                                        Редактировать
+                                    </a>
+                                    <button type="submit" class="btn btn-outline-danger btn-sm">Удалить</button>
+                                </div>
+                            </form>
+                        </div>
+                    }
+                    <p class="@labelClasses">Просмотров: 0</p>
+                </div>
+            </div>
+        </div>
     }
-
-    td {
-        border: 2px solid gray;
-        padding: 3px;
-    }
-</style>
-
-<div>
-    <table>
-        <tr>
-            <th>ID</th>
-            <th>Заголовок</th>
-            <th>Контент</th>
-            <th>ID создателя</th>
-            <th>Теги</th>
-            <th>Дата созадния</th>
-            <th>Комментарии</th>
-            <th></th>
-            <th></th>
-            <th></th>
-        </tr>
-        @foreach(var post in Model.Posts)
-        {
-            <tr>
-                <td>@post.Id</td>
-                <td>@post.Title</td>
-                <td>
-                    <details>
-                        <summary>Раскрыть</summary>
-                        @post.Content
-                    </details>
-                </td>
-                <td>@post.UserId</td>
-                <td>
-                    <details>
-                        <summary>Раскрыть</summary>
-                        @string.Join(" ", post.Tags.Select(t => t.Name))
-                    </details>
-                </td>
-                <td>@post.CreatedDate.ToString("dd-MM-yyyy")</td>
-                <td>
-                    <details>
-                        <summary>Раскрыть</summary>
-                        @string.Join(" || ", post.Comments.Select(c => c.Text))
-                    </details>
-                </td>
-                <td>
-                    <form method="post" asp-controller="Post" asp-action="Remove" asp-route-id="@post.Id">
-                        <input type="hidden" value="@post.UserId" name="userId"/>
-                        <button type="submit">Удалить</button>
-                    </form>
-                </td>
-                <td>
-                    <form method="get" asp-controller="Post" asp-action="Edit" asp-route-id="@post.Id">
-                        <input type="hidden" value="@post.UserId" name="userId"/>
-                        <button type="submit">Редактировать</button>
-                    </form>
-                </td>
-                <td>
-                    <form method="get" asp-controller="Comment" asp-action="Create">
-                        <input type="hidden" value="@post.Id" name="postId"/>
-                        <input type="hidden" value="@User.Claims.FirstOrDefault(c => c.Type == "UserID")?.Value" name="userId" />
-                        <button type="submit">Добавить комментарий</button>
-                    </form>
-                </td>
-            </tr>
-        }
-    </table>
 </div>

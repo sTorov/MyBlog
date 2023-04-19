@@ -66,7 +66,7 @@ namespace MyBlog.App.Controllers
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
-            var model = await _postService.GetPostEditViewModel(id, Request.Query["userId"]);
+            var model = await _postService.GetPostEditViewModel(id, Request.Query["userId"], User.IsInRole("Admin") || User.IsInRole("Moderator"));
             if (model == null) 
                 return NotFound();
             model.AllTags = await _tagService.GetAllTagsAsync();

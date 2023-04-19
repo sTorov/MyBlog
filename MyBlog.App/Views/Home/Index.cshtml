@@ -1,17 +1,8 @@
 ﻿@using System.Security.Claims;
 @{
     ViewData["Title"] = "Home Page";
-    var user = (ClaimsPrincipal)ViewData["User"];
 }
 
 <div class="text-start">
-    @if(user == null)
-    {
-        <h1 class="mt-5 mb-5 display-5 text-center">Добро пожаловать в MyBlog</h1>
-    }
-    else
-    {
-        <h3 class="mt-5">Все статьи</h3>
-        <a asp-action="Create" asp-controller="Post" class="text-decoration-none">Добавить статью</a>
-    }
+    <h1 class="mt-5 mb-5 display-4 text-center">Добро пожаловать в MyBlog</h1>
 </div>

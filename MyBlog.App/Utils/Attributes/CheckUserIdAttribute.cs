@@ -19,7 +19,12 @@ namespace MyBlog.App.Utils.Attributes
 
         public void OnAuthorization(AuthorizationFilterContext context)
         {
-            if (CheckAccess(context)) return;
+            if (CheckAccess(context)) 
+            {
+                var Id = context.HttpContext.User.Claims.FirstOrDefault(c => c.Type == "UserID")?.Value;
+                context.HttpContext.Request.QueryString.Add(ParameterName, Id ?? "");
+                return;
+            }
 
             var userId = context.HttpContext.User.Claims.FirstOrDefault(c => c.Type == "UserID")?.Value;
             if (userId == null)
