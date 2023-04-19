@@ -38,6 +38,10 @@ body {
     background-color: gray;
 }
 
+.font-m75{
+    font-size: .75em;
+}
+
 .dropdown-menu-dark .dropdown-item:active {
     color: #fff;
     background-color: var(--bs-gray-600);
