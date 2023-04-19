@@ -14,7 +14,6 @@ namespace MyBlog.App.Utils.Services.Interfaces
         Task<List<User>> GetAllUsersAsync();
         Task<User?> GetUserByIdAsync(int id);
         Task<User?> GetUserByEmailAsync(string email);
-        Task<User?> GetUserByNameAsync(string name);
         Task<bool> DeleteByIdAsync(int id);
         Task<List<Claim>> GetClaims(User user);
         Task<UserEditViewModel?> GetUserEditViewModelAsync(int id);

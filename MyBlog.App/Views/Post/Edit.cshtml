@@ -3,53 +3,58 @@
     ViewData["Title"] = "Редактирование статьи";
 }
 
-<style>
-    .wrapper {
-        display: flex;
-    }
+<div class="max-width-450 m-auto">
+    <form class="mt-5" method="post" asp-controller="Post" asp-action="Edit">
+        <h3>Редактирование статьи</h3>
+        <hr class="hr" />
+        <div asp-validation-summary="ModelOnly" class="text-danger fs-6"></div>
 
-    input, textarea {
-        margin-left: 5px;
-    }
+        <input type="hidden" id="post-tags" asp-for="PostTags" />
 
-    textarea{
-        resize: none;
-    }
-
-    .warning {
-        color: red;
-        font-size: 12px;
-        margin-left: 10px;
-    }
-</style>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.1/jquery.validate.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.11/jquery.validate.unobtrusive.js"></script>
-
-<div>
-    <h1>Редактирование статьи "@Model.Title"</h1>
-
-    <form method="post" asp-controller="Post" asp-action="Edit">
-        <div asp-validation-summary="ModelOnly" class="warning"></div>
-
-        <div class="wrapper">
-            <label asp-for="Title"></label>
-            <input asp-for="Title" value="@Model.Title"/>
-            <span asp-validation-for="Title" class="warning"></span>
+        <h5 class="text-muted ms-2">Теги</h5>
+        <div class="form-text mb-1" id="add-tags"></div>
+        <div class="input-group">
+            <input class="form-control form-control-sm shadow-none input-primary-board" id="filter-input" placeholder="Поиск тега" oninput="filter()" />
+            <button type="button" class="btn btn-outline-primary btn-sm shadow-none" onclick="addTag()">Добавить</button>
         </div>
 
-        <div class="wrapper">
-            <label asp-for="PostTags"></label>
-            <input asp-for="PostTags" value="@Model.PostTags" />
+        <div class="form-group">
+            <select class="form-select form-select-sm shadow-none input-primary-board" id="tags" size="4">
+                @foreach (var tag in Model.AllTags!)
+                {
+                    <option value="@tag.Id">@tag.Name</option>
+                }
+            </select>
+        </div>
+        <p class="form-text">Если вы не нашли нужный тег, <a asp-action="Create" asp-controller="Tag" class="text-decoration-none">создайте его</a></p>
+        <hr class="hr" />
+
+        <h5 class="text-muted ms-2">Статья</h5>
+        <div class="form-group mb-4 position-relative">
+            <div class="row">
+                <label asp-for="Title" class="form-label col-sm-3 col-form-label"></label>
+                <div class="col-sm-9">
+                    <input asp-for="Title" class="form-control" />
+                </div>
+            </div>
+            <span asp-validation-for="Title" class="text-danger error-message"></span>
         </div>
 
-        <div class="wrapper">
-            <label asp-for="Content"></label>
-            <textarea asp-for="Content" rows="4" cols="80" >@Model.Content</textarea>
-            <span asp-validation-for="Content" class="warning"></span>
+        <div class="form-group mb-4 position-relative">
+            <div class="row">
+                <label asp-for="Content" class="form-label col-sm-3 col-form-label"></label>
+                <div class="col-sm-9">
+                    <textarea asp-for="Content" class="form-control textarea" rows="4"></textarea>
+                </div>
+            </div>
+            <span asp-validation-for="Content" class="text-danger error-message"></span>
         </div>
 
-        <button type="submit">Сохранить</button>
+        <button type="submit" class="btn btn-primary mb-2">Сохранить изменения</button>
+        <p class="form-text"><a asp-action="Index" asp-controller="Home" class="text-decoration-none">Выйти без сохранения</a></p>
     </form>
 </div>
+
+<script>
+    window.addEventListener('load', () => changeViewTags('post-tags', 'add-tags'));
+</script>

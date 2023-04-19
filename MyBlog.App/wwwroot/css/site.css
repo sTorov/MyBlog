@@ -78,3 +78,14 @@ body {
 .input-primary-board:focus{
     border-color: var(--bs-primary);
 }
+
+.tag-badge {
+    background: var(--bs-blue);
+    margin: 0 1px;
+    transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out;
+}
+    .tag-badge:hover {
+        background: var(--bs-gray-600);
+        cursor: pointer;
+        transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out;
+    }

@@ -1,10 +1,13 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using MyBlog.Data.DBModels.Tags;
+using System.ComponentModel.DataAnnotations;
 
 namespace MyBlog.App.ViewModels.Posts
 {
     public class PostEditViewModel
     {
         public int Id { get; set; }
+
+        public List<Tag>? AllTags { get; set; }
 
         [Required(ErrorMessage = "Поле обязательно для заполнения!")]
         [Display(Name = "Заголовок")]

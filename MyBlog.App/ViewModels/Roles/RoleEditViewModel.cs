@@ -1,14 +1,16 @@
-﻿using MyBlog.App.ViewModels.Tags.Interfaces;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
-namespace MyBlog.App.ViewModels.Tags
+namespace MyBlog.App.ViewModels.Roles
 {
-    public class TagEditViewModel : ITagViewModel
+    public class RoleEditViewModel
     {
         public int Id { get; set; }
 
         [Required(ErrorMessage = "Поле обязательно для заполнения!")]
         [Display(Name = "Название")]
         public string Name { get; set; }
+
+        [Display(Name = "Описание")]
+        public string? Description { get; set; }
     }
 }

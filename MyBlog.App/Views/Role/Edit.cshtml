@@ -1,15 +1,15 @@
-﻿@model MyBlog.App.ViewModels.Tags.TagEditViewModel
+﻿@model MyBlog.App.ViewModels.Roles.RoleEditViewModel
 @{
-    ViewData["Title"] = "Редактирование тега";
+    ViewData["Title"] = "Редактирование роли";
 }
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.1/jquery.validate.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.11/jquery.validate.unobtrusive.js"></script>
 
-<div class="max-width-350 m-auto">
-    <form class="mt-5" method="post" asp-controller="Tag" asp-action="Edit">
-        <h3>Редактирование тега</h3>
+<div class="max-width-450 m-auto">
+    <form class="mt-5" method="post" asp-controller="Role" asp-action="Edit">
+        <h3>Редактирование роли</h3>
         <hr class="hr" />
         <div asp-validation-summary="ModelOnly" class="text-danger fs-6"></div>
 
@@ -23,7 +23,17 @@
             <span asp-validation-for="Name" class="text-danger error-message"></span>
         </div>
 
+        <div class="form-group mb-4">
+            <div class="row">
+                <label asp-for="Description" class="form-label col-sm-3 col-form-label"></label>
+                <div class="col-sm-9">
+                    <textarea asp-for="Description" class="form-control textarea" rows="4"></textarea>
+                </div>
+            </div>
+        </div>
+
         <button type="submit" class="btn btn-primary mb-2">Сохранить</button>
-        <p class="form-text"><a asp-action="GetTag" asp-controller="Tag" class="text-decoration-none">Перейти к списку всех тегов</a></p>
+        <p class="form-text"><a asp-action="GetRole" asp-controller="Role" class="text-decoration-none">Перейти к списку всех ролей</a></p>
     </form>
 </div>
+

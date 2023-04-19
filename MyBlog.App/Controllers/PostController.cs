@@ -55,7 +55,9 @@ namespace MyBlog.App.Controllers
         [HttpPost]
         public async Task<IActionResult> Remove(int id)
         {
-            _ = await _postService.DeletePost(id);
+            var result = await _postService.DeletePost(id);
+            if (!result)
+                return BadRequest();
 
             return RedirectToAction("GetPost");
         }
@@ -64,11 +66,10 @@ namespace MyBlog.App.Controllers
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
-            var r = Request.RouteValues;
-
             var model = await _postService.GetPostEditViewModel(id, Request.Query["userId"]);
-
-            if (model == null) return NotFound();
+            if (model == null) 
+                return NotFound();
+            model.AllTags = await _tagService.GetAllTagsAsync();
 
             return View(model);
         }
@@ -76,9 +77,18 @@ namespace MyBlog.App.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(PostEditViewModel model)
         {
-            _ = await _postService.UpdatePostAsync(model);
+            var currentPost = await _postService.CheckDataAtUpdatePostAsync(this, model);
+            if (ModelState.IsValid)
+            {
+                var result = await _postService.UpdatePostAsync(model, currentPost!);
+                if (!result)
+                    return BadRequest();
 
-            return RedirectToAction("GetPost");
+                return RedirectToAction("GetPost");
+            }
+
+            model.AllTags = await _tagService.GetAllTagsAsync();
+            return View(model);
         }
     }
 }

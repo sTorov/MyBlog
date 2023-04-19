@@ -35,6 +35,7 @@ namespace MyBlog.App
 
             CreateMap<RoleCreateViewModel, Role>()
                 .ForMember(m => m.NormalizedName, opt => opt.MapFrom(p => p.Name.ToUpper()));
+            CreateMap<Role, RoleEditViewModel>();
         }
     }
 }

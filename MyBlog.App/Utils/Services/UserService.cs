@@ -71,8 +71,6 @@ namespace MyBlog.App.Utils.Services
         public async Task<User?> GetUserByEmailAsync(string email) => 
             await _userManager.Users.Include(u => u.Roles).FirstOrDefaultAsync(u => u.Email == email);
 
-        public async Task<User?> GetUserByNameAsync(string name) => await _userManager.FindByNameAsync(name);
-
         public async Task<bool> DeleteByIdAsync(int id)
         {
             var user = await _userManager.FindByIdAsync(id.ToString());

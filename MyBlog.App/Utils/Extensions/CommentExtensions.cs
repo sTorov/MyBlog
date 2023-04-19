@@ -9,6 +9,7 @@ namespace MyBlog.App.Utils.Extensions
         {
             comment.Text = model.Text;
             comment.UserId = model.UserId;
+
             return comment;
         }
     }

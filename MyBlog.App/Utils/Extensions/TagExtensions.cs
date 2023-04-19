@@ -8,6 +8,7 @@ namespace MyBlog.App.Utils.Extensions
         public static Tag Convert(this Tag tag, TagEditViewModel model)
         {
             tag.Name = model.Name;
+
             return tag;
         } 
     }

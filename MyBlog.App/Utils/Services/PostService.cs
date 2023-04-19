@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using MyBlog.App.Controllers;
 using MyBlog.App.Utils.Extensions;
 using MyBlog.App.Utils.Services.Interfaces;
 using MyBlog.App.ViewModels.Posts;
@@ -81,17 +82,23 @@ namespace MyBlog.App.Utils.Services
             return true;
         }
 
-        public async Task<bool> UpdatePostAsync(PostEditViewModel model)
+        public async Task<bool> UpdatePostAsync(PostEditViewModel model, Post post)
+        {
+            post.Convert(model);
+            if (!string.IsNullOrEmpty(model.PostTags))
+                post.Tags = await _tagService.CreateTagForPostAsync(model.PostTags) ?? new List<Tag>();
+
+            await _postRepository.UpdateAsync(post);
+            return true;
+        }
+
+        public async Task<Post?> CheckDataAtUpdatePostAsync(PostController controller, PostEditViewModel model)
         {
             var currentPost = await GetPostByIdAsync(model.Id);
-            if (currentPost == null) return false;
+            if (currentPost == null)
+                controller.ModelState.AddModelError(string.Empty, $"Статья с Id [{model.Id}] не найдена!");
 
-            currentPost.Convert(model);
-            if (!string.IsNullOrEmpty(model.PostTags))
-                currentPost.Tags = await _tagService.CreateTagForPostAsync(model.PostTags) ?? new List<Tag>();
-
-            await _postRepository.UpdateAsync(currentPost);
-            return true;
+            return currentPost;
         }
     }
 }

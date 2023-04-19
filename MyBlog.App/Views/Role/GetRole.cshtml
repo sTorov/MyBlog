@@ -8,5 +8,9 @@
     @foreach(var role in Model.Roles)
     {
         <p>@(role.Id) - @(role.Name)</p>
+        <a asp-action="Edit" asp-controller="Role" asp-route-id="@role.Id">Изменить</a>
+        <form method="post" asp-action="Delete" asp-controller="Role" asp-route-id="@role.Id">
+            <button type="submit" class="btn btn-dark">Удалить</button>
+        </form>
     }
 </div>

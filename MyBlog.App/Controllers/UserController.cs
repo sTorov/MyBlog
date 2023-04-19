@@ -6,7 +6,6 @@ using MyBlog.App.Utils.Attributes;
 using MyBlog.App.Utils.Services.Interfaces;
 using MyBlog.App.ViewModels.Users;
 using MyBlog.Data.DBModels.Users;
-using System.Security.Claims;
 
 namespace MyBlog.App.Controllers
 {
@@ -151,33 +150,6 @@ namespace MyBlog.App.Controllers
 
             model.AllRoles = await _roleService.GetEnabledRolesForUser(model.Id);
             return View(model);
-        }
-
-        [Authorize(Roles = "Admin")]
-        [HttpGet]
-        public async Task<IActionResult> GetRoles(int id)
-        {
-            var model = await _roleService.GetUserRolesViewModelAsync(id);
-            if(model == null)
-                return RedirectToAction("GetUser");
-
-            return View("Roles", model);
-        }
-
-        [Authorize(Roles = "Admin")]
-        [HttpPost]
-        public async Task<IActionResult> SetRoles(UserRolesViewModel model)
-        {
-            var roles = await _roleService.GetRolesFromModelAsync(model);
-            var user = await _userService.GetUserByIdAsync(model.UserId);
-
-            if (user != null)
-            {
-                user.Roles = roles;
-                await _userService.UpdateUserAsync(user);
-            }
-
-            return RedirectToAction("GetUser");
         }
     }
 }

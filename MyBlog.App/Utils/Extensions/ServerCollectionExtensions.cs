@@ -10,6 +10,7 @@ namespace MyBlog.App.Utils.Extensions
         public static IServiceCollection AddUnitOfWork(this IServiceCollection services)
         {
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+
             return services;
         }
 
@@ -29,6 +30,7 @@ namespace MyBlog.App.Utils.Extensions
             where TRepoitory : Repository<TEntity>
         {
             services.AddScoped<IRepository<TEntity>, TRepoitory>();
+
             return services;
         }
     }

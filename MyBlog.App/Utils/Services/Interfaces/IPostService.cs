@@ -13,6 +13,7 @@ namespace MyBlog.App.Utils.Services.Interfaces
         Task<PostEditViewModel?> GetPostEditViewModel(int id, string? userId);
         Task<bool> DeletePost(int id);
         Task<Post?> GetPostByIdAsync(int id);
-        Task<bool> UpdatePostAsync(PostEditViewModel model);
+        Task<bool> UpdatePostAsync(PostEditViewModel model, Post post);
+        Task<Post?> CheckDataAtUpdatePostAsync(PostController controller, PostEditViewModel model);
     }
 }
