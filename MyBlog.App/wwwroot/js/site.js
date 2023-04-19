@@ -69,3 +69,16 @@ function deleteTag(elem) {
     field.value = tags.join(' ');
     if (tags.length === 1 && tags[0] === '') view.innerText = 'Здесь вы увидите добавленные теги';
 }
+
+
+function setScrollPos() {
+    localStorage.setItem('y-pos', window.pageYOffset);
+}
+
+function getScrollPos() {
+    const pos = localStorage.getItem('y-pos');
+    if (pos !== null) {
+        window.scrollTo({ left: 0, top: pos, behavior: "instant" });
+        localStorage.removeItem('y-pos');
+    }
+}

@@ -1,0 +1,89 @@
+﻿@model MyBlog.App.ViewModels.Posts.PostViewModel
+@{
+    ViewData["Title"] = "Статья";
+
+    var checkRole = User.IsInRole("Admin") || User.IsInRole("Moderator");
+    var claimUserId = User.Claims.FirstOrDefault(c => c.Type == "UserID")?.Value;
+}
+
+<script>
+    window.addEventListener('load', () => getScrollPos());
+</script>
+
+<div class="col-sm-11 m-auto mt-5">
+    <div class="row">
+        <div class="col">
+            <h3>@Model.Title</h3>
+        </div>
+        <div class="col d-flex align-items-center justify-content-end">
+            @if (checkRole || (!checkRole && claimUserId == Model.User.Id.ToString()))
+            {
+                <a class="btn btn-outline-primary btn-sm m-0" asp-action="Edit" asp-controller="Post" asp-route-id="@Model.Id"
+                    asp-route-returnUrl="@Context.Request.Path">
+                    Редактировать
+                </a>
+            }
+        </div>
+    </div>
+    <div class="form-text">
+        @foreach (var tag in Model.Tags)
+        {
+            <span class="badge bg-primary">@tag.Name</span>
+        }
+    </div>
+
+    <hr class="hr" />
+
+    <p class="text-pre-wrap">@Model.Content</p>
+
+    <hr class="hr" />
+    <p class="form-text text-end mb-5">@Model.User.Email</p>
+
+    <div>
+        @foreach(var comment in Model.Comments)
+        {
+            <div class="card p-2 m-2">
+                <div class="card-body">
+                    @comment.Text
+                </div>
+                <div class="row">
+                    <div class="col">
+                        @if (checkRole || (!checkRole && claimUserId == comment.UserId.ToString()))
+                        {
+                            <div class="col-sm-8">
+                                <form method="post" asp-action="Remove" asp-controller="Comment" asp-route-id="@comment.Id">
+                                    <input type="hidden" name="userId" value="@claimUserId" />
+                                    <input type="hidden" value="@Context.Request.Path" name="returnUrl" />
+
+                                    <div class="btn-group">
+                                        <a class="btn btn-outline-success btn-sm" onclick="setScrollPos()" asp-action="Edit" asp-controller="Comment" asp-route-id="@comment.Id"
+                                            asp-route-returnUrl="@Context.Request.Path">
+                                            Редактировать
+                                        </a>
+                                        <button type="submit" class="btn btn-outline-danger btn-sm" onclick="setScrollPos()">Удалить</button>
+                                    </div>
+                                </form>
+                            </div>
+                        }
+                    </div>
+                    <div class=" col form-text text-end"><span class="badge bg-success me-2">@comment.User.Email</span></div>
+                </div>
+            </div>   
+        }
+    </div>
+    <hr class="hr mt-5 mb-5"/>
+
+    <form method="post" asp-action="Create" asp-controller="Comment">
+        <input type="hidden" value="@Model.Id" name="PostId" />
+        <input type="hidden" value="@User.Claims.FirstOrDefault(c => c.Type == "UserID")?.Value" name="UserId" />
+
+        <div class="form-group">
+            <div class="row mb-3">
+                <div class="col-sm-10">
+                    <textarea name="Text" class="form-control no-resize" rows="5" required></textarea>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary mb-2" onclick="setScrollPos()">Оставить комментарий</button>
+        </div>
+    </form>
+</div>

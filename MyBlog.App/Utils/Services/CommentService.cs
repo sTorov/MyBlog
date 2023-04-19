@@ -99,5 +99,8 @@ namespace MyBlog.App.Utils.Services
             if(await _commentRepository.UpdateAsync(currentComment) == 0) return false;
             return true;
         }
+
+        public async Task<List<Comment>> GetAllCommentsByPostIdAsync(int postId) =>
+            await _commentRepository.GetCommentsByPostIdAsync(postId);
     }
 }

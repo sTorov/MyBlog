@@ -12,7 +12,8 @@ namespace MyBlog.Data.Repositories
             await Set.Include(p => p.Tags).Include(p => p.Comments).ToListAsync();
 
         public async override Task<Post?> GetAsync(int id) => 
-            await Set.Include(p => p.Tags).Include(p => p.Comments).FirstOrDefaultAsync(p => p.Id == id);
+            await Set.Include(p => p.Tags).Include(p => p.Comments).Include(p => p.User)
+                .FirstOrDefaultAsync(p => p.Id == id);
 
         public async Task<List<Post>> GetPostsByUserIdAsync(int userId) =>
             await Set.Include(p => p.Tags).Include(p => p.Comments)

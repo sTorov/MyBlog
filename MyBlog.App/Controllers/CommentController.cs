@@ -27,7 +27,7 @@ namespace MyBlog.App.Controllers
             if (!result)
                 return BadRequest();
 
-            return RedirectToAction("GetComments");
+            return RedirectToAction("View", "Post", new { Id = model.PostId });
         }
 
         [Authorize(Roles = "Admin, Moderator")]
@@ -62,17 +62,21 @@ namespace MyBlog.App.Controllers
             if(!result)
                 return BadRequest();
 
+            if (model.ReturnUrl != null && Url.IsLocalUrl(model.ReturnUrl))
+                return Redirect(model.ReturnUrl);
             return RedirectToAction("GetComments");
         }
 
         [HttpPost]
-        public async Task<IActionResult> Remove([FromRoute] int id, [FromForm] int? userId)
+        public async Task<IActionResult> Remove([FromRoute] int id, [FromForm] int? userId, string? returnUrl)
         {
             var access = User.IsInRole("Admin") || User.IsInRole("Moderator");
             var result = await _commentService.DeleteCommentAsync(id, userId, access);
             if(!result)
                 return BadRequest();
 
+            if (returnUrl != null && Url.IsLocalUrl(returnUrl))
+                return Redirect(returnUrl);
             return RedirectToAction("GetComments");
         }
     }

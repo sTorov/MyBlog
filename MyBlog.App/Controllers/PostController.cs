@@ -11,11 +11,13 @@ namespace MyBlog.App.Controllers
     {
         private readonly IPostService _postService;
         private readonly ITagService _tagService;
+        private readonly ICommentService _commentService;
 
-        public PostController(IPostService postService, ITagService tagService)
+        public PostController(IPostService postService, ITagService tagService, ICommentService commentService)
         {
             _postService = postService;
             _tagService = tagService;
+            _commentService = commentService;
         }
 
         [HttpGet]
@@ -45,7 +47,7 @@ namespace MyBlog.App.Controllers
         [Route("GetPosts")]
         public async Task<IActionResult> GetPosts([FromQuery] int? userId)
         {
-            var model = await _postService.GetPostViewModelAsync(userId);
+            var model = await _postService.GetPostsViewModelAsync(userId);
             return View(model);
         }
 
@@ -70,6 +72,7 @@ namespace MyBlog.App.Controllers
             if (model == null) return BadRequest();
 
             model.AllTags = await _tagService.GetAllTagsAsync();
+
             return View(model);
         }
 
@@ -83,10 +86,24 @@ namespace MyBlog.App.Controllers
                 if (!result)
                     return BadRequest();
 
+                if (model.ReturnUrl != null && Url.IsLocalUrl(model.ReturnUrl))
+                    return Redirect(model.ReturnUrl);
                 return RedirectToAction("GetPosts");
             }
 
             model.AllTags = await _tagService.GetAllTagsAsync();
+            return View(model);
+        }
+
+        [HttpGet]
+        [Route("ViewPost/{id}")]
+        public async Task<IActionResult> View([FromRoute] int id)
+        {
+            var model = await _postService.GetPostViewModelAsync(id);
+            if(model == null)
+                return BadRequest();
+
+            model.Comments = await _commentService.GetAllCommentsByPostIdAsync(id);
             return View(model);
         }
     }

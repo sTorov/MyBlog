@@ -7,10 +7,14 @@ namespace MyBlog.App.Controllers
 {
     public class HomeController : Controller
     {
-        public IActionResult Index()
+        public IActionResult Index(string? returnUrl)
         {
             if (User.Identity!.IsAuthenticated)
+            {
+                if (returnUrl != null && Url.IsLocalUrl(returnUrl))
+                    return Redirect(returnUrl);
                 return RedirectToAction("GetPosts", "Post");
+            }
             return View();
         }
 

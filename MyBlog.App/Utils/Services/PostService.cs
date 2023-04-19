@@ -42,7 +42,7 @@ namespace MyBlog.App.Utils.Services
             return true;
         }
 
-        public async Task<PostsViewModel> GetPostViewModelAsync(int? userId) 
+        public async Task<PostsViewModel> GetPostsViewModelAsync(int? userId) 
         {
             var model = new PostsViewModel();
 
@@ -98,6 +98,14 @@ namespace MyBlog.App.Utils.Services
                 controller.ModelState.AddModelError(string.Empty, $"Статья с Id [{model.Id}] не найдена!");
 
             return currentPost;
+        }
+
+        public async Task<PostViewModel?> GetPostViewModelAsync(int id)
+        {
+            var post = await _postRepository.GetAsync(id);
+            if (post == null) return null;
+
+            return _mapper.Map<PostViewModel>(post);
         }
     }
 }

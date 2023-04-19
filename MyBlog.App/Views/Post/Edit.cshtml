@@ -3,55 +3,56 @@
     ViewData["Title"] = "Редактирование статьи";
 }
 
-<div class="max-width-600 m-auto">
-    <form class="mt-5" method="post" asp-controller="Post" asp-action="Edit">
-        <h3>Редактирование статьи</h3>
-        <hr class="hr" />
+<div class="mt-5 m-auto">
+    <h3>Редактирование статьи</h3>
+    <hr class="hr" />
+    <form method="post" asp-controller="Post" asp-action="Edit">
         <div asp-validation-summary="ModelOnly" class="text-danger fs-6"></div>
 
         <input type="hidden" id="post-tags" asp-for="PostTags" />
+        <input type="hidden" asp-for="ReturnUrl" value="@($"{Context.Request.Query["returnUrl"]}")" />
 
-        <h5 class="text-muted ms-2">Теги</h5>
-        <div class="form-text mb-1" id="add-tags"></div>
-        <div class="input-group">
-            <input class="form-control form-control-sm shadow-none input-primary-board" id="filter-input" placeholder="Поиск тега" oninput="filter()" />
-            <button type="button" class="btn btn-outline-primary btn-sm shadow-none" onclick="addTag()">Добавить</button>
+        <div class="max-width-600">
+            <h5 class="text-muted ms-2">Теги</h5>
+            <div class="form-text mb-1" id="add-tags"></div>
+            <div class="input-group">
+                <input class="form-control form-control-sm shadow-none input-primary-board" id="filter-input" placeholder="Поиск тега" oninput="filter()" />
+                <button type="button" class="btn btn-outline-primary btn-sm shadow-none" onclick="addTag()">Добавить</button>
+            </div>
+
+            <div class="form-group">
+                <select class="form-select form-select-sm shadow-none input-primary-board" id="tags" size="4">
+                    @foreach (var tag in Model.AllTags!)
+                    {
+                        <option value="@tag.Id">@tag.Name</option>
+                    }
+                </select>
+            </div>
+            <p class="form-text">Если вы не нашли нужный тег, <a asp-action="Create" asp-controller="Tag" class="text-decoration-none">создайте его</a></p>
         </div>
 
-        <div class="form-group">
-            <select class="form-select form-select-sm shadow-none input-primary-board" id="tags" size="4">
-                @foreach (var tag in Model.AllTags!)
-                {
-                    <option value="@tag.Id">@tag.Name</option>
-                }
-            </select>
-        </div>
-        <p class="form-text">Если вы не нашли нужный тег, <a asp-action="Create" asp-controller="Tag" class="text-decoration-none">создайте его</a></p>
         <hr class="hr" />
-
         <h5 class="text-muted ms-2">Статья</h5>
         <div class="form-group mb-4 position-relative">
             <div class="row">
-                <label asp-for="Title" class="form-label col-sm-2 col-form-label"></label>
-                <div class="col-sm-10">
-                    <input asp-for="Title" class="form-control" />
-                </div>
+                <label asp-for="Title" class="form-label col-sm-2"></label>
+                <input asp-for="Title" class="form-control" />
             </div>
             <span asp-validation-for="Title" class="text-danger error-message"></span>
         </div>
 
         <div class="form-group mb-4 position-relative">
             <div class="row">
-                <label asp-for="Content" class="form-label col-sm-2 col-form-label"></label>
-                <div class="col-sm-10">
-                    <textarea asp-for="Content" class="form-control textarea" rows="4"></textarea>
-                </div>
+                <label asp-for="Content" class="form-label"></label>
+                <textarea asp-for="Content" class="form-control" rows="15"></textarea>
             </div>
             <span asp-validation-for="Content" class="text-danger error-message"></span>
         </div>
 
         <button type="submit" class="btn btn-primary mb-2">Сохранить изменения</button>
-        <p class="form-text"><a asp-action="Index" asp-controller="Home" class="text-decoration-none">Выйти без сохранения</a></p>
+        <p class="form-text">
+            <a asp-action="Index" asp-controller="Home" asp-route-returnUrl="@($"{Context.Request.Query["returnUrl"]}")"
+               class="text-decoration-none">Выйти без сохранения</a></p>
     </form>
 </div>
 

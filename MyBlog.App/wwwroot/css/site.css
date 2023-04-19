@@ -100,3 +100,15 @@ body {
         cursor: pointer;
         transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out;
     }
+
+
+.no-resize {
+    resize: none;
+}
+
+.text-pre-wrap {
+    white-space: pre-wrap;
+}
+.text-pre-line {
+    white-space: pre-line;
+}

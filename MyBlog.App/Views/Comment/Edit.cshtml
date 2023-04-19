@@ -34,6 +34,7 @@
         <div asp-validation-summary="ModelOnly" class="warning"></div>
 
         <input type="hidden" asp-for="UserId" value="@Model.UserId"/>
+        <input type="hidden" asp-for="ReturnUrl" value="@($"{Context.Request.Query["returnUrl"]}")" />
 
         <div class="wrapper">
             <label asp-for="Text"></label>

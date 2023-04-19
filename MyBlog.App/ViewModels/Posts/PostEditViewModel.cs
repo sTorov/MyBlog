@@ -7,6 +7,8 @@ namespace MyBlog.App.ViewModels.Posts
     {
         public int Id { get; set; }
 
+        public string? ReturnUrl { get; set; }
+
         public List<Tag>? AllTags { get; set; }
 
         [Required(ErrorMessage = "Поле обязательно для заполнения!")]

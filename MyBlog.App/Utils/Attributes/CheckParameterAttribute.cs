@@ -7,14 +7,12 @@ namespace MyBlog.App.Utils.Attributes
     public class CheckParameterAttribute : Attribute, IAuthorizationFilter
     {
         public string ParameterName { get; set; }
-        public int ParameterCount { get; set; }
         public string Path { get; set; }
 
-        public CheckParameterAttribute(string parameterName = "", string path = "", int paramCount = 1)
+        public CheckParameterAttribute(string parameterName = "", string path = "")
         {
             ParameterName = parameterName;
             Path = path.ToLower();
-            ParameterCount = paramCount;
         }
 
         public void OnAuthorization(AuthorizationFilterContext context)
@@ -44,7 +42,7 @@ namespace MyBlog.App.Utils.Attributes
             var path = context.HttpContext.Request.Path.ToString().ToLower();
             var query = context.HttpContext.Request.Query;
             
-            if (path.StartsWith($"/{Path}") && query.Any(p => p.Key == ParameterName) && query.Count == ParameterCount)
+            if (path.StartsWith($"/{Path}") && query.Any(p => p.Key == ParameterName))
                 return;
             else
                 context.Result = new NotFoundResult();

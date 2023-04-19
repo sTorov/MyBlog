@@ -26,6 +26,7 @@ namespace MyBlog.App
             CreateMap<PostCreateViewModel, Post>();
             CreateMap<Post, PostEditViewModel>()
                 .ForMember(m => m.PostTags, opt => opt.MapFrom(p => string.Join(" ", p.Tags.Select(p => p.Name))));
+            CreateMap<Post, PostViewModel>();
 
             CreateMap<CommentCreateViewModel, Comment>();
             CreateMap<Comment, CommentEditViewModel>();
