@@ -3,67 +3,22 @@
     ViewData["Title"] = "Пользователи";
 }
 
-<style>
-    table{
-        border: 2px solid gray;
-    }
-    th{
-        border: 2px solid gray;
-        padding: 3px;
-        background-color: cornflowerblue;
-    }
-    td{
-        border: 2px solid gray;
-        padding: 3px;
-    }
-</style>
+<h3 class="mt-5">Все пользователи</h3>
+<a asp-action="Index" asp-controller="Home" class="mb-3 text-decoration-none">Добавить пользователя</a>
 
-<div>
-
-    <table>
-        <tr>
-            <th>ID</th>
-            <th>Имя</th>
-            <th>Фамилия</th>
-            <th>Отчество</th>
-            <th>Никнейм</th>
-            <th>Дата рождения</th>
-            <th>Email</th>
-            <th>Фото</th>
-            <th></th>
-            <th></th>
-            <th></th>
-        </tr>
-        @foreach(var user in Model.Users)
-        {
-            <tr>
-                <td>@user.Id</td>
-                <td>@user.FirstName</td>
-                <td>@user.SecondName</td>
-                <td>@user.LastName</td>
-                <td>@user.UserName</td>
-                <td>@user.BirthDate.ToString("dd-MM-yyyy")</td>
-                <td>@user.Email</td>
-                <td>@user.Photo</td>
-                <td>
-                    <form method="post" asp-controller="User" asp-action="Remove">
-                        <input type="hidden" value="@user.Id" name="id"/>
-                        <button type="submit">Удалить</button>
-                    </form>
-                </td>
-                <td>
-                    <form method="get" asp-controller="User" asp-action="Edit">
-                        <input type="hidden" name="id" value="@user.Id" />
-                        <button type="submit">Изменить</button>
-                    </form>
-                </td>
-                <td>
-                    <form method="get" asp-controller="User" asp-action="GetRoles" asp-route-id="@user.Id">
-                        <button type="submit">Роли</button>
-                    </form>
-                </td>
-            </tr>
-        }
-    </table>
-
+<div class="row justify-content-center">
+    @foreach (var user in Model.Users)
+    {
+        <div class="card m-3 col-8 col-md-5 col-lg-3">
+            <div class="card-body">
+                <a class="fs-5 mb-0 link-primary text-decoration-none" href="#">@user.UserName</a>
+                <p class="text-black-50 mb-0">@($"{user.FirstName} {user.SecondName}")</p>
+                @foreach (var role in user.Roles)
+                {
+                    <span class="badge bg-primary">@role.Name</span>
+                }
+            </div>
+            <p class="form-text text-end">@user.Email</p>
+        </div>
+    }
 </div>

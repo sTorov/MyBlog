@@ -8,6 +8,14 @@ html {
   }
 }
 
+/*.btn-text-gray {
+    color: var(--bs-gray-400);
+    transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out;
+}
+    .btn-text-gray:hover {
+        color: var(--bs-gray-500);
+        transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out;
+    }*/
 /*.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
   box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }*/
@@ -18,17 +26,13 @@ html {
 }
 
 body {
-  margin-bottom: 60px;
+    margin-bottom: 60px;
+    background-color: rgba(0,0,0,.03);
 }
 
-/*.btn-text-gray {
-    color: var(--bs-gray-400);
-    transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out;
+.bg-card-color {
+    background-color: rgba(0,0,0,.03);
 }
-    .btn-text-gray:hover {
-        color: var(--bs-gray-500);
-        transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out;
-    }*/
 
 .hr{
     background-color: gray;
@@ -50,11 +54,14 @@ body {
 .max-width-350 {
     max-width: 350px;
 }
+.max-width-450 {
+    max-width: 450px;
+}
 .max-width-550 {
     max-width: 550px;
 }
-.max-width-450 {
-    max-width: 450px;
+.max-width-600 {
+    max-width: 600px;
 }
 
 .error-message {

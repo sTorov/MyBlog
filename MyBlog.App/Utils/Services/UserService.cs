@@ -92,7 +92,7 @@ namespace MyBlog.App.Utils.Services
             var model = new UsersViewModel();
             
             if (id == null)
-                model.Users = await _userManager.Users.ToListAsync();
+                model.Users = await _userManager.Users.Include(u => u.Roles).ToListAsync();
             else
             {
                 var user = await _userManager.FindByIdAsync(id?.ToString() ?? "");

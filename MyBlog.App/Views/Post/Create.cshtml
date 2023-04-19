@@ -7,7 +7,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.1/jquery.validate.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.11/jquery.validate.unobtrusive.js"></script>
 
-<div class="max-width-450 m-auto">
+<div class="max-width-600 m-auto">
     <form class="mt-5" method="post" asp-controller="Post" asp-action="Create">
         <h3>Добавление статьи</h3>
         <hr class="hr" />
@@ -37,8 +37,8 @@
         <h5 class="text-muted ms-2">Статья</h5>
         <div class="form-group mb-4 position-relative">
             <div class="row">
-                <label asp-for="Title" class="form-label col-sm-3 col-form-label"></label>
-                <div class="col-sm-9">
+                <label asp-for="Title" class="form-label col-sm-2 col-form-label"></label>
+                <div class="col-sm-10">
                     <input asp-for="Title" class="form-control" />
                 </div>
             </div>
@@ -47,8 +47,8 @@
 
         <div class="form-group mb-4 position-relative">
             <div class="row">
-                <label asp-for="Content" class="form-label col-sm-3 col-form-label"></label>
-                <div class="col-sm-9">
+                <label asp-for="Content" class="form-label col-sm-2 col-form-label"></label>
+                <div class="col-sm-10">
                     <textarea asp-for="Content" class="form-control textarea" rows="4"></textarea>
                 </div>
             </div>
