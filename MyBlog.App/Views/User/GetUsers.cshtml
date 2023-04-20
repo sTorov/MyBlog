@@ -4,7 +4,7 @@
 }
 
 <h3 class="mt-5">Все пользователи</h3>
-<a asp-action="Index" asp-controller="Home" class="mb-3 text-decoration-none">Добавить пользователя</a>
+<a asp-action="Create" asp-controller="User" class="mb-3 text-decoration-none">Добавить пользователя</a>
 
 <div class="row justify-content-center">
     @foreach (var user in Model.Users)

@@ -38,21 +38,20 @@ namespace MyBlog.App.Utils.Services
             return (result, user);
         }
 
+        public async Task<IdentityResult> CreateUserAsync(UserCreateViewModel model)
+        {
+            var user = _mapper.Map<User>(model);
+            user.Roles = await GetRoleListFromDictionary(model.AllRoles);
+
+            var result = await _userManager.CreateAsync(user, model.PasswordReg);
+            return result;
+        }
+
+
         public async Task<IdentityResult> UpdateUserAsync(UserEditViewModel model, User user)
         {
             user.Convert(model);
-
-            var roles = new List<Role>();
-            foreach(var pair in model.AllRoles!)
-            {
-                if(pair.Value)
-                {
-                    var role = await _roleManager.FindByNameAsync(pair.Key);
-                    if(role != null)
-                        roles.Add(role);
-                }    
-            }
-            user.Roles = roles;
+            user.Roles = await GetRoleListFromDictionary(model.AllRoles!);
             
             var result = await _userManager.UpdateAsync(user);
             if(result.Succeeded) 
@@ -60,6 +59,23 @@ namespace MyBlog.App.Utils.Services
 
             return result;
         }
+
+        private async Task<List<Role>> GetRoleListFromDictionary(Dictionary<string, bool> dict)
+        {
+            var roles = new List<Role>();
+            foreach (var pair in dict)
+            {
+                if (pair.Value)
+                {
+                    var role = await _roleManager.FindByNameAsync(pair.Key);
+                    if (role != null)
+                        roles.Add(role);
+                }
+            }
+            return roles;
+        }
+
+
 
         public async Task<IdentityResult> UpdateUserAsync(User user) => await _userManager.UpdateAsync(user);
 
@@ -109,7 +125,7 @@ namespace MyBlog.App.Utils.Services
             return model;
         }
 
-        public async Task CheckDataAtRegistrationAsync(UserController controller, UserRegisterViewModel model)
+        public async Task CheckDataAtCreationAsync(UserController controller, UserRegisterViewModel model)
         {
             var checkName = (await _userManager.FindByNameAsync(model.Login))?.UserName;
             if (checkName != null)
@@ -155,7 +171,7 @@ namespace MyBlog.App.Utils.Services
             var allRoles = await _roleManager.Roles.ToListAsync();
 
             foreach (var role in allRoles)
-                dict.Add(role.Name!, controller.Request.Form[$"role{role.Name}"] == "on");
+                dict.Add(role.Name!, controller.Request.Form[role.Name!] == "on");
 
             return dict;
         }

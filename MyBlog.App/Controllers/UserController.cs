@@ -29,7 +29,7 @@ namespace MyBlog.App.Controllers
         [Route("Register")]
         public async Task<IActionResult> Register(UserRegisterViewModel model)
         {
-            await _userService.CheckDataAtRegistrationAsync(this, model);
+            await _userService.CheckDataAtCreationAsync(this, model);
             if (ModelState.IsValid)
             {
                 var (result, user) = await _userService.CreateUserAsync(model);
@@ -100,7 +100,7 @@ namespace MyBlog.App.Controllers
 
         [Authorize]
         [HttpPost]
-        public async Task<IActionResult> Remove([FromRoute] int id, [FromForm] int? userId)
+        public async Task<IActionResult> Remove(int id, [FromForm] int? userId)
         {
             var result = await _userService.DeleteByIdAsync(id, userId,  User.IsInRole("Admin"));
             if (!result)
@@ -162,6 +162,48 @@ namespace MyBlog.App.Controllers
                 return BadRequest();
 
             return View(model);
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpGet]
+        public async Task<IActionResult> Create()
+        {
+            var model = new UserCreateViewModel() { AllRoles = await GetDictionaryRolesDefault() };
+            return View(model);
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPost]
+        public async Task<IActionResult> Create(UserCreateViewModel model)
+        {
+            await _userService.CheckDataAtCreationAsync(this, model);
+            if (ModelState.IsValid)
+            {
+                model.AllRoles = await _userService.UpdateRoleStateForEditUserAsync(this);
+                var result = await _userService.CreateUserAsync(model);
+
+                if(!result.Succeeded)
+                    return BadRequest();
+
+                return RedirectToAction("GetUsers");
+            }
+
+            model.AllRoles = await GetDictionaryRolesDefault();
+            return View(model);
+        }
+
+        private async Task<Dictionary<string, bool>> GetDictionaryRolesDefault()
+        {
+            var roles = await _roleService.GetAllRolesAsync();
+            var dict = new Dictionary<string, bool>();
+            foreach (var role in roles)
+            {
+                if (role.Name == "User")
+                    dict.Add(role.Name, true);
+                else
+                    dict.Add(role.Name!, false);
+            }
+            return dict;
         }
     }
 }

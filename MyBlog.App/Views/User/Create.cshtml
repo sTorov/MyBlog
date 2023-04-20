@@ -1,0 +1,120 @@
+﻿@model MyBlog.App.ViewModels.Users.UserCreateViewModel
+@{
+    ViewData["Title"] = "Создание пользователя"; 
+}
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.1/jquery.validate.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.11/jquery.validate.unobtrusive.js"></script>
+
+<div class="max-width-550 m-auto mb-5">
+    <form class="mt-5" method="post" asp-controller="User" asp-action="Create">
+        <h3>Создание пользователя</h3>
+        <hr  class="hr"/>
+        <div asp-validation-summary="ModelOnly" class="text-danger fs-6"></div>
+
+        <div class="row">
+            @foreach (var role in Model.AllRoles!)
+            {
+                <div class="col-md-3 col-sm-4">
+                    <div class="form-check">
+                        @if(role.Key == "User")
+                        {
+                            <input type="hidden" name="User" value="on"/>
+                        }
+                        <input class="form-check-input" type="checkbox" id="@role.Key" @(role.Key == "User" ? "disabled" : "")
+                               name="@(role.Key != "User" ? $"{@role.Key}" : "")" @(role.Key == "User" ? "checked" : null) />
+                        <label class="from-check-label @(role.Key == "User" ? "text-secondary" : "")" for="@role.Key">
+                            @role.Key
+                        </label>
+                    </div>
+                </div>
+            }
+        </div>
+        <hr class="hr" />
+
+        <div class="form-group mb-4 position-relative">
+            <div class="row">
+            <label asp-for="FirstName" class="form-label col-sm-4 col-form-label"></label>
+                <div class="col-sm-8">
+                    <input asp-for="FirstName" class="form-control" />
+                </div>
+            </div>
+            <span asp-validation-for="FirstName" class="text-danger error-message"></span>
+        </div>
+
+        <div class="form-group mb-4 position-relative">
+            <div class="row">
+                <label asp-for="SecondName" class="form-label col-sm-4 col-form-label"></label>
+                <div class="col-sm-8">
+                    <input asp-for="SecondName" class="form-control" />
+                </div>
+            </div>
+            <span asp-validation-for="SecondName" class="text-danger error-message"></span>
+        </div>
+
+        <div class="form-group mb-4 position-relative">
+            <div class="row">
+                <label asp-for="LastName" class="form-label col-sm-4 col-form-label"></label>
+                <div class="col-sm-8">
+                    <input asp-for="LastName" class="form-control" />
+                </div>
+            </div>
+            <span asp-validation-for="LastName" class="text-danger error-message"></span>
+        </div>
+
+        <div class="form-group mb-4 position-relative">
+            <div class="row">
+                <label asp-for="EmailReg" class="form-label col-sm-4 col-form-label"></label>
+                <div class="col-sm-8">
+                    <input asp-for="EmailReg" class="form-control" />
+                </div>
+            </div>
+            <span asp-validation-for="EmailReg" class="text-danger error-message"></span>
+        </div>
+
+        <div class="form-group mb-4 position-relative">
+            <div class="row">
+                <label asp-for="Login" class="form-label col-sm-4 col-form-label"></label>
+                <div class="col-sm-8">
+                    <input asp-for="Login" class="form-control" />
+                </div>
+            </div>
+            <span asp-validation-for="Login" class="text-danger error-message"></span>
+        </div>
+
+        <div class="form-group mb-4 position-relative">
+            <div class="row">
+                <label asp-for="BirthDate" class="form-label col-sm-6 col-form-label"></label>
+                <div class="col-sm-6">
+                    <input asp-for="BirthDate" type="date" class="form-control" />
+                </div>
+            </div>
+            <span asp-validation-for="BirthDate" class="text-danger error-message"></span>
+        </div>
+
+        <div class="form-group mb-4 position-relative">
+            <div class="row">
+                <label asp-for="PasswordReg" class="form-label col-sm-6 col-form-label"></label>
+                <div class="col-sm-6">
+                    <input asp-for="PasswordReg" class="form-control" />
+                </div>
+            </div>
+            <span asp-validation-for="PasswordReg" class="text-danger error-message"></span>
+        </div>
+
+        <div class="form-group mb-4 position-relative">
+            <div class="row">
+                <label asp-for="PasswordConfirm" class="form-label col-sm-6 col-form-label"></label>
+                <div class="col-sm-6">
+                    <input asp-for="PasswordConfirm" class="form-control" />
+                </div>
+            </div>
+            <span asp-validation-for="PasswordConfirm" class="text-danger error-message"></span>
+        </div>
+
+        <button type="submit" class="btn btn-primary mb-2">Создать</button>
+        <p class="form-text"><a asp-action="GetUsers" asp-controller="User" class="text-decoration-none">Перейти к списку всех пользователей</a></p>
+    </form>
+</div>
+

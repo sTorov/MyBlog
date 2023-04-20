@@ -6,17 +6,20 @@ using MyBlog.App.Utils.Extensions;
 using MyBlog.App.Utils.Services.Interfaces;
 using MyBlog.App.ViewModels.Roles;
 using MyBlog.Data.DBModels.Roles;
+using MyBlog.Data.DBModels.Users;
 
 namespace MyBlog.App.Utils.Services
 {
     public class RoleService : IRoleService
     {
         private readonly RoleManager<Role> _roleManager;
+        private readonly UserManager<User> _userManager;
         private readonly IMapper _mapper;
 
-        public RoleService(RoleManager<Role> roleManager, IMapper mapper)
+        public RoleService(RoleManager<Role> roleManager, UserManager<User> userManager, IMapper mapper)
         {
             _roleManager = roleManager;
+            _userManager = userManager;
             _mapper = mapper;
         }
 
@@ -27,17 +30,18 @@ namespace MyBlog.App.Utils.Services
             
         public async Task<Role?> GetRoleByNameAsync(string roleName) => await _roleManager.FindByNameAsync(roleName);
 
-        public async Task<RolesViewModel?> GetRolesViewModelAsync(int? id)
+        public async Task<RolesViewModel?> GetRolesViewModelAsync(int? userId)
         {
             var model = new RolesViewModel();
-            if (id == null) 
+            if (userId == null) 
                 model.Roles = await _roleManager.Roles.ToListAsync();
             else 
             {
-                var role = await _roleManager.FindByIdAsync(id.ToString() ?? "");
-                if (role == null) return null;
+                var user = await _userManager.Users.Include(u => u.Roles)
+                    .FirstOrDefaultAsync(u => u.Id == userId);
+                if (user == null) return null;
 
-                model.Roles = new List<Role> { role };
+                model.Roles = user.Roles;
             }
 
             return model;
@@ -88,6 +92,8 @@ namespace MyBlog.App.Utils.Services
 
             return _mapper.Map<RoleEditViewModel>(checkRole);
         }
+
+        public async Task<List<Role>> GetAllRolesAsync() => await _roleManager.Roles.ToListAsync();
 
         public async Task<Role?> CheckDataAtEditAsync(RoleController controller, RoleEditViewModel model)
         {

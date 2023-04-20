@@ -16,10 +16,10 @@ namespace MyBlog.App.Controllers
         }
 
         [HttpGet]
-        [Route("GetRoles/{id?}")]
-        public async Task<IActionResult> GetRoles([FromRoute]int? id)
+        [Route("GetRoles/{userId?}")]
+        public async Task<IActionResult> GetRoles([FromRoute]int? userId)
         {
-            var model = await _roleService.GetRolesViewModelAsync(id);
+            var model = await _roleService.GetRolesViewModelAsync(userId);
             if(model == null) 
                 return NotFound();
 

@@ -24,7 +24,7 @@
                     </p>
                     <div>
                         <a class="m-3 text-decoration-none" asp-action="GetComments" asp-controller="Comment" asp-route-userId="@Model.Id">Коментариии</a>
-                        <a class="m-3 text-decoration-none" asp-action="GetPost" asp-controller="Post" asp-route-userId="@Model.Id">Статьи</a>
+                        <a class="m-3 text-decoration-none" asp-action="GetPosts" asp-controller="Post" asp-route-userId="@Model.Id">Статьи</a>
                         <a class="m-3 text-decoration-none" asp-action="GetRoles" asp-controller="Role" asp-route-userId="@Model.Id">Роли</a>
                     </div>
                     <div class="row pt-5">
@@ -36,7 +36,9 @@
                         <div class="col mt-4 d-flex justify-content-sm-end justify-content-start">
                             <form method="post" asp-action="Remove" asp-controller="User">
                                 <input type="hidden" name="id" value="@Model.Id" />
-                                <button class="btn btn-outline-danger">Удалить</button>
+                                <input type="hidden" name="userId" value="@User.Claims.FirstOrDefault(c => c.Type == "UserID")?.Value" />
+
+                                <button type="submit" class="btn btn-outline-danger">Удалить</button>
                             </form>
                         </div>
                     </div>

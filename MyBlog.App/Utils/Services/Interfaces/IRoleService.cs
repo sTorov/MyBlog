@@ -8,8 +8,9 @@ namespace MyBlog.App.Utils.Services.Interfaces
     {
         Task<List<Role>> GetRolesByUserAsync(int userId);
         Task<Role?> GetRoleByNameAsync(string roleName);
-        Task<RolesViewModel?> GetRolesViewModelAsync(int? id);
+        Task<RolesViewModel?> GetRolesViewModelAsync(int? userId);
         Task<bool> CreateRoleAsync(RoleCreateViewModel model);
+        Task<List<Role>> GetAllRolesAsync();
         Task<Role?> CheckDataForCreateTagAsync(RoleController controller, RoleCreateViewModel model);
         Task<Dictionary<string, bool>> GetEnabledRolesForUserAsync(int id);
         Task<RoleEditViewModel?> GetRoleEditViewModelAsync(int id);
