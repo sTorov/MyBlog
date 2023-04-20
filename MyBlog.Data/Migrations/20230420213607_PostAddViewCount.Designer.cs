@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MyBlog.Data;
 
@@ -10,9 +11,11 @@ using MyBlog.Data;
 namespace MyBlog.Data.Migrations
 {
     [DbContext(typeof(MyBlogContext))]
-    partial class MyBlogContextModelSnapshot : ModelSnapshot
+    [Migration("20230420213607_PostAddViewCount")]
+    partial class PostAddViewCount
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.4");
@@ -162,6 +165,9 @@ namespace MyBlog.Data.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<int>("UserId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("ViewCount")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
@@ -349,21 +355,6 @@ namespace MyBlog.Data.Migrations
                     b.ToTable("RoleUser");
                 });
 
-            modelBuilder.Entity("UserToVisitedPost", b =>
-                {
-                    b.Property<int>("UsersId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("VisitedPostsId")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("UsersId", "VisitedPostsId");
-
-                    b.HasIndex("VisitedPostsId");
-
-                    b.ToTable("UserToVisitedPost");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
                 {
                     b.HasOne("MyBlog.Data.DBModels.Roles.Role", null)
@@ -471,21 +462,6 @@ namespace MyBlog.Data.Migrations
                     b.HasOne("MyBlog.Data.DBModels.Users.User", null)
                         .WithMany()
                         .HasForeignKey("UsersId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("UserToVisitedPost", b =>
-                {
-                    b.HasOne("MyBlog.Data.DBModels.Users.User", null)
-                        .WithMany()
-                        .HasForeignKey("UsersId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("MyBlog.Data.DBModels.Posts.Post", null)
-                        .WithMany()
-                        .HasForeignKey("VisitedPostsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

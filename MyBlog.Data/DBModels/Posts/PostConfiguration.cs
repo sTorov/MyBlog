@@ -8,6 +8,11 @@ namespace MyBlog.Data.DBModels.Posts
         public void Configure(EntityTypeBuilder<Post> builder)
         {
             builder.ToTable("Posts").HasKey(c => c.Id);
+
+            builder
+                .HasMany(e => e.Users)
+                .WithMany(e => e.VisitedPosts)
+                .UsingEntity("UserToVisitedPost");
         }
     }
 }

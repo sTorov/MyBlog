@@ -16,6 +16,7 @@ namespace MyBlog.Data.DBModels.Users
         public List<Role> Roles { get; set; }
         public List<Post> Posts { get; set; }
         public List<Comment> Comments { get; set; }
+        public List<Post> VisitedPosts { get; set; }
 
         public User()
         {

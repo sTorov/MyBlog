@@ -1,10 +1,13 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using MyBlog.App.Controllers;
 using MyBlog.App.Utils.Extensions;
 using MyBlog.App.Utils.Services.Interfaces;
 using MyBlog.App.ViewModels.Posts;
 using MyBlog.Data.DBModels.Posts;
 using MyBlog.Data.DBModels.Tags;
+using MyBlog.Data.DBModels.Users;
 using MyBlog.Data.Repositories;
 using MyBlog.Data.Repositories.Interfaces;
 
@@ -14,16 +17,16 @@ namespace MyBlog.App.Utils.Services
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-        private readonly IUserService _userService;
+        private readonly UserManager<User> _userManager;
         private readonly ITagService _tagService;
 
         private readonly PostRepository _postRepository;
 
-        public PostService(IUnitOfWork unitOfWork, IMapper mapper, IUserService userService, ITagService tagService) 
+        public PostService(IUnitOfWork unitOfWork, IMapper mapper, UserManager<User> userManager, ITagService tagService) 
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
-            _userService = userService;
+            _userManager = userManager;
             _tagService = tagService;
 
             _postRepository = (PostRepository)_unitOfWork.GetRepository<Post>();
@@ -31,7 +34,7 @@ namespace MyBlog.App.Utils.Services
 
         public async Task<bool> CreatePostAsync(PostCreateViewModel model, List<Tag>? tags)
         {
-            var user = await _userService.GetUserByIdAsync(model.UserId);
+            var user = await _userManager.FindByIdAsync(model.UserId.ToString());
             if (user == null) return false;
 
             var post = _mapper.Map<Post>(model);
@@ -100,10 +103,17 @@ namespace MyBlog.App.Utils.Services
             return currentPost;
         }
 
-        public async Task<PostViewModel?> GetPostViewModelAsync(int id)
+        public async Task<PostViewModel?> GetPostViewModelAsync(int id, string userId)
         {
-            var post = await _postRepository.GetAsync(id);
-            if (post == null) return null;
+            var post = await _postRepository.Set.Include(p => p.Users).FirstOrDefaultAsync(p => p.Id == id);
+            var user = await _userManager.FindByIdAsync(userId);
+            if (post == null || user == null) return null;
+
+            if (!post.Users.Contains(user))
+            {
+                post.Users.Add(user);
+                await _postRepository.UpdateAsync(post);
+            }
 
             return _mapper.Map<PostViewModel>(post);
         }

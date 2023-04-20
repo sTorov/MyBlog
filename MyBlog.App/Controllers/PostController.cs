@@ -97,9 +97,9 @@ namespace MyBlog.App.Controllers
 
         [HttpGet]
         [Route("ViewPost/{id}")]
-        public async Task<IActionResult> View([FromRoute] int id)
+        public async Task<IActionResult> View([FromRoute] int id, [FromQuery] string userId)
         {
-            var model = await _postService.GetPostViewModelAsync(id);
+            var model = await _postService.GetPostViewModelAsync(id, userId);
             if(model == null)
                 return BadRequest();
 

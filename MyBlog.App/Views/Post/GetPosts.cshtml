@@ -17,8 +17,8 @@
     {
         <div class="card m-3 col-10">
             <div class="card-body">
-                <a class="fs-5 mb-0 link-primary text-decoration-none" asp-action="View" 
-                    asp-controller="Post" asp-route-id="@post.Id">
+                <a class="fs-5 mb-0 link-primary text-decoration-none" asp-action="View"
+               asp-controller="Post" asp-route-id="@post.Id" asp-route-userId="@User.Claims.FirstOrDefault(c => c.Type == "UserID")?.Value">
                     @post.Title
                 </a>
                 <div class="mb-4">
@@ -42,7 +42,7 @@
                             </form>
                         </div>
                     }
-                    <p class="@labelClasses">Просмотров: 0</p>
+                    <p class="@labelClasses">Просмотров: @post.Users.Count</p>
                 </div>
             </div>
         </div>

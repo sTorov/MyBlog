@@ -8,6 +8,12 @@ namespace MyBlog.Data.DBModels.Users
         public void Configure(EntityTypeBuilder<User> builder)
         {
             builder.ToTable("Users").HasKey(c => c.Id);
+
+            builder
+                .HasMany(e => e.Posts)
+                .WithOne(e => e.User)
+                .HasForeignKey(e => e.UserId)
+                .IsRequired();
         }
     }
 }
