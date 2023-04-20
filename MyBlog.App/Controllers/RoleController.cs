@@ -84,5 +84,16 @@ namespace MyBlog.App.Controllers
 
             return RedirectToAction("GetRoles");
         }
+
+        [HttpGet]
+        [Route("/ViewRole/{id}")]
+        public async Task<IActionResult> View([FromRoute] int id)
+        {
+            var model = await _roleService.GetRoleViewModel(id);
+            if(model == null)
+                return BadRequest();
+
+            return View(model);
+        }
     }
 }

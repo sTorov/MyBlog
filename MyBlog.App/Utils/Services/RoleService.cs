@@ -120,5 +120,13 @@ namespace MyBlog.App.Utils.Services
             var result = await _roleManager.DeleteAsync(role);
             return result.Succeeded;
         }
+
+        public async Task<RoleViewModel?> GetRoleViewModel(int id)
+        {
+            var role = await _roleManager.FindByIdAsync(id.ToString());
+            if (role == null) return null;
+
+            return _mapper.Map<RoleViewModel>(role);
+        }
     }
 }

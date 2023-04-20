@@ -23,7 +23,7 @@
                         <small>День рожденмя: @Model.BirthDate.ToString("d")</small>
                     </p>
                     <div>
-                        <a class="m-3 text-decoration-none" asp-action="GetComments" asp-controller="Comment" asp-route-userId="@Model.Id">Коментариии</a>
+                        <a class="m-3 text-decoration-none" asp-action="GetComments" asp-controller="Comment" asp-route-userId="@Model.Id">Коментарии</a>
                         <a class="m-3 text-decoration-none" asp-action="GetPosts" asp-controller="Post" asp-route-userId="@Model.Id">Статьи</a>
                         <a class="m-3 text-decoration-none" asp-action="GetRoles" asp-controller="Role" asp-route-userId="@Model.Id">Роли</a>
                     </div>

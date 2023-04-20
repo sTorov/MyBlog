@@ -110,16 +110,24 @@ namespace MyBlog.App.Utils.Services
             return _mapper.Map<UserEditViewModel>(user);
         }
 
-        public async Task<UsersViewModel?> GetUsersViewModelAsync(int? id)
+        public async Task<UsersViewModel?> GetUsersViewModelAsync(int? roleId)
         {
             var model = new UsersViewModel();
             
-            if (id == null)
+            if (roleId == null)
                 model.Users = await _userManager.Users.Include(u => u.Roles).ToListAsync();
             else
             {
-                var user = await _userManager.FindByIdAsync(id?.ToString() ?? "");
-                if (user != null) model.Users.Add(user);
+                var role = await _roleManager.Roles.Include(r => r.Users).FirstOrDefaultAsync(r => r.Id == roleId);
+                if (role == null) return null;
+
+                model.Users = role.Users;
+                for(int i = 0; i < model.Users.Count; i++)
+                {
+                    model.Users[i].Roles = await _roleManager.Roles.Include(r => r.Users)
+                        .SelectMany(r => r.Users, (r, u) => new { Role = r, User = u })
+                        .Where(o => o.User.Id == model.Users[i].Id).Select(o => o.Role).ToListAsync();
+                }
             }
 
             return model;

@@ -18,7 +18,7 @@ namespace MyBlog.App.Utils.Services.Interfaces
         Task<bool> DeleteByIdAsync(int id, int? userId, bool fullAccess);
         Task<List<Claim>> GetClaimsAsync(User user);
         Task<UserEditViewModel?> GetUserEditViewModelAsync(int id, int? userId, bool fullAccess);
-        Task<UsersViewModel?> GetUsersViewModelAsync(int? id);
+        Task<UsersViewModel?> GetUsersViewModelAsync(int? roleId);
         Task CheckDataAtCreationAsync(UserController controller, UserRegisterViewModel model);
         Task<User?> CheckDataAtLoginAsync(UserController controller, UserLoginViewModel model);
         Task<User?> CheckDataAtEditionAsync(UserController controller, UserEditViewModel model);

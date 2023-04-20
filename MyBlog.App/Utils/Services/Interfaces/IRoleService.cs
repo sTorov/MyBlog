@@ -17,5 +17,6 @@ namespace MyBlog.App.Utils.Services.Interfaces
         Task<Role?> CheckDataAtEditAsync(RoleController controller, RoleEditViewModel model);
         Task<bool> UpdateRoleAsync(Role role, RoleEditViewModel model);
         Task<bool> DeleteRoleAsync(int id);
+        Task<RoleViewModel?> GetRoleViewModel(int id);
     }
 }

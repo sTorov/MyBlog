@@ -91,10 +91,10 @@ namespace MyBlog.App.Controllers
 
         [Authorize(Roles = "Admin")]
         [HttpGet]
-        [Route("GetUsers/{id?}")]
-        public async Task<IActionResult> GetUsers([FromRoute] int? id)
+        [Route("GetUsers/{roleId?}")]
+        public async Task<IActionResult> GetUsers([FromRoute] int? roleId)
         {
-            var model = await _userService.GetUsersViewModelAsync(id);
+            var model = await _userService.GetUsersViewModelAsync(roleId);
             return View(model);
         }
 
