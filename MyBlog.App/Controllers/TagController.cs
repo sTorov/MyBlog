@@ -52,7 +52,7 @@ namespace MyBlog.App.Controllers
         {
             var model = await _tagService.GetTagEditViewModelAsync(id);
             if (model == null)
-                return RedirectToAction("NotFound", "Error");
+                return BadRequest();
 
             return View(model);
         }
@@ -66,7 +66,7 @@ namespace MyBlog.App.Controllers
             {
                 var result = await _tagService.UpdateTagAsync(model);
                 if (!result) 
-                    return RedirectToAction("BadRequest", "Error");
+                    return BadRequest();
 
                 return RedirectToAction("GetTags");
             }
@@ -80,7 +80,7 @@ namespace MyBlog.App.Controllers
         {
             var reselt = await _tagService.DeleteTagAsync(id);
             if(!reselt)
-                return RedirectToAction("BadRequest", "Error");
+                return BadRequest();
 
             return RedirectToAction("GetTags");
         }

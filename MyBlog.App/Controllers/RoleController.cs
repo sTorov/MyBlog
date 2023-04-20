@@ -21,7 +21,7 @@ namespace MyBlog.App.Controllers
         {
             var model = await _roleService.GetRolesViewModelAsync(userId);
             if(model == null)
-                return RedirectToAction("NotFound", "Error");
+                return BadRequest();
 
             return View(model);
         }
@@ -39,7 +39,7 @@ namespace MyBlog.App.Controllers
             {
                 var result = await _roleService.CreateRoleAsync(model);
                 if (!result)
-                    return RedirectToAction("BadRequest", "Error");
+                    return BadRequest();
 
                 return RedirectToAction("GetRoles");
             }
@@ -53,7 +53,7 @@ namespace MyBlog.App.Controllers
         {
             var model = await _roleService.GetRoleEditViewModelAsync(id);
             if (model == null)
-                return RedirectToAction("NotFound", "Error");
+                return BadRequest();
 
             return View(model);
         }
@@ -67,7 +67,7 @@ namespace MyBlog.App.Controllers
             {
                 var result = await _roleService.UpdateRoleAsync(currentRole!, model);
                 if(!result) 
-                    return RedirectToAction("BadRequest", "Error");
+                    return BadRequest();
 
                 return RedirectToAction("GetRoles");
             }
@@ -80,7 +80,7 @@ namespace MyBlog.App.Controllers
         {
             var result = await _roleService.DeleteRoleAsync(id);
             if(!result)
-                return RedirectToAction("BadRequest", "Error");
+                return BadRequest();
 
             return RedirectToAction("GetRoles");
         }

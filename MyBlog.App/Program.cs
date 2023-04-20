@@ -55,6 +55,18 @@ namespace MyBlog.App
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
+            app.UseStatusCodePages(async statusCodeContext =>
+            {
+                var response = statusCodeContext.HttpContext.Response;
+
+                response.ContentType = "text/plain; charset=UTF-8";
+                if (response.StatusCode == 400)
+                    response.Redirect("/BadRequest");
+
+                else if (response.StatusCode == 404)
+                    response.Redirect("/NotFound");
+            });
+
             app.UseRouting();
 
             app.UseAuthentication();

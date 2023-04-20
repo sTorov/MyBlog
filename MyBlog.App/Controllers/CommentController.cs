@@ -25,7 +25,7 @@ namespace MyBlog.App.Controllers
         {
             var result = await _commentService.CreateCommentAsync(model);
             if (!result)
-                return RedirectToAction("BadRequest", "Error");
+                return BadRequest();
 
             return RedirectToAction("View", "Post", new { Id = model.PostId });
         }
@@ -36,7 +36,7 @@ namespace MyBlog.App.Controllers
         public async Task<IActionResult> GetComments([FromRoute] int? postId, [FromQuery] int? userId)
         {
             if(postId != null && await _postService.GetPostByIdAsync((int)postId) == null)
-                return NotFound();
+                return BadRequest();
 
             var model = await _commentService.GetCommentsViewModelAsync(postId, userId);
                 return View(model);
@@ -50,7 +50,7 @@ namespace MyBlog.App.Controllers
             var model = await _commentService.GetCommentEditViewModelAsync(id, userId, access);
 
             if (model == null)
-                return RedirectToAction("BadRequest", "Error");
+                return BadRequest();
 
             return View(model);
         }
@@ -60,7 +60,7 @@ namespace MyBlog.App.Controllers
         {
             var result = await _commentService.UpdateCommentAsync(model);
             if(!result)
-                return RedirectToAction("BadRequest", "Error");
+                return BadRequest();
 
             if (model.ReturnUrl != null && Url.IsLocalUrl(model.ReturnUrl))
                 return Redirect(model.ReturnUrl);
@@ -73,7 +73,7 @@ namespace MyBlog.App.Controllers
             var access = User.IsInRole("Admin") || User.IsInRole("Moderator");
             var result = await _commentService.DeleteCommentAsync(id, userId, access);
             if(!result)
-                return RedirectToAction("BadRequest", "Error");
+                return BadRequest();
 
             if (returnUrl != null && Url.IsLocalUrl(returnUrl))
                 return Redirect(returnUrl);
