@@ -43,9 +43,6 @@ namespace MyBlog.App
             {
                 opt.LoginPath = "/Login";
                 opt.AccessDeniedPath = "/AccessDenied";
-                opt.Cookie.Name = "UserID";
-                opt.ExpireTimeSpan = TimeSpan.FromHours(48);
-                opt.SlidingExpiration = true;
             });
 
             builder.Services.AddAuthorization();

@@ -57,7 +57,7 @@ namespace MyBlog.App.Controllers
             var access = User.IsInRole("Admin") || User.IsInRole("Moderator");
             var result = await _postService.DeletePostAsync(id, userId, access);
 
-            if (!result) return BadRequest();
+            if (!result) return RedirectToAction("BadRequest", "Error");
 
             return RedirectToAction("GetPosts");
         }
@@ -69,7 +69,7 @@ namespace MyBlog.App.Controllers
             var access = User.IsInRole("Admin") || User.IsInRole("Moderator");
             var model = await _postService.GetPostEditViewModelAsync(id, userId, access);
 
-            if (model == null) return BadRequest();
+            if (model == null) return RedirectToAction("BadRequest", "Error");
 
             model.AllTags = await _tagService.GetAllTagsAsync();
 
@@ -84,7 +84,7 @@ namespace MyBlog.App.Controllers
             {
                 var result = await _postService.UpdatePostAsync(model, currentPost!);
                 if (!result)
-                    return BadRequest();
+                    return RedirectToAction("BadRequest", "Error");
 
                 if (model.ReturnUrl != null && Url.IsLocalUrl(model.ReturnUrl))
                     return Redirect(model.ReturnUrl);
@@ -101,7 +101,7 @@ namespace MyBlog.App.Controllers
         {
             var model = await _postService.GetPostViewModelAsync(id);
             if(model == null)
-                return BadRequest();
+                return RedirectToAction("BadRequest", "Error");
 
             model.Comments = await _commentService.GetAllCommentsByPostIdAsync(id);
             return View(model);

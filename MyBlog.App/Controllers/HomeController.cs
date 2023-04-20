@@ -20,10 +20,6 @@ namespace MyBlog.App.Controllers
 
         public IActionResult Privacy() => View();
 
-        [Authorize]
-        [Route("AccessDenied")]
-        public IActionResult AccessDenied() => View();
-
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

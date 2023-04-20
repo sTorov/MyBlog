@@ -104,7 +104,7 @@ namespace MyBlog.App.Controllers
         {
             var result = await _userService.DeleteByIdAsync(id, userId,  User.IsInRole("Admin"));
             if (!result)
-                return BadRequest();
+                return RedirectToAction("BadRequest", "Error");
 
             if(User.IsInRole("Admin")) return RedirectToAction("GetUsers");
 
@@ -119,7 +119,7 @@ namespace MyBlog.App.Controllers
         {
             var model = await _userService.GetUserEditViewModelAsync(id, userId, User.IsInRole("Admin"));
             if(model == null)
-                return BadRequest();
+                return RedirectToAction("BadRequest", "Error");
 
             model.AllRoles = await _roleService.GetEnabledRolesForUserAsync(id);
             return View(model);
@@ -159,7 +159,7 @@ namespace MyBlog.App.Controllers
         {
             var model = await _userService.GetUserViewModelAsync(id, userId, User.IsInRole("Admin"));
             if (model == null)
-                return BadRequest();
+                return RedirectToAction("BadRequest", "Error");
 
             return View(model);
         }
@@ -183,7 +183,7 @@ namespace MyBlog.App.Controllers
                 var result = await _userService.CreateUserAsync(model);
 
                 if(!result.Succeeded)
-                    return BadRequest();
+                    return RedirectToAction("BadRequest", "Error");
 
                 return RedirectToAction("GetUsers");
             }
