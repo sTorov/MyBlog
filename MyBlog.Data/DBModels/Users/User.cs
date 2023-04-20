@@ -19,7 +19,7 @@ namespace MyBlog.Data.DBModels.Users
 
         public User()
         {
-            Photo = "https://thispersondoesnotexist.com/image";            
+            Photo = "https://gamerwall.pro/uploads/posts/2021-11/thumbs/1637156211_50-gamerwall-pro-p-svetlo-seraya-tekstura-oboi-na-zastavku-50.png";            
         }
     }
 }

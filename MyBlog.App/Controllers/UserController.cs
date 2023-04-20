@@ -151,5 +151,17 @@ namespace MyBlog.App.Controllers
             model.AllRoles = await _roleService.GetEnabledRolesForUserAsync(model.Id);
             return View(model);
         }
+
+        [Authorize, CheckParameter(parameterName:"userId", path:"ViewUser")]
+        [HttpGet]
+        [Route("ViewUser/{id}")]
+        public async Task<IActionResult> View([FromRoute]int id,[FromQuery] int? userId)
+        {
+            var model = await _userService.GetUserViewModelAsync(id, userId, User.IsInRole("Admin"));
+            if (model == null)
+                return BadRequest();
+
+            return View(model);
+        }
     }
 }

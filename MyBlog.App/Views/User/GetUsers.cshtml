@@ -11,7 +11,10 @@
     {
         <div class="card m-3 col-8 col-md-5 col-lg-3">
             <div class="card-body">
-                <a class="fs-5 mb-0 link-primary text-decoration-none" href="#">@user.UserName</a>
+                <a class="fs-5 mb-0 link-primary text-decoration-none" asp-action="View" asp-controller="User"
+                    asp-route-id="@user.Id">
+                    @user.UserName
+                </a>
                 <p class="text-black-50 mb-0">@($"{user.FirstName} {user.SecondName}")</p>
                 @foreach (var role in user.Roles)
                 {

@@ -22,6 +22,7 @@ namespace MyBlog.App
                 .ForMember(u => u.PasswordHash, opt => opt.MapFrom(m => m.PasswordReg.GetHashCode()));
             CreateMap<User, UserEditViewModel>()
                 .ForMember(u => u.Login, opt => opt.MapFrom(m => m.UserName));
+            CreateMap<User, UserViewModel>();
 
             CreateMap<PostCreateViewModel, Post>();
             CreateMap<Post, PostEditViewModel>()

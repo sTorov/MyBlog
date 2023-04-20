@@ -3,45 +3,30 @@
     ViewData["Title"] = "Редактирование комментария";
 }
 
-<style>
-    .wrapper {
-        display: flex;
-    }
-
-    input, textarea {
-        margin-left: 5px;
-    }
-
-    textarea{
-        resize: none;
-    }
-
-    .warning {
-        color: red;
-        font-size: 12px;
-        margin-left: 10px;
-    }
-</style>
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.1/jquery.validate.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.11/jquery.validate.unobtrusive.js"></script>
 
-<div>
-    <h1>Редактирование комментария #@Model.Id</h1>
 
-    <form method="post" asp-controller="Comment" asp-action="Edit">
-        <div asp-validation-summary="ModelOnly" class="warning"></div>
+<div class="max-width-600 m-auto">
+    <form class="mt-5" method="post" asp-controller="Comment" asp-action="Edit">
+        <h3>Редактирование комментария</h3>
+        <hr class="hr" />
+        <div asp-validation-summary="ModelOnly" class="text-danger fs-6"></div>
 
-        <input type="hidden" asp-for="UserId" value="@Model.UserId"/>
+        <input type="hidden" asp-for="UserId" value="@Model.UserId" />
         <input type="hidden" asp-for="ReturnUrl" value="@($"{Context.Request.Query["returnUrl"]}")" />
 
-        <div class="wrapper">
-            <label asp-for="Text"></label>
-            <textarea asp-for="Text" rows="4" cols="80">@Model.Text</textarea>
-            <span asp-validation-for="Text" class="warning"></span>
+        <div class="form-group mb-4 position-relative">
+            <label asp-for="Text" class="form-label"></label>
+            <textarea class="form-control no-resize" asp-for="Text" rows="5"></textarea>
+            <span asp-validation-for="Text" class="text-danger error-message"></span>
         </div>
 
-        <button type="submit">Сохранить</button>
+        <button type="submit" class="btn btn-primary mb-2">Сохранить</button>
+        <p class="form-text"><a asp-action="Index" asp-controller="Home" class="text-decoration-none"
+            asp-route-returnUrl="@($"{Context.Request.Query["returnUrl"]}")">
+            Выйти без сохранения
+        </a></p>
     </form>
 </div>

@@ -22,5 +22,6 @@ namespace MyBlog.App.Utils.Services.Interfaces
         Task<User?> CheckDataAtLoginAsync(UserController controller, UserLoginViewModel model);
         Task<User?> CheckDataAtEditionAsync(UserController controller, UserEditViewModel model);
         Task<Dictionary<string, bool>> UpdateRoleStateForEditUserAsync(UserController controller);
+        Task<UserViewModel?> GetUserViewModelAsync(int id, int? userId, bool fullAccess);
     }
 }

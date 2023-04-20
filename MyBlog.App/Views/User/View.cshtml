@@ -1,0 +1,47 @@
+﻿@model MyBlog.App.ViewModels.Users.UserViewModel;
+@{
+    ViewData["Title"] = "Пользователь";
+}
+
+<div class="m-auto max-width-800">
+    <h3 mt-5>Профиль пользователя @Model.UserName</h3>
+    <hr class="hr"/>
+    <div class="card border-muted shadow-lg h-75">
+        <div class="row g-0">
+            <div class="col-5 col-sm-4">
+                <img class="h-100 w-100" src="@Model.Photo" alt="photo" />                
+            </div>
+            <div class="col-7 col-sm-8">
+                <div class="card-body h-100">
+                    <h3 class="fs-2">
+                        @($"{Model.FirstName} {Model.SecondName} {Model.LastName}")
+                    </h3>
+                    <p class="card-text text-muted">
+                        @Model.Email
+                    </p>
+                    <p class="card-text text-muted">
+                        <small>День рожденмя: @Model.BirthDate.ToString("d")</small>
+                    </p>
+                    <div>
+                        <a class="m-3 text-decoration-none" asp-action="GetComments" asp-controller="Comment" asp-route-userId="@Model.Id">Коментариии</a>
+                        <a class="m-3 text-decoration-none" asp-action="GetPost" asp-controller="Post" asp-route-userId="@Model.Id">Статьи</a>
+                        <a class="m-3 text-decoration-none" asp-action="GetRoles" asp-controller="Role" asp-route-userId="@Model.Id">Роли</a>
+                    </div>
+                    <div class="row pt-5">
+                        <div class="col mt-4 mb-2 justify-content-end">
+                            <a class="btn btn-outline-primary" asp-action="Edit" asp-controller="User" asp-route-id="@Model.Id">
+                                Редактировать
+                            </a>
+                        </div>
+                        <div class="col mt-4 d-flex justify-content-sm-end justify-content-start">
+                            <form method="post" asp-action="Remove" asp-controller="User">
+                                <input type="hidden" name="id" value="@Model.Id" />
+                                <button class="btn btn-outline-danger">Удалить</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>    
+</div>

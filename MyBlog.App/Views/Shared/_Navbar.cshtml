@@ -33,7 +33,7 @@
             </a>
             <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark" id="navbarDropdownMenuLink">
                 <li>
-                    <a class="dropdown-item @(Context.Request.Path == "/EditUser" ? "disabled" : "")" asp-action="Edit" asp-controller="User"
+                    <a class="dropdown-item @(Context.Request.Path.StartsWithSegments("/ViewUser") ? "disabled" : "")" asp-action="View" asp-controller="User"
                    asp-route-id="@User.Claims.FirstOrDefault(c => c.Type == "UserID")?.Value">Профиль</a></li>
                 <li>
                     <hr class="dropdown-divider" />

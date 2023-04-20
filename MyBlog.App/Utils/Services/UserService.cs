@@ -171,5 +171,16 @@ namespace MyBlog.App.Utils.Services
 
             return claims;
         }
+
+        public async Task<UserViewModel?> GetUserViewModelAsync(int id, int? userId, bool fullAccess)
+        {
+            var user = await _userManager.FindByIdAsync(id.ToString());
+            var check = fullAccess
+                ? user != null
+                : user != null && user.Id == userId;
+
+            if (!check) return null;
+            return _mapper.Map<UserViewModel>(user);
+        }
     }
 }
