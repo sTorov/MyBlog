@@ -75,7 +75,7 @@
 
     <form method="post" asp-action="Create" asp-controller="Comment">
         <input type="hidden" value="@Model.Id" name="PostId" />
-        <input type="hidden" value="@User.Claims.FirstOrDefault(c => c.Type == "UserID")?.Value" name="UserId" />
+        <input type="hidden" value="@claimUserId" name="UserId" />
 
         <div class="form-group">
             <div class="row mb-3">

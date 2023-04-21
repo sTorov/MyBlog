@@ -27,7 +27,8 @@ namespace MyBlog.App.Controllers
             if (!result)
                 return BadRequest();
 
-            return RedirectToAction("View", "Post", new { Id = model.PostId });
+            return RedirectToAction("View", "Post", 
+                new { Id = model.PostId, UserId = User.Claims.FirstOrDefault(c => c.Type == "UserID")?.Value });
         }
 
         [Authorize(Roles = "Admin, Moderator")]
@@ -35,11 +36,11 @@ namespace MyBlog.App.Controllers
         [Route("GetComments/{postId?}")]
         public async Task<IActionResult> GetComments([FromRoute] int? postId, [FromQuery] int? userId)
         {
-            if(postId != null && await _postService.GetPostByIdAsync((int)postId) == null)
+            var model = await _commentService.GetCommentsViewModelAsync(postId, userId);
+            if(model == null)
                 return BadRequest();
 
-            var model = await _commentService.GetCommentsViewModelAsync(postId, userId);
-                return View(model);
+            return View(model);
         }
 
         [CheckParameter(parameterName: "userId", path: "Comment/Edit")]

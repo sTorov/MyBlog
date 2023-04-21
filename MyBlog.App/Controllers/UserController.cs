@@ -152,12 +152,12 @@ namespace MyBlog.App.Controllers
             return View(model);
         }
 
-        [Authorize, CheckParameter(parameterName:"userId", path:"ViewUser")]
+        [Authorize]
         [HttpGet]
         [Route("ViewUser/{id}")]
-        public async Task<IActionResult> View([FromRoute]int id,[FromQuery] int? userId)
+        public async Task<IActionResult> View([FromRoute]int id)
         {
-            var model = await _userService.GetUserViewModelAsync(id, userId, User.IsInRole("Admin"));
+            var model = await _userService.GetUserViewModelAsync(id);
             if (model == null)
                 return BadRequest();
 

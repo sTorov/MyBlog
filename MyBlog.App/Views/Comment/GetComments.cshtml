@@ -1,62 +1,45 @@
 ﻿@model MyBlog.App.ViewModels.Comments.CommentsViewModel
 @{
     ViewData["Title"] = "Список комментариев";
+    var checkRole = User.IsInRole("Admin") || User.IsInRole("Moderator");
+    var claimUserId = User.Claims.FirstOrDefault(c => c.Type == "UserID")?.Value;
 }
 
-<style>
-    table {
-        border: 2px solid gray;
-    }
+<h3 class="mt-5">Все комментарии</h3>
+<div class="row justify-content-center">
+    @foreach (var comment in Model.Comments)
+    {
+        <div class="card m-3 col-9">
+            <div class="card-body">
+                <div class="ps-4">
+                    <span class="text-muted">Статья:</span>
+                    <a class="mb-0 me-4 link-primary" asp-action="View"
+                        asp-controller="Post" asp-route-id="@comment.PostId" asp-route-userId="@claimUserId">
+                            @comment.Post.Title
+                    </a>
+                    <span class="text-muted">Пользователь:</span>
+                    <a class="mb-0 link-primary" asp-action="View"
+                        asp-controller="User" asp-route-id="@comment.UserId">
+                            @comment.User.UserName
+                    </a>
+                </div>
 
-    th {
-        border: 2px solid gray;
-        padding: 3px;
-        background-color: cornflowerblue;
-    }
+                <p class="form-text">@comment.Text</p>
+                
+                <div class="d-flex justify-content-end">
+                    <form method="post" asp-action="Remove" asp-controller="Comment" asp-route-id="@comment.Id">
+                        <input type="hidden" name="userId" value="@claimUserId" />
 
-    td {
-        border: 2px solid gray;
-        padding: 3px;
-    }
-</style>
-
-<div>
-    <table>
-        <tr>
-            <th>ID</th>
-            <th>Текст</th>
-            <th>ID создателя</th>
-            <th>ID поста</th>
-            <th>Дата созадния</th>
-            <th></th>
-            <th></th>
-        </tr>
-        @foreach(var comment in Model.Comments)
-        {
-            <tr>
-                <td>@comment.Id</td>
-                <td>
-                    <details>
-                        <summary>Раскрыть</summary>
-                        @comment.Text
-                    </details>
-                </td>
-                <td>@comment.UserId</td>
-                <td>@comment.PostId</td>
-                <td>@comment.CreatedDate.ToString("dd-MM-yyyy hh:mm")</td>
-                <td>
-                    <form method="post" asp-controller="Comment" asp-action="Remove" asp-route-id="@comment.Id">
-                        <input type="hidden" value="@User.Claims.FirstOrDefault(u => u.Type == "UserID")?.Value" name="userId" />
-                        <button type="submit">Удалить</button>
+                        <div class="btn-group">
+                            <a class="btn btn-outline-success btn-sm" asp-action="Edit" asp-controller="Comment" asp-route-id="@comment.Id">
+                                Редактировать
+                            </a>
+                            <button type="submit" class="btn btn-outline-danger btn-sm">Удалить</button>
+                        </div>
                     </form>
-                </td>
-                <td>
-                    <form method="get" asp-controller="Comment" asp-action="Edit" asp-route-id="@comment.Id">
-                        <input type="hidden" value="@comment.UserId" name="userId"/>
-                        <button type="submit">Редактировать</button>
-                    </form>
-                </td>
-            </tr>
-        }
-    </table>
+                </div>
+
+            </div>
+        </div>
+    }
 </div>
