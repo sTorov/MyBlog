@@ -1,12 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace MyBlog.App.ViewModels.Comments
+namespace MyBlog.App.ViewModels.Comments.Response
 {
-    public class CommentEditViewModel
+    public class CommentCreateViewModel
     {
         public int UserId { get; set; }
-        public int Id { get; set; }
-        public string? ReturnUrl { get; set; }
+        public int PostId { get; set; }
 
         [Required(ErrorMessage = "Добавьте текст комментария!")]
         [Display(Name = "Комментарий")]

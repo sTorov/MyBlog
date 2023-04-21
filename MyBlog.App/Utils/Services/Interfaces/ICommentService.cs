@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MyBlog.App.Controllers;
-using MyBlog.App.ViewModels.Comments;
+using MyBlog.App.ViewModels.Comments.Request;
+using MyBlog.App.ViewModels.Comments.Response;
 using MyBlog.Data.DBModels.Comments;
 using MyBlog.Data.DBModels.Posts;
 using MyBlog.Data.DBModels.Users;

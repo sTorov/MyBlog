@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace MyBlog.App.ViewModels.Users
+namespace MyBlog.App.ViewModels.Users.Request
 {
     public class UserRolesViewModel
     {

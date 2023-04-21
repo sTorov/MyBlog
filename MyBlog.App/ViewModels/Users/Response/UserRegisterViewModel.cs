@@ -1,13 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace MyBlog.App.ViewModels.Users
+namespace MyBlog.App.ViewModels.Users.Response
 {
-    public class UserEditViewModel
+    public class UserRegisterViewModel
     {
-        public int Id { get; set; }
-
-        public Dictionary<string, bool>? AllRoles { get; set; }
-
         [Required(ErrorMessage = "Поле обязательно для заполнения!")]
         [Display(Name = "Имя")]
         public string FirstName { get; set; }
@@ -22,7 +18,11 @@ namespace MyBlog.App.ViewModels.Users
         [Required(ErrorMessage = "Поле обязательно для заполнения!")]
         [DataType(DataType.EmailAddress)]
         [Display(Name = "Email")]
-        public string Email { get; set; }
+        public string EmailReg { get; set; }
+
+        [Required(ErrorMessage = "Поле обязательно для заполнения!")]
+        [Display(Name = "Никнейм")]
+        public string Login { get; set; }
 
         [Required(ErrorMessage = "Поле обязательно для заполнения!")]
         [DataType(DataType.DateTime)]
@@ -30,12 +30,15 @@ namespace MyBlog.App.ViewModels.Users
         public DateTime BirthDate { get; set; }
 
         [Required(ErrorMessage = "Поле обязательно для заполнения!")]
-        [Display(Name = "Никнейм")]
-        public string Login { get; set; }
+        [DataType(DataType.Password)]
+        [Display(Name = "Пароль")]
+        [StringLength(30, ErrorMessage = "{0} - Минимальная длина пароля: {1}, Максимальная: {2}", MinimumLength = 8)]
+        public string PasswordReg { get; set; }
 
         [Required(ErrorMessage = "Поле обязательно для заполнения!")]
-        [DataType(DataType.ImageUrl)]
-        [Display(Name = "Ссылка на изображение")]
-        public string Photo { get; set; }
+        [Compare("PasswordReg", ErrorMessage = "Пароли не совпадают!")]
+        [DataType(DataType.Password)]
+        [Display(Name = "Подтвердить пароль")]
+        public string PasswordConfirm { get; set; }
     }
 }

@@ -1,6 +1,6 @@
 ﻿using MyBlog.Data.DBModels.Posts;
 
-namespace MyBlog.App.ViewModels.Posts
+namespace MyBlog.App.ViewModels.Posts.Request
 {
     public class PostsViewModel
     {

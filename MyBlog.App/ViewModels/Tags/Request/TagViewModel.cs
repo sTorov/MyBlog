@@ -1,4 +1,4 @@
-﻿namespace MyBlog.App.ViewModels.Tags
+﻿namespace MyBlog.App.ViewModels.Tags.Request
 {
     public class TagViewModel
     {

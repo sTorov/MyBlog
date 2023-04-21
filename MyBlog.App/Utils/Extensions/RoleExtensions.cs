@@ -1,4 +1,4 @@
-﻿using MyBlog.App.ViewModels.Roles;
+﻿using MyBlog.App.ViewModels.Roles.Response;
 using MyBlog.Data.DBModels.Roles;
 
 namespace MyBlog.App.Utils.Extensions

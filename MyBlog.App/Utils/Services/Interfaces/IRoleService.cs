@@ -1,5 +1,6 @@
 ﻿using MyBlog.App.Controllers;
-using MyBlog.App.ViewModels.Roles;
+using MyBlog.App.ViewModels.Roles.Request;
+using MyBlog.App.ViewModels.Roles.Response;
 using MyBlog.Data.DBModels.Roles;
 
 namespace MyBlog.App.Utils.Services.Interfaces

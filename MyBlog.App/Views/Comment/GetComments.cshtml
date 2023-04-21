@@ -1,4 +1,4 @@
-﻿@model MyBlog.App.ViewModels.Comments.CommentsViewModel
+﻿@model MyBlog.App.ViewModels.Comments.Request.CommentsViewModel
 @{
     ViewData["Title"] = "Список комментариев";
     var checkRole = User.IsInRole("Admin") || User.IsInRole("Moderator");

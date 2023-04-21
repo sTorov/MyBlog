@@ -1,6 +1,6 @@
 ﻿using MyBlog.Data.DBModels.Roles;
 
-namespace MyBlog.App.ViewModels.Roles
+namespace MyBlog.App.ViewModels.Roles.Request
 {
     public class RolesViewModel
     {

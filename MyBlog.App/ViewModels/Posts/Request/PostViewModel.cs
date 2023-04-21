@@ -2,7 +2,7 @@
 using MyBlog.Data.DBModels.Tags;
 using MyBlog.Data.DBModels.Users;
 
-namespace MyBlog.App.ViewModels.Posts
+namespace MyBlog.App.ViewModels.Posts.Request
 {
     public class PostViewModel
     {

@@ -1,6 +1,7 @@
 ﻿using MyBlog.App.Controllers;
-using MyBlog.App.ViewModels.Tags;
 using MyBlog.App.ViewModels.Tags.Interfaces;
+using MyBlog.App.ViewModels.Tags.Request;
+using MyBlog.App.ViewModels.Tags.Response;
 using MyBlog.Data.DBModels.Posts;
 using MyBlog.Data.DBModels.Tags;
 using MyBlog.Data.Repositories;

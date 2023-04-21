@@ -1,4 +1,4 @@
-﻿@model MyBlog.App.ViewModels.Posts.PostsViewModel
+﻿@model MyBlog.App.ViewModels.Posts.Request.PostsViewModel
 @{
     ViewData["Title"] = "Список статей";
     var checkRole = User.IsInRole("Admin") || User.IsInRole("Moderator");

@@ -1,4 +1,4 @@
-﻿using MyBlog.App.ViewModels.Comments;
+﻿using MyBlog.App.ViewModels.Comments.Response;
 using MyBlog.Data.DBModels.Comments;
 
 namespace MyBlog.App.Utils.Extensions

@@ -1,4 +1,4 @@
-﻿namespace MyBlog.App.ViewModels.Users
+﻿namespace MyBlog.App.ViewModels.Users.Response
 {
     public class UserCreateViewModel : UserRegisterViewModel
     {

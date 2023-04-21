@@ -4,7 +4,8 @@ using Microsoft.EntityFrameworkCore;
 using MyBlog.App.Controllers;
 using MyBlog.App.Utils.Extensions;
 using MyBlog.App.Utils.Services.Interfaces;
-using MyBlog.App.ViewModels.Roles;
+using MyBlog.App.ViewModels.Roles.Request;
+using MyBlog.App.ViewModels.Roles.Response;
 using MyBlog.Data.DBModels.Roles;
 using MyBlog.Data.DBModels.Users;
 

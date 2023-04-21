@@ -1,9 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace MyBlog.App.ViewModels.Roles
+namespace MyBlog.App.ViewModels.Roles.Response
 {
-    public class RoleCreateViewModel
+    public class RoleEditViewModel
     {
+        public int Id { get; set; }
+
         [Required(ErrorMessage = "Поле обязательно для заполнения!")]
         [Display(Name = "Название")]
         public string Name { get; set; }

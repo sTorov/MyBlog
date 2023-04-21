@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using MyBlog.App.Utils.Attributes;
 using MyBlog.App.Utils.Services.Interfaces;
-using MyBlog.App.ViewModels.Users;
+using MyBlog.App.ViewModels.Users.Response;
 using MyBlog.Data.DBModels.Users;
 
 namespace MyBlog.App.Controllers
@@ -57,7 +57,7 @@ namespace MyBlog.App.Controllers
         public async Task<IActionResult> Login(UserLoginViewModel model, [FromRoute] int? userId)
         {
             var user = await _userService.CheckDataAtLoginAsync(this, model);
-            if(ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 var result = await _signInManager.CheckPasswordSignInAsync(user!, model.Password, false);
 
@@ -83,7 +83,7 @@ namespace MyBlog.App.Controllers
         [HttpPost]
         [Route("Logout")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Logout([FromQuery] string returnUrl,[FromQuery] int? userId)
+        public async Task<IActionResult> Logout([FromQuery] string returnUrl, [FromQuery] int? userId)
         {
             await _signInManager.SignOutAsync();
             return RedirectToAction("Login", new { returnUrl, userId });
@@ -102,11 +102,11 @@ namespace MyBlog.App.Controllers
         [HttpPost]
         public async Task<IActionResult> Remove(int id, [FromForm] int? userId)
         {
-            var result = await _userService.DeleteByIdAsync(id, userId,  User.IsInRole("Admin"));
+            var result = await _userService.DeleteByIdAsync(id, userId, User.IsInRole("Admin"));
             if (!result)
                 return BadRequest();
 
-            if(User.IsInRole("Admin")) return RedirectToAction("GetUsers");
+            if (User.IsInRole("Admin")) return RedirectToAction("GetUsers");
 
             await _signInManager.SignOutAsync();
             return RedirectToAction("Index", "Home");
@@ -115,10 +115,10 @@ namespace MyBlog.App.Controllers
         [Authorize, CheckParameter(parameterName: "userId", path: "EditUser")]
         [HttpGet]
         [Route("EditUser/{id?}")]
-        public async Task<IActionResult> Edit([FromRoute]int id, [FromQuery] int? userId)
+        public async Task<IActionResult> Edit([FromRoute] int id, [FromQuery] int? userId)
         {
             var model = await _userService.GetUserEditViewModelAsync(id, userId, User.IsInRole("Admin"));
-            if(model == null)
+            if (model == null)
                 return BadRequest();
 
             model.AllRoles = await _roleService.GetEnabledRolesForUserAsync(id);
@@ -138,7 +138,7 @@ namespace MyBlog.App.Controllers
 
                 if (result.Succeeded)
                 {
-                    if(User.IsInRole("Admin")) return RedirectToAction("GetUsers");
+                    if (User.IsInRole("Admin")) return RedirectToAction("GetUsers");
                     return RedirectToAction("Index", "Home");
                 }
                 else
@@ -155,7 +155,7 @@ namespace MyBlog.App.Controllers
         [Authorize]
         [HttpGet]
         [Route("ViewUser/{id}")]
-        public async Task<IActionResult> View([FromRoute]int id)
+        public async Task<IActionResult> View([FromRoute] int id)
         {
             var model = await _userService.GetUserViewModelAsync(id);
             if (model == null)
@@ -182,7 +182,7 @@ namespace MyBlog.App.Controllers
                 model.AllRoles = await _userService.UpdateRoleStateForEditUserAsync(this);
                 var result = await _userService.CreateUserAsync(model);
 
-                if(!result.Succeeded)
+                if (!result.Succeeded)
                     return BadRequest();
 
                 return RedirectToAction("GetUsers");

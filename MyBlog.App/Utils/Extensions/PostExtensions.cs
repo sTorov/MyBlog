@@ -1,4 +1,4 @@
-﻿using MyBlog.App.ViewModels.Posts;
+﻿using MyBlog.App.ViewModels.Posts.Response;
 using MyBlog.Data.DBModels.Posts;
 using MyBlog.Data.DBModels.Tags;
 using System.Text.RegularExpressions;

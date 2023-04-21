@@ -1,7 +1,7 @@
 ﻿using MyBlog.App.ViewModels.Tags.Interfaces;
 using System.ComponentModel.DataAnnotations;
 
-namespace MyBlog.App.ViewModels.Tags
+namespace MyBlog.App.ViewModels.Tags.Response
 {
     public class TagCreateViewModel : ITagViewModel
     {

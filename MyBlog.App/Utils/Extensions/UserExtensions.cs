@@ -1,4 +1,4 @@
-﻿using MyBlog.App.ViewModels.Users;
+﻿using MyBlog.App.ViewModels.Users.Response;
 using MyBlog.Data.DBModels.Users;
 
 namespace MyBlog.App.Utils.Extensions

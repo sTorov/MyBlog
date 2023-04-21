@@ -1,7 +1,7 @@
 ﻿using MyBlog.Data.DBModels.Tags;
 using System.ComponentModel.DataAnnotations;
 
-namespace MyBlog.App.ViewModels.Posts
+namespace MyBlog.App.ViewModels.Posts.Response
 {
     public class PostCreateViewModel
     {

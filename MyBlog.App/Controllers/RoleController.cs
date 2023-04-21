@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MyBlog.App.Utils.Services.Interfaces;
-using MyBlog.App.ViewModels.Roles;
+using MyBlog.App.ViewModels.Roles.Response;
 
 namespace MyBlog.App.Controllers
 {

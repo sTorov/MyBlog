@@ -1,4 +1,4 @@
-﻿@model MyBlog.App.ViewModels.Tags.TagsViewModel
+﻿@model MyBlog.App.ViewModels.Tags.Request.TagsViewModel
 @{
     ViewData["Title"] = "Список тегов";
     var check = User.IsInRole("Admin") || User.IsInRole("Moderator");

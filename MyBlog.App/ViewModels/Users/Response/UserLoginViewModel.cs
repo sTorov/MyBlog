@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Xml.Linq;
 
-namespace MyBlog.App.ViewModels.Users
+namespace MyBlog.App.ViewModels.Users.Response
 {
     public class UserLoginViewModel
     {

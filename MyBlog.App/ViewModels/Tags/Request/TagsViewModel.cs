@@ -1,6 +1,6 @@
 ﻿using MyBlog.Data.DBModels.Tags;
 
-namespace MyBlog.App.ViewModels.Tags
+namespace MyBlog.App.ViewModels.Tags.Request
 {
     public class TagsViewModel
     {

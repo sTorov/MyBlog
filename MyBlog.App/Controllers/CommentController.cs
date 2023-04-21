@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using MyBlog.App.Utils.Attributes;
 using MyBlog.App.Utils.Services.Interfaces;
-using MyBlog.App.ViewModels.Comments;
+using MyBlog.App.ViewModels.Comments.Response;
 
 namespace MyBlog.App.Controllers
 {
@@ -26,7 +26,7 @@ namespace MyBlog.App.Controllers
             var result = await _commentService.CreateCommentAsync(model);
             if (!result)
                 return BadRequest();
-
+            
             return RedirectToAction("View", "Post", 
                 new { Id = model.PostId, UserId = User.Claims.FirstOrDefault(c => c.Type == "UserID")?.Value });
         }

@@ -1,12 +1,13 @@
 ﻿using AutoMapper;
 using MyBlog.App.Controllers;
 using MyBlog.App.Utils.Services.Interfaces;
-using MyBlog.App.ViewModels.Comments;
 using MyBlog.Data.DBModels.Comments;
 using MyBlog.App.Utils.Extensions;
 using MyBlog.Data.Repositories;
 using MyBlog.Data.Repositories.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using MyBlog.App.ViewModels.Comments.Response;
+using MyBlog.App.ViewModels.Comments.Request;
 
 namespace MyBlog.App.Utils.Services
 {

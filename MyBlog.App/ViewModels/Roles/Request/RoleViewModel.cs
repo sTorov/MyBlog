@@ -1,4 +1,4 @@
-﻿namespace MyBlog.App.ViewModels.Roles
+﻿namespace MyBlog.App.ViewModels.Roles.Request
 {
     public class RoleViewModel
     {

@@ -1,5 +1,6 @@
 ﻿using MyBlog.App.Controllers;
-using MyBlog.App.ViewModels.Posts;
+using MyBlog.App.ViewModels.Posts.Request;
+using MyBlog.App.ViewModels.Posts.Response;
 using MyBlog.Data.DBModels.Posts;
 using MyBlog.Data.DBModels.Tags;
 using MyBlog.Data.DBModels.Users;

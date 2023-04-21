@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using MyBlog.App.Controllers;
-using MyBlog.App.ViewModels.Users;
+using MyBlog.App.ViewModels.Users.Request;
+using MyBlog.App.ViewModels.Users.Response;
 using MyBlog.Data.DBModels.Users;
 using System.Security.Claims;
 
