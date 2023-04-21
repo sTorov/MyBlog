@@ -34,6 +34,7 @@ namespace MyBlog.App
 
             CreateMap<TagCreateViewModel, Tag>();
             CreateMap<Tag, TagEditViewModel>();
+            CreateMap<Tag, TagViewModel>();
 
             CreateMap<RoleCreateViewModel, Role>()
                 .ForMember(m => m.NormalizedName, opt => opt.MapFrom(p => p.Name.ToUpper()));

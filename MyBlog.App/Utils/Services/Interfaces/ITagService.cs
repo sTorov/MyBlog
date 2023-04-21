@@ -18,5 +18,6 @@ namespace MyBlog.App.Utils.Services.Interfaces
         Task<TagEditViewModel?> GetTagEditViewModelAsync(int id);
         Task<bool> UpdateTagAsync(TagEditViewModel model);
         Task<bool> DeleteTagAsync(int id);
+        Task<TagViewModel?> GetTagViewModelAsync(int id);
     }
 }

@@ -4,7 +4,6 @@ using MyBlog.App.Utils.Extensions;
 using MyBlog.App.Utils.Services.Interfaces;
 using MyBlog.App.ViewModels.Tags;
 using MyBlog.App.ViewModels.Tags.Interfaces;
-using MyBlog.Data.DBModels.Posts;
 using MyBlog.Data.DBModels.Tags;
 using MyBlog.Data.Repositories;
 using MyBlog.Data.Repositories.Interfaces;
@@ -127,6 +126,14 @@ namespace MyBlog.App.Utils.Services
                 await _tagRepository.CreateAsync(new Tag(tagName));
 
             return tagSet;
+        }
+
+        public async Task<TagViewModel?> GetTagViewModelAsync(int id)
+        {
+            var tag = await _tagRepository.GetAsync(id);
+            if (tag == null) return null;
+
+            return _mapper.Map<TagViewModel>(tag);
         }
     }
 }

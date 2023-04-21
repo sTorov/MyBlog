@@ -12,11 +12,16 @@ namespace MyBlog.Data.Repositories
             await Set.Include(p => p.Tags).Include(p => p.Comments).Include(p => p.Users).ToListAsync();
 
         public async override Task<Post?> GetAsync(int id) => 
-            await Set.Include(p => p.Tags).Include(p => p.Comments).Include(p => p.User)
+            await Set.Include(p => p.Tags).Include(p => p.Comments).Include(p => p.User).Include(p => p.Users)
                 .FirstOrDefaultAsync(p => p.Id == id);
 
         public async Task<List<Post>> GetPostsByUserIdAsync(int userId) =>
-            await Set.Include(p => p.Tags).Include(p => p.Comments).Include(p => p.Users)
+            await Set.Include(p => p.Users).Include(p => p.Tags).Include(p => p.Comments)
                 .Where(p => p.UserId == userId).ToListAsync();
+
+        public async Task<List<Post>> GetPostsByTagIdAsync(int tagId) =>
+            await Set.Include(p => p.Tags).Include(p => p.Users).Include(p => p.Comments)
+                .SelectMany(p => p.Tags, (p, t) => new { Post = p, TagId = t.Id })
+                .Where(o => o.TagId == tagId).Select(o => o.Post).ToListAsync();
     }
 }

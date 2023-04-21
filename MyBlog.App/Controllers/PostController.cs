@@ -44,10 +44,10 @@ namespace MyBlog.App.Controllers
         }
 
         [HttpGet]
-        [Route("GetPosts")]
-        public async Task<IActionResult> GetPosts([FromQuery] int? userId)
+        [Route("GetPosts/{tagId?}")]
+        public async Task<IActionResult> GetPosts([FromRoute]int? tagId, [FromQuery] int? userId)
         {
-            var model = await _postService.GetPostsViewModelAsync(userId);
+            var model = await _postService.GetPostsViewModelAsync(tagId, userId);
             return View(model);
         }
 

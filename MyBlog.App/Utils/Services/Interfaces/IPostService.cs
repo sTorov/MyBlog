@@ -9,7 +9,7 @@ namespace MyBlog.App.Utils.Services.Interfaces
     public interface IPostService
     {
         Task<bool> CreatePostAsync(PostCreateViewModel model, List<Tag>? tags);
-        Task<PostsViewModel> GetPostsViewModelAsync(int? userId);
+        Task<PostsViewModel> GetPostsViewModelAsync(int? tagId, int? userId);
         Task<PostViewModel?> GetPostViewModelAsync(int id, string userId);
         Task<PostEditViewModel?> GetPostEditViewModelAsync(int id, int? userId, bool fullAccess);
         Task<bool> DeletePostAsync(int id, int userId, bool fullAccess);

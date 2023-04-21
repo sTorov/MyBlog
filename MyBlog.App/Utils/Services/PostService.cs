@@ -45,14 +45,16 @@ namespace MyBlog.App.Utils.Services
             return true;
         }
 
-        public async Task<PostsViewModel> GetPostsViewModelAsync(int? userId) 
+        public async Task<PostsViewModel> GetPostsViewModelAsync(int? tagId, int? userId) 
         {
             var model = new PostsViewModel();
 
-            if (userId == null)
+            if (userId == null && tagId == null)
                 model.Posts = await _postRepository.GetAllAsync();
-            else
+            else if(userId != null && tagId == null)
                 model.Posts = await _postRepository.GetPostsByUserIdAsync((int)userId);
+            else
+                model.Posts= await _postRepository.GetPostsByTagIdAsync((int)tagId!);
             
             return model;
         }
@@ -105,7 +107,7 @@ namespace MyBlog.App.Utils.Services
 
         public async Task<PostViewModel?> GetPostViewModelAsync(int id, string userId)
         {
-            var post = await _postRepository.Set.Include(p => p.Users).FirstOrDefaultAsync(p => p.Id == id);
+            var post = await _postRepository.GetAsync(id);
             var user = await _userManager.FindByIdAsync(userId);
             if (post == null || user == null) return null;
 

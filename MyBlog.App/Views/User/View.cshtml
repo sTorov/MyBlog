@@ -20,12 +20,15 @@
                         @Model.Email
                     </p>
                     <p class="card-text text-muted">
-                        <small>День рожденмя: @Model.BirthDate.ToString("d")</small>
+                        <small>День рождения: @Model.BirthDate.ToString("d")</small>
                     </p>
                     <div>
-                        <a class="m-3 text-decoration-none" asp-action="GetComments" asp-controller="Comment" asp-route-userId="@Model.Id">Коментарии</a>
                         <a class="m-3 text-decoration-none" asp-action="GetPosts" asp-controller="Post" asp-route-userId="@Model.Id">Статьи</a>
-                        <a class="m-3 text-decoration-none" asp-action="GetRoles" asp-controller="Role" asp-route-userId="@Model.Id">Роли</a>
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <a class="m-3 text-decoration-none" asp-action="GetComments" asp-controller="Comment" asp-route-userId="@Model.Id">Коментарии</a>
+                            <a class="m-3 text-decoration-none" asp-action="GetRoles" asp-controller="Role" asp-route-userId="@Model.Id">Роли</a>
+                        }
                     </div>
                     <div class="row pt-5">
                         <div class="col mt-4 mb-2 justify-content-end">

@@ -48,7 +48,7 @@ namespace MyBlog.App.Controllers
 
         [Authorize(Roles = "Admin, Moderator")]
         [HttpGet]
-        public async Task<IActionResult> Edit(int id)
+        public async Task<IActionResult> Edit([FromRoute] int id)
         {
             var model = await _tagService.GetTagEditViewModelAsync(id);
             if (model == null)
@@ -83,6 +83,17 @@ namespace MyBlog.App.Controllers
                 return BadRequest();
 
             return RedirectToAction("GetTags");
+        }
+
+        [Authorize(Roles = "Admin, Moderator")]
+        [HttpGet]
+        public async Task<IActionResult> View([FromRoute]int id)
+        {
+            var model = await _tagService.GetTagViewModelAsync(id);
+            if(model == null)
+                return BadRequest();
+
+            return View(model);
         }
     }
 }
