@@ -1,6 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using MyBlog.App.ViewModels;
+﻿using Microsoft.AspNetCore.Mvc;
+using MyBlog.Services.ViewModels;
 using System.Diagnostics;
 
 namespace MyBlog.App.Controllers

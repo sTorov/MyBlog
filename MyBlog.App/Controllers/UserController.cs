@@ -2,9 +2,10 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using MyBlog.App.Utils.Attributes;
-using MyBlog.App.Utils.Services.Interfaces;
-using MyBlog.App.ViewModels.Users.Response;
+using MyBlog.App.Utils.Modules.Interfaces;
 using MyBlog.Data.DBModels.Users;
+using MyBlog.Services.Services.Interfaces;
+using MyBlog.Services.ViewModels.Users.Response;
 
 namespace MyBlog.App.Controllers
 {
@@ -13,12 +14,14 @@ namespace MyBlog.App.Controllers
         private readonly SignInManager<User> _signInManager;
         private readonly IUserService _userService;
         private readonly IRoleService _roleService;
+        private readonly IUserControllerModule _module;
 
-        public UserController(SignInManager<User> signInManager, IUserService userService, IRoleService roleService)
+        public UserController(SignInManager<User> signInManager, IUserService userService, IRoleService roleService, IUserControllerModule module)
         {
             _signInManager = signInManager;
             _userService = userService;
             _roleService = roleService;
+            _module = module;
         }
 
         [HttpGet]
@@ -29,7 +32,7 @@ namespace MyBlog.App.Controllers
         [Route("Register")]
         public async Task<IActionResult> Register(UserRegisterViewModel model)
         {
-            await _userService.CheckDataAtCreationAsync(this, model);
+            await _module.CheckDataAtCreationAsync(this, model);
             if (ModelState.IsValid)
             {
                 var (result, user) = await _userService.CreateUserAsync(model);
@@ -56,7 +59,7 @@ namespace MyBlog.App.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(UserLoginViewModel model, [FromRoute] int? userId)
         {
-            var user = await _userService.CheckDataAtLoginAsync(this, model);
+            var user = await _module.CheckDataAtLoginAsync(this, model);
             if (ModelState.IsValid)
             {
                 var result = await _signInManager.CheckPasswordSignInAsync(user!, model.Password, false);
@@ -130,10 +133,10 @@ namespace MyBlog.App.Controllers
         [Route("EditUser/{id}")]
         public async Task<IActionResult> Edit(UserEditViewModel model)
         {
-            var currentUser = await _userService.CheckDataAtEditionAsync(this, model);
+            var currentUser = await _module.CheckDataAtEditionAsync(this, model);
             if (ModelState.IsValid)
             {
-                model.AllRoles = await _userService.UpdateRoleStateForEditUserAsync(this);
+                model.AllRoles = await _module.UpdateRoleStateForEditUserAsync(this);
                 var result = await _userService.UpdateUserAsync(model, currentUser!);
 
                 if (result.Succeeded)
@@ -176,10 +179,10 @@ namespace MyBlog.App.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(UserCreateViewModel model)
         {
-            await _userService.CheckDataAtCreationAsync(this, model);
+            await _module.CheckDataAtCreationAsync(this, model);
             if (ModelState.IsValid)
             {
-                model.AllRoles = await _userService.UpdateRoleStateForEditUserAsync(this);
+                model.AllRoles = await _module.UpdateRoleStateForEditUserAsync(this);
                 var result = await _userService.CreateUserAsync(model);
 
                 if (!result.Succeeded)

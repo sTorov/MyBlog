@@ -1,17 +1,20 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using MyBlog.App.Utils.Services.Interfaces;
-using MyBlog.App.ViewModels.Tags.Response;
+using MyBlog.App.Utils.Modules.Interfaces;
+using MyBlog.Services.Services.Interfaces;
+using MyBlog.Services.ViewModels.Tags.Response;
 
 namespace MyBlog.App.Controllers
 {
     public class TagController : Controller
     {
         private readonly ITagService _tagService;
+        private readonly ITagControllerModule _module;
 
-        public TagController(ITagService tagService)
+        public TagController(ITagService tagService, ITagControllerModule module)
         {
             _tagService = tagService;
+            _module = module;
         }
 
         [Authorize]
@@ -24,7 +27,7 @@ namespace MyBlog.App.Controllers
         [Route("CreateTag")]
         public async Task<IActionResult> Create(TagCreateViewModel model)
         {
-            _ = await _tagService.CheckTagNameAsync(this, model);
+            _ = await _module.CheckTagNameAsync(this, model);
             if (ModelState.IsValid)
             {
                 var result = await _tagService.CreateTagAsync(model);
@@ -61,7 +64,7 @@ namespace MyBlog.App.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(TagEditViewModel model)
         {
-            _ = await _tagService.CheckTagNameAsync(this, model);
+            _ = await _module.CheckTagNameAsync(this, model);
             if (ModelState.IsValid)
             {
                 var result = await _tagService.UpdateTagAsync(model);

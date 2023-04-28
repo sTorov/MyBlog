@@ -1,7 +1,9 @@
-﻿using MyBlog.App.Utils.Services;
-using MyBlog.App.Utils.Services.Interfaces;
+﻿using MyBlog.App.Utils.Modules;
+using MyBlog.App.Utils.Modules.Interfaces;
 using MyBlog.Data.Repositories;
 using MyBlog.Data.Repositories.Interfaces;
+using MyBlog.Services.Services;
+using MyBlog.Services.Services.Interfaces;
 
 namespace MyBlog.App.Utils.Extensions
 {
@@ -21,6 +23,16 @@ namespace MyBlog.App.Utils.Extensions
             services.AddScoped<IPostService, PostService>();
             services.AddScoped<ICommentService, CommentService>();
             services.AddScoped<ITagService, TagService>();
+
+            return services;
+        }
+
+        public static IServiceCollection AddControllerModules(this IServiceCollection services)
+        {
+            services.AddScoped<IUserControllerModule, UserControllerModule>();
+            services.AddScoped<IRoleControllerModule, RoleControllerModule>();
+            services.AddScoped<IPostControllerModule, PostControllerModule>();
+            services.AddScoped<ITagControllerModule, TagControllerModule>();
 
             return services;
         }

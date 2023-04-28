@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MyBlog.App.Utils.Attributes;
-using MyBlog.App.Utils.Services.Interfaces;
-using MyBlog.App.ViewModels.Comments.Response;
+using MyBlog.Services.Services.Interfaces;
+using MyBlog.Services.ViewModels.Comments.Response;
 
 namespace MyBlog.App.Controllers
 {
@@ -10,13 +10,10 @@ namespace MyBlog.App.Controllers
     public class CommentController : Controller
     {
         private readonly ICommentService _commentService;
-        private readonly IPostService _postService;
 
-        public CommentController(ICommentService commentService, IPostService postService)
+        public CommentController(ICommentService commentService)
         {
             _commentService = commentService;
-            _postService = postService;
-
         }
 
         [HttpPost]

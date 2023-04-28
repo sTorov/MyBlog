@@ -8,6 +8,7 @@ using MyBlog.Data.DBModels.Users;
 using MyBlog.Data.Repositories;
 using System.Reflection;
 using MyBlog.Data.DBModels.Roles;
+using MyBlog.Services;
 
 namespace MyBlog.App
 {
@@ -25,7 +26,8 @@ namespace MyBlog.App
                 .AddCustomRepository<Post, PostRepository>()
                 .AddCustomRepository<Comment, CommentRepository>()
                 .AddCustomRepository<Tag, TagRepository>()
-                .AddAppServices();
+                .AddAppServices()
+                .AddControllerModules();
 
             var assembly = Assembly.GetAssembly(typeof(MapperProfile));
             builder.Services.AddAutoMapper(assembly);
