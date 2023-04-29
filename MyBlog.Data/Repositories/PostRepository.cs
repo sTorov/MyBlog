@@ -23,5 +23,9 @@ namespace MyBlog.Data.Repositories
             await Set.Include(p => p.Tags).Include(p => p.Users).Include(p => p.Comments)
                 .SelectMany(p => p.Tags, (p, t) => new { Post = p, TagId = t.Id })
                 .Where(o => o.TagId == tagId).Select(o => o.Post).ToListAsync();
+
+        public async Task<int> FindLastCreateIdByUserId(int userId) => 
+            await Set.Where(p => p.UserId == userId).Select(p => p.Id)
+            .OrderByDescending(id => id).FirstOrDefaultAsync();
     }
 }

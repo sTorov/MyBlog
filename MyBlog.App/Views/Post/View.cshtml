@@ -28,7 +28,10 @@
     <div class="form-text">
         @foreach (var tag in Model.Tags)
         {
-            <span class="badge bg-primary">@tag.Name</span>
+            <span class="badge tag-badge" onclick="document.getElementById('@(tag.Id)').submit()">
+                @tag.Name
+            </span>
+            <form class="d-none" id="@tag.Id" method="get" asp-action="GetPosts" asp-controller="Post" asp-route-tagId="@tag.Id"></form>
         }
     </div>
 
@@ -66,24 +69,17 @@
                             </div>
                         }
                     </div>
-                    <div class=" col form-text text-end"><span class="badge bg-success me-2">@comment.User.Email</span></div>
+                    <div class=" col form-text text-end">
+                        <span class="badge email-badge me-2" onclick="document.getElementById('@(comment.Id)').submit()">
+                            @comment.User.Email
+                        </span>
+                        <form class="d-none" method="get" id="@comment.Id" asp-action="View" asp-controller="User" asp-route-id="@comment.UserId"></form>
+                    </div>
                 </div>
             </div>   
         }
     </div>
     <hr class="hr mt-5 mb-5"/>
 
-    <form method="post" asp-action="Create" asp-controller="Comment">
-        <input type="hidden" value="@Model.Id" name="PostId" />
-        <input type="hidden" value="@claimUserId" name="UserId" />
-
-        <div class="form-group">
-            <div class="row mb-3">
-                <div class="col-sm-10">
-                    <textarea name="Text" class="form-control no-resize" rows="5" required></textarea>
-                </div>
-            </div>
-            <button type="submit" class="btn btn-primary mb-2" onclick="setScrollPos()">Оставить комментарий</button>
-        </div>
-    </form>
+    <partial name="~/Views/Comment/Create.cshtml" model="@Model.CommentCreateViewModel"/>
 </div>

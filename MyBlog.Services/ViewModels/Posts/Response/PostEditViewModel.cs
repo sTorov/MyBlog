@@ -11,12 +11,11 @@ namespace MyBlog.Services.ViewModels.Posts.Response
 
         public List<Tag>? AllTags { get; set; }
 
+        public string? PostTags { get; set; }
+
         [Required(ErrorMessage = "Поле обязательно для заполнения!")]
         [Display(Name = "Заголовок")]
         public string Title { get; set; }
-
-        [Display(Name = "Тэги (указать через пробел)")]
-        public string? PostTags { get; set; }
 
         [Required(ErrorMessage = "Добавьте контент!")]
         [Display(Name = "Контент")]

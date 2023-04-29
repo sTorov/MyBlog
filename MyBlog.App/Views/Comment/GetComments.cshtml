@@ -1,6 +1,7 @@
 ﻿@model MyBlog.Services.ViewModels.Comments.Request.CommentsViewModel
 @{
     ViewData["Title"] = "Список комментариев";
+
     var checkRole = User.IsInRole("Admin") || User.IsInRole("Moderator");
     var claimUserId = User.Claims.FirstOrDefault(c => c.Type == "UserID")?.Value;
 }
@@ -31,7 +32,8 @@
                         <input type="hidden" name="userId" value="@claimUserId" />
 
                         <div class="btn-group">
-                            <a class="btn btn-outline-success btn-sm" asp-action="Edit" asp-controller="Comment" asp-route-id="@comment.Id">
+                            <a class="btn btn-outline-success btn-sm" asp-action="Edit" asp-controller="Comment" 
+                                asp-route-id="@comment.Id" asp-route-returnUrl="@Context.Request.Path">
                                 Редактировать
                             </a>
                             <button type="submit" class="btn btn-outline-danger btn-sm">Удалить</button>

@@ -1,0 +1,22 @@
+﻿@model MyBlog.Services.ViewModels.Comments.Response.CommentCreateViewModel
+@{
+    var claimUserId = User.Claims.FirstOrDefault(c => c.Type == "UserID")?.Value;
+}
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.1/jquery.validate.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.11/jquery.validate.unobtrusive.js"></script>
+
+<form method="post" asp-action="Create" asp-controller="Comment">
+    <input type="hidden" asp-for="PostId"/>
+    <input type="hidden" asp-for="UserId" value="@claimUserId"/>
+
+    <div class="form-group">
+        <div class="row mb-3">
+            <div class="col-sm-10">
+                <textarea asp-for="Text" class="form-control no-resize" rows="5"></textarea>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary mb-2" onclick="setScrollPos()">Оставить комментарий</button>
+    </div>
+</form>

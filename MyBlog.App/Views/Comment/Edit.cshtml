@@ -1,6 +1,8 @@
 ﻿@model MyBlog.Services.ViewModels.Comments.Response.CommentEditViewModel
 @{
     ViewData["Title"] = "Редактирование комментария";
+
+    var returnUrl = Context.Request.Query["returnUrl"];
 }
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.js"></script>
@@ -15,7 +17,7 @@
         <div asp-validation-summary="ModelOnly" class="text-danger fs-6"></div>
 
         <input type="hidden" asp-for="UserId" value="@Model.UserId" />
-        <input type="hidden" asp-for="ReturnUrl" value="@($"{Context.Request.Query["returnUrl"]}")" />
+        <input type="hidden" asp-for="ReturnUrl" value="@returnUrl" />
 
         <div class="form-group mb-4 position-relative">
             <label asp-for="Text" class="form-label"></label>
@@ -25,7 +27,7 @@
 
         <button type="submit" class="btn btn-primary mb-2">Сохранить</button>
         <p class="form-text"><a asp-action="Index" asp-controller="Home" class="text-decoration-none"
-            asp-route-returnUrl="@($"{Context.Request.Query["returnUrl"]}")">
+            asp-route-returnUrl="@returnUrl">
             Выйти без сохранения
         </a></p>
     </form>

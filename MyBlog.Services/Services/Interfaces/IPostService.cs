@@ -14,5 +14,6 @@ namespace MyBlog.Services.Services.Interfaces
         Task<bool> DeletePostAsync(int id, int userId, bool fullAccess);
         Task<Post?> GetPostByIdAsync(int id);
         Task<bool> UpdatePostAsync(PostEditViewModel model, Post post);
+        Task<int> GetLastCreatePostIdByUserId(int userId);
     }
 }

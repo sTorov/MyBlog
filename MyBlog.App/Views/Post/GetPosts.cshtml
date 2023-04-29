@@ -1,6 +1,7 @@
 ﻿@model MyBlog.Services.ViewModels.Posts.Request.PostsViewModel
 @{
     ViewData["Title"] = "Список статей";
+
     var checkRole = User.IsInRole("Admin") || User.IsInRole("Moderator");
     var claimUserId = User.Claims.FirstOrDefault(c => c.Type == "UserID")?.Value;
 
@@ -18,13 +19,16 @@
         <div class="card m-3 col-10">
             <div class="card-body">
                 <a class="fs-5 mb-0 link-primary text-decoration-none" asp-action="View"
-               asp-controller="Post" asp-route-id="@post.Id" asp-route-userId="@User.Claims.FirstOrDefault(c => c.Type == "UserID")?.Value">
+               asp-controller="Post" asp-route-id="@post.Id" asp-route-userId="@claimUserId">
                     @post.Title
                 </a>
                 <div class="mb-4">
                     @foreach (var tag in post.Tags)
                     {
-                        <span class="badge bg-primary">@tag.Name</span>
+                        <span class="badge tag-badge" onclick="document.getElementById('@(tag.Id)').submit()">
+                            @tag.Name
+                        </span>
+                        <form class="d-none" id="@tag.Id" method="get" asp-action="GetPosts" asp-controller="Post" asp-route-tagId="@tag.Id"></form>
                     }
                 </div>
                 <div class="row">

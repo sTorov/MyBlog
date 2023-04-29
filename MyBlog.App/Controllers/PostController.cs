@@ -43,7 +43,7 @@ namespace MyBlog.App.Controllers
                 ModelState.AddModelError(string.Empty, "Не удалось создать статью!");
                 return View(model);
             }
-            return RedirectToAction("GetPosts");
+            return RedirectToAction("View", new { Id = await _postService.GetLastCreatePostIdByUserId(model.UserId) });
         }
 
         [HttpGet]
@@ -98,6 +98,7 @@ namespace MyBlog.App.Controllers
             return View(model);
         }
 
+        [CheckParameter(parameterName: "userId", path: "ViewPost")]
         [HttpGet]
         [Route("ViewPost/{id}")]
         public async Task<IActionResult> View([FromRoute] int id, [FromQuery] string userId)

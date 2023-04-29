@@ -9,7 +9,6 @@ namespace MyBlog.Services.ViewModels.Posts.Response
 
         public List<Tag> AllTags { get; set; }
 
-        [Display(Name = "Теги (указать через пробел)")]
         public string? PostTags { get; set; }
 
         [Required(ErrorMessage = "Поле обязательно для заполнения!")]

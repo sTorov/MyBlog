@@ -4,6 +4,7 @@ using MyBlog.Services.Extensions;
 using MyBlog.Services.Services.Interfaces;
 using MyBlog.Services.ViewModels.Posts.Request;
 using MyBlog.Services.ViewModels.Posts.Response;
+using MyBlog.Services.ViewModels.Comments.Response;
 using MyBlog.Data.DBModels.Posts;
 using MyBlog.Data.DBModels.Tags;
 using MyBlog.Data.DBModels.Users;
@@ -107,7 +108,12 @@ namespace MyBlog.Services.Services
                 await _postRepository.UpdateAsync(post);
             }
 
-            return _mapper.Map<PostViewModel>(post);
+            var model = _mapper.Map<PostViewModel>(post);
+            model.CommentCreateViewModel = new CommentCreateViewModel { PostId = id };
+
+            return model;
         }
+
+        public async Task<int> GetLastCreatePostIdByUserId(int userId) => await _postRepository.FindLastCreateIdByUserId(userId);
     }
 }

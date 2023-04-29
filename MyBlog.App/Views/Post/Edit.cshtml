@@ -1,7 +1,13 @@
 ﻿@model MyBlog.Services.ViewModels.Posts.Response.PostEditViewModel
 @{
     ViewData["Title"] = "Редактирование статьи";
+
+    var returnUrl = Context.Request.Query["returnUrl"];
 }
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.1/jquery.validate.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.11/jquery.validate.unobtrusive.js"></script>
 
 <div class="mt-5 m-auto">
     <h3>Редактирование статьи</h3>
@@ -10,7 +16,7 @@
         <div asp-validation-summary="ModelOnly" class="text-danger fs-6"></div>
 
         <input type="hidden" id="post-tags" asp-for="PostTags" />
-        <input type="hidden" asp-for="ReturnUrl" value="@($"{Context.Request.Query["returnUrl"]}")" />
+        <input type="hidden" asp-for="ReturnUrl" value="@returnUrl" />
 
         <div class="max-width-600">
             <h5 class="text-muted ms-2">Теги</h5>
@@ -51,7 +57,7 @@
 
         <button type="submit" class="btn btn-primary mb-2">Сохранить изменения</button>
         <p class="form-text">
-            <a asp-action="Index" asp-controller="Home" asp-route-returnUrl="@($"{Context.Request.Query["returnUrl"]}")"
+            <a asp-action="Index" asp-controller="Home" asp-route-returnUrl="@returnUrl"
                class="text-decoration-none">Выйти без сохранения</a></p>
     </form>
 </div>
