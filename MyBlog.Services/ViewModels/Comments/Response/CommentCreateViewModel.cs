@@ -7,7 +7,7 @@ namespace MyBlog.Services.ViewModels.Comments.Response
         public int UserId { get; set; }
         public int PostId { get; set; }
 
-        [Required(ErrorMessage = "Добавьте текст комментария!")]
+        [Required]
         [Display(Name = "Комментарий")]
         public string Text { get; set; }
     }

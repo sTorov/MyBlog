@@ -1,6 +1,8 @@
 ﻿@model MyBlog.Services.ViewModels.Roles.Response.RoleEditViewModel
 @{
     ViewData["Title"] = "Редактирование роли";
+
+    var defaultNameCheck = Model.Name == "Admin" || Model.Name == "Moderator" || Model.Name == "User";
 }
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.js"></script>
@@ -19,7 +21,14 @@
             <div class="row">
                 <label asp-for="Name" class="form-label col-sm-3 col-form-label"></label>
                 <div class="col-sm-9">
-                    <input asp-for="Name" class="form-control" />
+                    @if (defaultNameCheck)
+                    {
+                        <input asp-for="Name" class="form-control" disabled/>
+                    }
+                    else
+                    {
+                        <input asp-for="Name" class="form-control"/>
+                    }
                 </div>
             </div>
             <span asp-validation-for="Name" class="text-danger error-message"></span>

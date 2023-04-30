@@ -16,7 +16,7 @@ namespace MyBlog.App.Utils.Modules
             _tagService = tagService;
         }
 
-        public async Task<Tag?> CheckTagNameAsync<T>(TagController controller, T model) where T : ITagViewModel
+        public async Task<Tag?> CheckTagNameAsync<T>(TagController controller, T model) where T : ITagResponseViewModel
         {
             var checkTag = await _tagService.GetTagByNameAsync(model.Name);
             var check = model is TagEditViewModel editModel

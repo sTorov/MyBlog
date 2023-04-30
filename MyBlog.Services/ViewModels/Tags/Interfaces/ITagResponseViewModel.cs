@@ -1,6 +1,6 @@
 ﻿namespace MyBlog.Services.ViewModels.Tags.Interfaces
 {
-    public interface ITagViewModel
+    public interface ITagResponseViewModel
     {
         string Name { get; set; }
     }

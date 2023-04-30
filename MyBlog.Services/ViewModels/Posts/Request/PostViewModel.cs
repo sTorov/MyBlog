@@ -16,10 +16,5 @@ namespace MyBlog.Services.ViewModels.Posts.Request
         public List<Comment> Comments { get; set; }
 
         public CommentCreateViewModel CommentCreateViewModel { get; set; }
-
-        public PostViewModel()
-        {
-            CommentCreateViewModel = new CommentCreateViewModel { PostId = Id };
-        }
     }
 }

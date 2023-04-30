@@ -6,6 +6,6 @@ namespace MyBlog.App.Utils.Modules.Interfaces
 {
     public interface ITagControllerModule
     {
-        Task<Tag?> CheckTagNameAsync<T>(TagController controller, T model) where T : ITagViewModel;
+        Task<Tag?> CheckTagNameAsync<T>(TagController controller, T model) where T : ITagResponseViewModel;
     }
 }
