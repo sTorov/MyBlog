@@ -6,6 +6,8 @@ namespace MyBlog.Services.ViewModels.Users.Response
     {
         public int Id { get; set; }
 
+        public string? ReturnUrl { get; set; } 
+
         public Dictionary<string, bool>? AllRoles { get; set; }
 
         [Required(ErrorMessage = "Поле обязательно для заполнения!")]

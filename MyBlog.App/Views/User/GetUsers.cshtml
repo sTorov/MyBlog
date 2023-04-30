@@ -18,7 +18,10 @@
                 <p class="text-black-50 mb-0">@($"{user.FirstName} {user.SecondName}")</p>
                 @foreach (var role in user.Roles)
                 {
-                    <span class="badge bg-primary">@role.Name</span>
+                    <span class="badge tag-badge" onclick="document.getElementById('@(role.Id)').submit()">
+                        @role.Name
+                    </span>
+                    <form class="d-none" id="@role.Id" method="get" asp-action="GetUsers" asp-controller="User" asp-route-roleId="@role.Id"></form>
                 }
             </div>
             <p class="form-text text-end">@user.Email</p>

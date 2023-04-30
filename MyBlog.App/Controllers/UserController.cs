@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using MyBlog.App.Utils.Attributes;
@@ -38,7 +39,11 @@ namespace MyBlog.App.Controllers
                 var (result, user) = await _userService.CreateUserAsync(model);
                 if (result.Succeeded)
                 {
-                    await _signInManager.SignInWithClaimsAsync(user, false, await _userService.GetClaimsAsync(user));
+                    await _signInManager.SignInWithClaimsAsync(user, new AuthenticationProperties { 
+                        IsPersistent = false,
+                        AllowRefresh = true                        
+                    }, await _userService.GetClaimsAsync(user));
+
                     return RedirectToAction("Index", "Home");
                 }
                 else
@@ -67,7 +72,10 @@ namespace MyBlog.App.Controllers
                 if (result.Succeeded)
                 {
                     var claims = await _userService.GetClaimsAsync(user!);
-                    await _signInManager.SignInWithClaimsAsync(user!, false, claims);
+                    await _signInManager.SignInWithClaimsAsync(user!, new AuthenticationProperties {
+                        IsPersistent = false,
+                        AllowRefresh = true
+                    }, claims);
 
                     var check = userId != null && claims.FirstOrDefault(c => c.Type == "UserID")?.Value == userId.ToString();
                     if (!string.IsNullOrEmpty(model.ReturnUrl) && Url.IsLocalUrl(model.ReturnUrl) && check)
@@ -140,10 +148,7 @@ namespace MyBlog.App.Controllers
                 var result = await _userService.UpdateUserAsync(model, currentUser!);
 
                 if (result.Succeeded)
-                {
-                    if (User.IsInRole("Admin")) return RedirectToAction("GetUsers");
-                    return RedirectToAction("Index", "Home");
-                }
+                    return RedirectToAction("Index", "Home", new { model.ReturnUrl });
                 else
                 {
                     foreach (var error in result.Errors)

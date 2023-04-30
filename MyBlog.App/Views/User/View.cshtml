@@ -19,10 +19,14 @@
                     <h3 class="fs-2">
                         @($"{Model.FirstName} {Model.SecondName} {Model.LastName}")
                     </h3>
-                    <p class="card-text text-muted">
+                    <p class="card-text text-muted mb-1">
                         @Model.Email
                     </p>
-                    <p class="card-text text-muted">
+                    @foreach (var role in Model.Roles)
+                    {
+                        <span class="badge bg-primary">@role.Name</span>
+                    }
+                    <p class="card-text text-muted mt-3">
                         <small>День рождения: @Model.BirthDate.ToString("d")</small>
                     </p>
                     <div>
@@ -37,10 +41,11 @@
                         }
                     </div>
                     <div class="row pt-5">
-                        @if(User.IsInRole("Admin") || (check && Model.Id.ToString() == climeUserId))
+                        @if (User.IsInRole("Admin") || (!User.IsInRole("Admin") && Model.Id.ToString() == climeUserId))
                         {
                             <div class="col mt-4 mb-2 justify-content-end">
-                                <a class="btn btn-outline-primary" asp-action="Edit" asp-controller="User" asp-route-id="@Model.Id">
+                                <a class="btn btn-outline-primary" asp-action="Edit" asp-controller="User" 
+                                    asp-route-id="@Model.Id" asp-route-returnUrl="@Context.Request.Path">
                                     Редактировать
                                 </a>
                             </div>

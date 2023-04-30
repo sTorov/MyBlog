@@ -1,6 +1,8 @@
 ﻿@model MyBlog.Services.ViewModels.Users.Response.UserEditViewModel
 @{
     ViewData["Title"] = "Редактирование пользователя";
+
+    var returnUrl = Context.Request.Query["returnUrl"];
 }
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.js"></script>
@@ -14,6 +16,7 @@
         <div asp-validation-summary="ModelOnly" class="text-danger fs-6"></div>
 
         <input type="hidden" asp-for="Id" />
+        <input type="hidden" asp-for="ReturnUrl" value="@returnUrl" />
 
         @if (User.IsInRole("Admin"))
         {
@@ -80,7 +83,7 @@
 
         <div class="form-group mb-4 position-relative">
             <div class="row">
-                <label asp-for="BirthDate" class="form-label col-sm-3 col-form-label"></label>
+                <label asp-for="BirthDate" class="form-label col-sm-6 col-form-label"></label>
                 <div class="col-sm-6">
                     <input asp-for="BirthDate" type="date" class="form-control" />
                 </div>
@@ -107,6 +110,9 @@
         </div>
 
         <button type="submit" class="btn btn-primary mb-2">Сохранить</button>
-        <p class="form-text"><a asp-action="Index" asp-controller="Home" class="text-decoration-none">Выйти без сохранения</a></p>
+        <p class="form-text"><a asp-action="Index" asp-controller="Home" asp-route-returnUrl="@returnUrl"
+            class="text-decoration-none">
+            Выйти без сохранения
+        </a></p>
     </form>
 </div>

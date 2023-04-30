@@ -1,4 +1,6 @@
-﻿namespace MyBlog.Services.ViewModels.Users.Request
+﻿using MyBlog.Data.DBModels.Roles;
+
+namespace MyBlog.Services.ViewModels.Users.Request
 {
     public class UserViewModel
     {
@@ -10,5 +12,6 @@
         public DateTime BirthDate { get; set; }
         public string Photo { get; set; }
         public string Email { get; set; }
+        public List<Role> Roles { get; set; }
     }
 }

@@ -77,3 +77,8 @@ function getScrollPos() {
         localStorage.removeItem('y-pos');
     }
 }
+
+function resetDataInDateInput() {
+    const input = document.querySelector('input[type=date]');
+    input.value = '';
+}

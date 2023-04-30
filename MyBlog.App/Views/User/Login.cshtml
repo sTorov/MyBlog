@@ -13,7 +13,7 @@
         <hr class="hr"/>
         <div asp-validation-summary="ModelOnly" class="text-danger fs-6"></div>
 
-        <input type="hidden" asp-for="ReturnUrl" value="@Context.Request.Query["ReturnUrl"].ToString()"/>
+        <input type="hidden" asp-for="ReturnUrl" value="@Context.Request.Query["ReturnUrl"]"/>
 
         <div class="form-group mb-4 position-relative">
             <div class="row">

@@ -146,7 +146,7 @@ namespace MyBlog.Services.Services
 
         public async Task<UserViewModel?> GetUserViewModelAsync(int id)
         {
-            var user = await _userManager.FindByIdAsync(id.ToString());
+            var user = await _userManager.Users.Include(u => u.Roles).FirstOrDefaultAsync(u => u.Id == id);
 
             if (user == null) return null;
             return _mapper.Map<UserViewModel>(user);
