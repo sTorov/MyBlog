@@ -1,12 +1,13 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MyBlog.App.Utils.Attributes;
 using MyBlog.App.Utils.Modules.Interfaces;
 using MyBlog.Services.Services.Interfaces;
 using MyBlog.Services.ViewModels.Roles.Response;
 
 namespace MyBlog.App.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin"), CheckUserId]
     public class RoleController : Controller
     {
         private readonly IRoleService _roleService;

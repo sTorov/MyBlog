@@ -1,11 +1,13 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MyBlog.App.Utils.Attributes;
 using MyBlog.App.Utils.Modules.Interfaces;
 using MyBlog.Services.Services.Interfaces;
 using MyBlog.Services.ViewModels.Tags.Response;
 
 namespace MyBlog.App.Controllers
 {
+    [CheckUserId]
     public class TagController : Controller
     {
         private readonly ITagService _tagService;

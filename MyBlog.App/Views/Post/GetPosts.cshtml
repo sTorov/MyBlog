@@ -38,7 +38,7 @@
                             <form method="post" asp-action="Remove" asp-controller="Post" asp-route-id="@post.Id" >
                             <input type="hidden" name="userId" value="@claimUserId" />
                                 <div class="btn-group">
-                                    <a class="btn btn-outline-success btn-sm" asp-action="Edit" asp-controller="Post" asp-route-id="@post.Id">
+                                    <a class="btn btn-outline-success btn-sm" asp-action="Edit" asp-controller="Post" asp-route-id="@post.Id" asp-route-userId="@claimUserId">
                                         Редактировать
                                     </a>
                                     <button type="submit" class="btn btn-outline-danger btn-sm">Удалить</button>

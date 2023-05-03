@@ -18,7 +18,7 @@
         <div class="col d-flex align-items-center justify-content-end">
             @if (checkRole || (!checkRole && claimUserId == Model.User.Id.ToString()))
             {
-                <a class="btn btn-outline-primary btn-sm m-0" asp-action="Edit" asp-controller="Post" asp-route-id="@Model.Id"
+                <a class="btn btn-outline-primary btn-sm m-0" asp-action="Edit" asp-controller="Post" asp-route-id="@Model.Id" asp-route-userId="@claimUserId"
                     asp-route-returnUrl="@Context.Request.Path">
                     Редактировать
                 </a>
@@ -60,7 +60,7 @@
 
                                     <div class="btn-group">
                                         <a class="btn btn-outline-success btn-sm" onclick="setScrollPos()" asp-action="Edit" asp-controller="Comment" asp-route-id="@comment.Id"
-                                            asp-route-returnUrl="@Context.Request.Path">
+                                            asp-route-returnUrl="@Context.Request.Path" asp-route-userId="@claimUserId">
                                             Редактировать
                                         </a>
                                         <button type="submit" class="btn btn-outline-danger btn-sm" onclick="setScrollPos()">Удалить</button>

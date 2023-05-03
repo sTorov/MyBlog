@@ -9,6 +9,7 @@ using MyBlog.Data.Repositories;
 using System.Reflection;
 using MyBlog.Data.DBModels.Roles;
 using MyBlog.Services;
+using Microsoft.AspNetCore.Http.Extensions;
 
 namespace MyBlog.App
 {
@@ -67,6 +68,12 @@ namespace MyBlog.App
 
                 else if (response.StatusCode == 404)
                     response.Redirect("/NotFound");
+
+                else if (response.StatusCode == 401)
+                {
+                    var returnUrl = statusCodeContext.HttpContext.Request.GetEncodedPathAndQuery().Replace("/", "%2F");
+                    response.Redirect($"/Login?ReturnUrl={returnUrl}");
+                }
             });
 
             app.UseRouting();

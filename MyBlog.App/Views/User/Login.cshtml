@@ -8,7 +8,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.11/jquery.validate.unobtrusive.js"></script>
 
 <div class="max-width-350 m-auto">
-    <form class="mt-5" method="post" asp-controller="User" asp-action="Login">
+    <form class="mt-5" method="post" asp-controller="User" asp-action="Login" asp-route-userId="@Context.Request.Query["userId"]">
         <h3>Вход в приложение</h3>
         <hr class="hr"/>
         <div asp-validation-summary="ModelOnly" class="text-danger fs-6"></div>

@@ -32,7 +32,7 @@
                         <input type="hidden" name="userId" value="@claimUserId" />
 
                         <div class="btn-group">
-                            <a class="btn btn-outline-success btn-sm" asp-action="Edit" asp-controller="Comment" 
+                            <a class="btn btn-outline-success btn-sm" asp-action="Edit" asp-controller="Comment" asp-route-userId="@claimUserId"
                                 asp-route-id="@comment.Id" asp-route-returnUrl="@Context.Request.Path">
                                 Редактировать
                             </a>

@@ -6,7 +6,7 @@ using MyBlog.Services.ViewModels.Comments.Response;
 
 namespace MyBlog.App.Controllers
 {
-    [Authorize]
+    [Authorize, CheckUserId]
     public class CommentController : Controller
     {
         private readonly ICommentService _commentService;
@@ -40,7 +40,6 @@ namespace MyBlog.App.Controllers
             return View(model);
         }
 
-        [CheckParameter(parameterName: "userId", path: "Comment/Edit")]
         [HttpGet]
         public async Task<IActionResult> Edit([FromRoute] int id, [FromQuery] int? userId)
         {

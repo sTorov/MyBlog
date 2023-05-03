@@ -56,13 +56,13 @@ namespace MyBlog.App.Controllers
         }
 
         [HttpGet]
-        [Route("Login/{userId?}")]
+        [Route("Login")]
         public IActionResult Login() => View();
 
         [HttpPost]
-        [Route("Login/{userId?}")]
+        [Route("Login")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Login(UserLoginViewModel model, [FromRoute] int? userId)
+        public async Task<IActionResult> Login(UserLoginViewModel model)
         {
             var user = await _module.CheckDataAtLoginAsync(this, model);
             if (ModelState.IsValid)
@@ -77,8 +77,7 @@ namespace MyBlog.App.Controllers
                         AllowRefresh = true
                     }, claims);
 
-                    var check = userId != null && claims.FirstOrDefault(c => c.Type == "UserID")?.Value == userId.ToString();
-                    if (!string.IsNullOrEmpty(model.ReturnUrl) && Url.IsLocalUrl(model.ReturnUrl) && check)
+                    if (!string.IsNullOrEmpty(model.ReturnUrl) && Url.IsLocalUrl(model.ReturnUrl))
                         return Redirect(model.ReturnUrl);
 
                     return RedirectToAction("Index", "Home");
@@ -94,13 +93,13 @@ namespace MyBlog.App.Controllers
         [HttpPost]
         [Route("Logout")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Logout([FromQuery] string returnUrl, [FromQuery] int? userId)
+        public async Task<IActionResult> Logout([FromQuery] string returnUrl)
         {
             await _signInManager.SignOutAsync();
-            return RedirectToAction("Login", new { returnUrl, userId });
+            return RedirectToAction("Login", new { ReturnUrl = returnUrl });
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin"), CheckUserId]
         [HttpGet]
         [Route("GetUsers/{roleId?}")]
         public async Task<IActionResult> GetUsers([FromRoute] int? roleId)
@@ -109,7 +108,7 @@ namespace MyBlog.App.Controllers
             return View(model);
         }
 
-        [Authorize]
+        [Authorize, CheckUserId]
         [HttpPost]
         public async Task<IActionResult> Remove(int id, [FromForm] int? userId)
         {
@@ -123,7 +122,7 @@ namespace MyBlog.App.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        [Authorize, CheckParameter(parameterName: "userId", path: "EditUser")]
+        [Authorize, CheckUserId]
         [HttpGet]
         [Route("EditUser/{id?}")]
         public async Task<IActionResult> Edit([FromRoute] int id, [FromQuery] int? userId)
@@ -136,7 +135,7 @@ namespace MyBlog.App.Controllers
             return View(model);
         }
 
-        [Authorize]
+        [Authorize, CheckUserId]
         [HttpPost]
         [Route("EditUser/{id}")]
         public async Task<IActionResult> Edit(UserEditViewModel model)
@@ -160,7 +159,7 @@ namespace MyBlog.App.Controllers
             return View(model);
         }
 
-        [Authorize]
+        [Authorize, CheckUserId]
         [HttpGet]
         [Route("ViewUser/{id}")]
         public async Task<IActionResult> View([FromRoute] int id)
@@ -172,7 +171,7 @@ namespace MyBlog.App.Controllers
             return View(model);
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin"), CheckUserId]
         [HttpGet]
         public async Task<IActionResult> Create()
         {
@@ -180,7 +179,7 @@ namespace MyBlog.App.Controllers
             return View(model);
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin"), CheckUserId]
         [HttpPost]
         public async Task<IActionResult> Create(UserCreateViewModel model)
         {

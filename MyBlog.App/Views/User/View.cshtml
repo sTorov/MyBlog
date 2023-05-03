@@ -2,7 +2,7 @@
 @{
     ViewData["Title"] = "Пользователь";
 
-    var climeUserId = @User.Claims.FirstOrDefault(c => c.Type == "UserID")?.Value;
+    var claimUserId = @User.Claims.FirstOrDefault(c => c.Type == "UserID")?.Value;
     var check = User.IsInRole("Admin") || User.IsInRole("Moderator");
 }
 
@@ -41,10 +41,10 @@
                         }
                     </div>
                     <div class="row pt-5">
-                        @if (User.IsInRole("Admin") || (!User.IsInRole("Admin") && Model.Id.ToString() == climeUserId))
+                        @if (User.IsInRole("Admin") || (!User.IsInRole("Admin") && Model.Id.ToString() == claimUserId))
                         {
                             <div class="col mt-4 mb-2 justify-content-end">
-                                <a class="btn btn-outline-primary" asp-action="Edit" asp-controller="User" 
+                                <a class="btn btn-outline-primary" asp-action="Edit" asp-controller="User" asp-route-userId="@claimUserId"
                                     asp-route-id="@Model.Id" asp-route-returnUrl="@Context.Request.Path">
                                     Редактировать
                                 </a>
@@ -52,7 +52,7 @@
                             <div class="col mt-4 d-flex justify-content-sm-end justify-content-start">
                                 <form method="post" asp-action="Remove" asp-controller="User">
                                     <input type="hidden" name="id" value="@Model.Id" />
-                                    <input type="hidden" name="userId" value="@climeUserId" />
+                                    <input type="hidden" name="userId" value="@claimUserId" />
 
                                     <button type="submit" class="btn btn-outline-danger">Удалить</button>
                                 </form>

@@ -41,8 +41,7 @@
                 <li>
                     <a class="dropdown-item" href="#" onclick="document.getElementById('logout').submit()">Выход</a>
                     <form id="logout" method="post" asp-controller="User" asp-action="Logout" 
-                        asp-route-returnUrl="@(Context.Request.Path + Context.Request.QueryString)"
-                        asp-route-userId="@User.Claims.FirstOrDefault(c => c.Type == "UserID")?.Value"></form>
+                        asp-route-returnUrl="@(Context.Request.Path + Context.Request.QueryString)"></form>
                 </li>
             </ul>
         </li>

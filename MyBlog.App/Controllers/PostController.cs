@@ -7,7 +7,7 @@ using MyBlog.Services.ViewModels.Posts.Response;
 
 namespace MyBlog.App.Controllers
 {
-    [Authorize]
+    [Authorize, CheckUserId]
     public class PostController : Controller
     {
         private readonly IPostService _postService;
@@ -65,7 +65,6 @@ namespace MyBlog.App.Controllers
             return RedirectToAction("GetPosts");
         }
 
-        [CheckParameter(parameterName: "userId", path: "Post/Edit")]
         [HttpGet]
         public async Task<IActionResult> Edit([FromRoute] int id, [FromQuery] int? userId)
         {
@@ -98,7 +97,6 @@ namespace MyBlog.App.Controllers
             return View(model);
         }
 
-        [CheckParameter(parameterName: "userId", path: "ViewPost")]
         [HttpGet]
         [Route("ViewPost/{id}")]
         public async Task<IActionResult> View([FromRoute] int id, [FromQuery] string userId)
