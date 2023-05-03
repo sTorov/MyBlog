@@ -33,8 +33,9 @@ namespace MyBlog.App
             var assembly = Assembly.GetAssembly(typeof(MapperProfile));
             builder.Services.AddAutoMapper(assembly);
 
+            Console.WriteLine(builder.Environment.IsProduction());
+
             builder.Services.AddIdentity<User, Role>(cfg => {
-                //заглушка
                 cfg.Password.RequiredLength = 8;
                 cfg.Password.RequireNonAlphanumeric = false;
                 cfg.Password.RequireUppercase = false;

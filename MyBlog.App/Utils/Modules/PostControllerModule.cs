@@ -6,6 +6,9 @@ using MyBlog.Services.ViewModels.Posts.Response;
 
 namespace MyBlog.App.Utils.Modules
 {
+    /// <summary>
+    /// Модуль контроллера статей
+    /// </summary>
     public class PostControllerModule : IPostControllerModule
     {
         private readonly IPostService _postService;
@@ -15,7 +18,7 @@ namespace MyBlog.App.Utils.Modules
             _postService = postService;
         }
 
-        public async Task<Post?> CheckDataAtUpdatePostAsync(PostController controller, PostEditViewModel model)
+        public async Task<Post?> CheckDataAtUpdateAsync(PostController controller, PostEditViewModel model)
         {
             var currentPost = await _postService.GetPostByIdAsync(model.Id);
             if (currentPost == null)

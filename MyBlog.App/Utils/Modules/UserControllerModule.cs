@@ -8,6 +8,9 @@ using MyBlog.Services.ViewModels.Users.Response;
 
 namespace MyBlog.App.Utils.Modules
 {
+    /// <summary>
+    /// Модуль контроллера пользователей
+    /// </summary>
     public class UserControllerModule : IUserControllerModule
     {
         private readonly UserManager<User> _userManager;

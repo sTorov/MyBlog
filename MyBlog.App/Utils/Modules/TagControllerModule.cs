@@ -7,6 +7,9 @@ using MyBlog.Services.ViewModels.Tags.Response;
 
 namespace MyBlog.App.Utils.Modules
 {
+    /// <summary>
+    /// Модель контроллера тегов
+    /// </summary>
     public class TagControllerModule : ITagControllerModule
     {
         private readonly ITagService _tagService;

@@ -10,6 +10,9 @@ using MyBlog.Services.ViewModels.Users.Response;
 
 namespace MyBlog.App.Controllers
 {
+    /// <summary>
+    /// Контроллер пользователей
+    /// </summary>
     public class UserController : Controller
     {
         private readonly SignInManager<User> _signInManager;
@@ -25,10 +28,16 @@ namespace MyBlog.App.Controllers
             _module = module;
         }
 
+        /// <summary>
+        /// Страница регистрации пользователя
+        /// </summary>
         [HttpGet]
         [Route("Register")]
         public IActionResult Register() => View();
 
+        /// <summary>
+        /// Регистрация пользователя
+        /// </summary>
         [HttpPost]
         [Route("Register")]
         public async Task<IActionResult> Register(UserRegisterViewModel model)
@@ -55,10 +64,16 @@ namespace MyBlog.App.Controllers
             return View("Register", model);
         }
 
+        /// <summary>
+        /// Страница авторизации пользователя
+        /// </summary>
         [HttpGet]
         [Route("Login")]
         public IActionResult Login() => View();
 
+        /// <summary>
+        /// Авторизация пользователя
+        /// </summary>
         [HttpPost]
         [Route("Login")]
         [ValidateAntiForgeryToken]
@@ -89,6 +104,9 @@ namespace MyBlog.App.Controllers
             return View(model);
         }
 
+        /// <summary>
+        /// Выход пользователя из системы
+        /// </summary>
         [Authorize]
         [HttpPost]
         [Route("Logout")]
@@ -99,6 +117,9 @@ namespace MyBlog.App.Controllers
             return RedirectToAction("Login", new { ReturnUrl = returnUrl });
         }
 
+        /// <summary>
+        /// Страница всех пользователей (получение пользователей с указаной ролью)
+        /// </summary>
         [Authorize(Roles = "Admin"), CheckUserId]
         [HttpGet]
         [Route("GetUsers/{roleId?}")]
@@ -108,6 +129,9 @@ namespace MyBlog.App.Controllers
             return View(model);
         }
 
+        /// <summary>
+        /// Удаление пользователя
+        /// </summary>
         [Authorize, CheckUserId]
         [HttpPost]
         public async Task<IActionResult> Remove(int id, [FromForm] int? userId)
@@ -122,6 +146,9 @@ namespace MyBlog.App.Controllers
             return RedirectToAction("Index", "Home");
         }
 
+        /// <summary>
+        /// Страница редактирования пользователя
+        /// </summary>
         [Authorize, CheckUserId]
         [HttpGet]
         [Route("EditUser/{id?}")]
@@ -135,6 +162,9 @@ namespace MyBlog.App.Controllers
             return View(model);
         }
 
+        /// <summary>
+        /// Редактирование пользователя
+        /// </summary>
         [Authorize, CheckUserId]
         [HttpPost]
         [Route("EditUser/{id}")]
@@ -159,6 +189,9 @@ namespace MyBlog.App.Controllers
             return View(model);
         }
 
+        /// <summary>
+        /// Страница отображения профиля пользователя
+        /// </summary>
         [Authorize, CheckUserId]
         [HttpGet]
         [Route("ViewUser/{id}")]
@@ -171,14 +204,20 @@ namespace MyBlog.App.Controllers
             return View(model);
         }
 
+        /// <summary>
+        /// Страница создания пользователя
+        /// </summary>
         [Authorize(Roles = "Admin"), CheckUserId]
         [HttpGet]
         public async Task<IActionResult> Create()
         {
-            var model = new UserCreateViewModel() { AllRoles = await GetDictionaryRolesDefault() };
+            var model = new UserCreateViewModel() { AllRoles = await _roleService.GetDictionaryRolesDefault() };
             return View(model);
         }
 
+        /// <summary>
+        /// Создание пользователя
+        /// </summary>
         [Authorize(Roles = "Admin"), CheckUserId]
         [HttpPost]
         public async Task<IActionResult> Create(UserCreateViewModel model)
@@ -195,22 +234,8 @@ namespace MyBlog.App.Controllers
                 return RedirectToAction("GetUsers");
             }
 
-            model.AllRoles = await GetDictionaryRolesDefault();
+            model.AllRoles = await _roleService.GetDictionaryRolesDefault();
             return View(model);
-        }
-
-        private async Task<Dictionary<string, bool>> GetDictionaryRolesDefault()
-        {
-            var roles = await _roleService.GetAllRolesAsync();
-            var dict = new Dictionary<string, bool>();
-            foreach (var role in roles)
-            {
-                if (role.Name == "User")
-                    dict.Add(role.Name, true);
-                else
-                    dict.Add(role.Name!, false);
-            }
-            return dict;
         }
     }
 }

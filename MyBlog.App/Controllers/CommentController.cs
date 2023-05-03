@@ -6,6 +6,9 @@ using MyBlog.Services.ViewModels.Comments.Response;
 
 namespace MyBlog.App.Controllers
 {
+    /// <summary>
+    /// Контроллер комментариев
+    /// </summary>
     [Authorize, CheckUserId]
     public class CommentController : Controller
     {
@@ -16,6 +19,9 @@ namespace MyBlog.App.Controllers
             _commentService = commentService;
         }
 
+        /// <summary>
+        /// Создание комментария
+        /// </summary>
         [HttpPost]
         [Route("CreateComment")]
         public async Task<IActionResult> Create(CommentCreateViewModel model)
@@ -28,6 +34,9 @@ namespace MyBlog.App.Controllers
                 new { Id = model.PostId, UserId = User.Claims.FirstOrDefault(c => c.Type == "UserID")?.Value });
         }
 
+        /// <summary>
+        /// Страница всех комментариев (получение комментариев для указанной статьи)
+        /// </summary>
         [Authorize(Roles = "Admin, Moderator")]
         [HttpGet]
         [Route("GetComments/{postId?}")]
@@ -40,6 +49,9 @@ namespace MyBlog.App.Controllers
             return View(model);
         }
 
+        /// <summary>
+        /// Страница редактирования комментария
+        /// </summary>
         [HttpGet]
         public async Task<IActionResult> Edit([FromRoute] int id, [FromQuery] int? userId)
         {
@@ -52,6 +64,9 @@ namespace MyBlog.App.Controllers
             return View(model);
         }
 
+        /// <summary>
+        /// Редактирование комментария
+        /// </summary>
         [HttpPost]
         public async Task<IActionResult> Edit(CommentEditViewModel model)
         {
@@ -64,6 +79,9 @@ namespace MyBlog.App.Controllers
             return RedirectToAction("GetComments");
         }
 
+        /// <summary>
+        /// Удаление комментария
+        /// </summary>
         [HttpPost]
         public async Task<IActionResult> Remove([FromRoute] int id, [FromForm] int? userId, string? returnUrl)
         {

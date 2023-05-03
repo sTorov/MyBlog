@@ -6,6 +6,9 @@ using MyBlog.Services.ViewModels.Roles.Response;
 
 namespace MyBlog.App.Utils.Modules
 {
+    /// <summary>
+    /// Модуль контроллера ролей
+    /// </summary>
     public class RoleControllerModule : IRoleControllerModule
     {
         private readonly RoleManager<Role> _roleManager;
@@ -24,7 +27,7 @@ namespace MyBlog.App.Utils.Modules
             return checkRole;
         }
 
-        public async Task<Role?> CheckDataForCreateTagAsync(RoleController controller, RoleCreateViewModel model)
+        public async Task<Role?> CheckDataForCreateAsync(RoleController controller, RoleCreateViewModel model)
         {
             var checkRole = await _roleManager.FindByNameAsync(model.Name);
             if (checkRole != null)

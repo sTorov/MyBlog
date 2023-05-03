@@ -2,27 +2,27 @@
 
 namespace MyBlog.App.Controllers
 {
+    /// <summary>
+    /// Контроллер ошибок
+    /// </summary>
     public class ErrorController : Controller
     {
+        /// <summary>
+        /// Получение представления при статус коде 404
+        /// </summary>
         [Route("NotFound")]
-        public new IActionResult NotFound()
-        {
-            Response.StatusCode = 404;
-            return View();
-        }
+        public new IActionResult NotFound() => View();
 
+        /// <summary>
+        /// Получение представления при статус коде 400
+        /// </summary>
         [Route("BadRequest")]
-        public new IActionResult BadRequest() 
-        {
-            Response.StatusCode = 400;
-            return View();
-        }
+        public new IActionResult BadRequest() => View();
 
+        /// <summary>
+        /// Получение представления при статус коде 403
+        /// </summary>
         [Route("AccessDenied")]
-        public IActionResult AccessDenied()
-        {
-            Response.StatusCode = 403;
-            return View();
-        }
+        public IActionResult AccessDenied() => View();
     }
 }

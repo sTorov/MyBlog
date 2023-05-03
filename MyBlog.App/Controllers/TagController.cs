@@ -7,6 +7,9 @@ using MyBlog.Services.ViewModels.Tags.Response;
 
 namespace MyBlog.App.Controllers
 {
+    /// <summary>
+    /// Контроллер тегов
+    /// </summary>
     [CheckUserId]
     public class TagController : Controller
     {
@@ -19,11 +22,17 @@ namespace MyBlog.App.Controllers
             _module = module;
         }
 
+        /// <summary>
+        /// Страница создания тега
+        /// </summary>
         [Authorize]
         [HttpGet]
         [Route("CreateTag")]
         public IActionResult Create() => View();
 
+        /// <summary>
+        /// Создание тега
+        /// </summary>
         [Authorize]
         [HttpPost]
         [Route("CreateTag")]
@@ -42,6 +51,9 @@ namespace MyBlog.App.Controllers
                 return View(model);
         }
 
+        /// <summary>
+        /// Страница всех тегов (получение тегов для указанной статьи, получение указанного тега)
+        /// </summary>
         [Authorize]
         [HttpGet]
         [Route("GetTags/{id?}")]
@@ -51,6 +63,9 @@ namespace MyBlog.App.Controllers
             return View(model);
         }
 
+        /// <summary>
+        /// Страница редактирования тега
+        /// </summary>
         [Authorize(Roles = "Admin, Moderator")]
         [HttpGet]
         public async Task<IActionResult> Edit([FromRoute] int id)
@@ -62,6 +77,9 @@ namespace MyBlog.App.Controllers
             return View(model);
         }
 
+        /// <summary>
+        /// Редактирование тега
+        /// </summary>
         [Authorize(Roles = "Admin, Moderator")]
         [HttpPost]
         public async Task<IActionResult> Edit(TagEditViewModel model)
@@ -79,6 +97,9 @@ namespace MyBlog.App.Controllers
                 return View(model);
         }
 
+        /// <summary>
+        /// Удаление тега
+        /// </summary>
         [Authorize(Roles = "Admin, Moderator")]
         [HttpPost]
         public async Task<IActionResult> Remove(int id)
@@ -90,6 +111,9 @@ namespace MyBlog.App.Controllers
             return RedirectToAction("GetTags");
         }
 
+        /// <summary>
+        /// Страница отображения указанного тега
+        /// </summary>
         [Authorize(Roles = "Admin, Moderator")]
         [HttpGet]
         public async Task<IActionResult> View([FromRoute]int id)

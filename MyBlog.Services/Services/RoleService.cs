@@ -111,5 +111,19 @@ namespace MyBlog.Services.Services
 
             return _mapper.Map<RoleViewModel>(role);
         }
+
+        public async Task<Dictionary<string, bool>> GetDictionaryRolesDefault()
+        {
+            var roles = await _roleManager.Roles.ToListAsync();
+            var dict = new Dictionary<string, bool>();
+            foreach (var role in roles)
+            {
+                if (role.Name == "User")
+                    dict.Add(role.Name, true);
+                else
+                    dict.Add(role.Name!, false);
+            }
+            return dict;
+        }
     }
 }

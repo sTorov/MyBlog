@@ -7,6 +7,9 @@ using MyBlog.Services.ViewModels.Roles.Response;
 
 namespace MyBlog.App.Controllers
 {
+    /// <summary>
+    /// Контроллер ролей
+    /// </summary>
     [Authorize(Roles = "Admin"), CheckUserId]
     public class RoleController : Controller
     {
@@ -19,6 +22,9 @@ namespace MyBlog.App.Controllers
             _module = module;
         }
 
+        /// <summary>
+        /// Странмца отображения всех ролей (получение ролей указанного пользователя)
+        /// </summary>
         [HttpGet]
         [Route("GetRoles/{userId?}")]
         public async Task<IActionResult> GetRoles([FromRoute]int? userId)
@@ -30,15 +36,21 @@ namespace MyBlog.App.Controllers
             return View(model);
         }
 
+        /// <summary>
+        /// Страница создания роли
+        /// </summary>
         [HttpGet]
         [Route("CreateRole")]
         public IActionResult Create() => View();
 
+        /// <summary>
+        /// Создание роли
+        /// </summary>
         [HttpPost]
         [Route("CreateRole")]
         public async Task<IActionResult> Create(RoleCreateViewModel model)
         {
-            _ = await _module.CheckDataForCreateTagAsync(this, model);
+            _ = await _module.CheckDataForCreateAsync(this, model);
             if (ModelState.IsValid)
             {
                 var result = await _roleService.CreateRoleAsync(model);
@@ -51,6 +63,9 @@ namespace MyBlog.App.Controllers
             return View(model);
         }
 
+        /// <summary>
+        /// Страница редактирования роли
+        /// </summary>
         [HttpGet]
         [Route("EditRole")]
         public async Task<IActionResult> Edit(int id)
@@ -62,6 +77,9 @@ namespace MyBlog.App.Controllers
             return View(model);
         }
 
+        /// <summary>
+        /// Редактирование роли
+        /// </summary>
         [HttpPost]
         [Route("EditRole")]
         public async Task<IActionResult> Edit(RoleEditViewModel model)
@@ -79,6 +97,9 @@ namespace MyBlog.App.Controllers
             return View(model);
         }
 
+        /// <summary>
+        /// Удаление роли
+        /// </summary>
         [HttpPost]
         public async Task<IActionResult> Delete(int id)
         {
@@ -89,6 +110,9 @@ namespace MyBlog.App.Controllers
             return RedirectToAction("GetRoles");
         }
 
+        /// <summary>
+        /// Страница отображения указанной роли
+        /// </summary>
         [HttpGet]
         [Route("/ViewRole/{id}")]
         public async Task<IActionResult> View([FromRoute] int id)

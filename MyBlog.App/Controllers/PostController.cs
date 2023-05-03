@@ -7,6 +7,9 @@ using MyBlog.Services.ViewModels.Posts.Response;
 
 namespace MyBlog.App.Controllers
 {
+    /// <summary>
+    /// Контроллер статей
+    /// </summary>
     [Authorize, CheckUserId]
     public class PostController : Controller
     {
@@ -23,6 +26,9 @@ namespace MyBlog.App.Controllers
             _module = module;
         }
 
+        /// <summary>
+        /// Страница создания статьи
+        /// </summary>
         [HttpGet]
         [Route("CreatePost")]
         public async Task<IActionResult> Create()
@@ -31,6 +37,9 @@ namespace MyBlog.App.Controllers
             return View(model);
         }
 
+        /// <summary>
+        /// Создание статьи
+        /// </summary>
         [HttpPost]
         [Route("CreatePost")]
         public async Task<IActionResult> Create(PostCreateViewModel model)
@@ -46,6 +55,9 @@ namespace MyBlog.App.Controllers
             return RedirectToAction("View", new { Id = await _postService.GetLastCreatePostIdByUserId(model.UserId) });
         }
 
+        /// <summary>
+        /// Страница всех статей (получения статей, имеющих указанный тег)
+        /// </summary>
         [HttpGet]
         [Route("GetPosts/{tagId?}")]
         public async Task<IActionResult> GetPosts([FromRoute]int? tagId, [FromQuery] int? userId)
@@ -54,6 +66,9 @@ namespace MyBlog.App.Controllers
             return View(model);
         }
 
+        /// <summary>
+        /// Удаление статьи
+        /// </summary>
         [HttpPost]
         public async Task<IActionResult> Remove([FromRoute] int id, [FromForm] int userId)
         {
@@ -65,6 +80,9 @@ namespace MyBlog.App.Controllers
             return RedirectToAction("GetPosts");
         }
 
+        /// <summary>
+        /// Страница редактирования статьи
+        /// </summary>
         [HttpGet]
         public async Task<IActionResult> Edit([FromRoute] int id, [FromQuery] int? userId)
         {
@@ -78,10 +96,13 @@ namespace MyBlog.App.Controllers
             return View(model);
         }
 
+        /// <summary>
+        /// Редактирование статьи
+        /// </summary>
         [HttpPost]
         public async Task<IActionResult> Edit(PostEditViewModel model)
         {
-            var currentPost = await _module.CheckDataAtUpdatePostAsync(this, model);
+            var currentPost = await _module.CheckDataAtUpdateAsync(this, model);
             if (ModelState.IsValid)
             {
                 var result = await _postService.UpdatePostAsync(model, currentPost!);
@@ -97,6 +118,9 @@ namespace MyBlog.App.Controllers
             return View(model);
         }
 
+        /// <summary>
+        /// Страница отображения указанной статьи
+        /// </summary>
         [HttpGet]
         [Route("ViewPost/{id}")]
         public async Task<IActionResult> View([FromRoute] int id, [FromQuery] string userId)

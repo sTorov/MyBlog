@@ -16,5 +16,6 @@ namespace MyBlog.Services.Services.Interfaces
         Task<bool> UpdateRoleAsync(Role role, RoleEditViewModel model);
         Task<bool> DeleteRoleAsync(int id);
         Task<RoleViewModel?> GetRoleViewModel(int id);
+        Task<Dictionary<string, bool>> GetDictionaryRolesDefault();
     }
 }
