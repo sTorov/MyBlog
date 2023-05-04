@@ -9,6 +9,9 @@ using MyBlog.Services.ViewModels.Comments.Request;
 
 namespace MyBlog.Services.Services
 {
+    /// <summary>
+    /// Сервисы сущности комментария
+    /// </summary>
     public class CommentService : ICommentService
     {
         private readonly IUnitOfWork _unitOfWork;

@@ -3,9 +3,6 @@ using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace MyBlog.App.Utils.Attributes
 {
-    /// <summary>
-    /// Аттрибут для проверки наличия утверждения UserID у пользователя
-    /// </summary>
     [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class)]
     public class CheckUserIdAttribute : Attribute, IAuthorizationFilter
     {

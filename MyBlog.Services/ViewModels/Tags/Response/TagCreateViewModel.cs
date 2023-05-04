@@ -4,6 +4,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace MyBlog.Services.ViewModels.Tags.Response
 {
+    /// <summary>
+    /// Модель представления создания тега
+    /// </summary>
     public class TagCreateViewModel : ITagResponseViewModel
     {
         [Required(ErrorMessage = "Поле обязательно для заполнения!")]

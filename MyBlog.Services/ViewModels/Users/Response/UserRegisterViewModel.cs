@@ -2,6 +2,9 @@
 
 namespace MyBlog.Services.ViewModels.Users.Response
 {
+    /// <summary>
+    /// Модель представления регистрации пользователя
+    /// </summary>
     public class UserRegisterViewModel
     {
         [Required(ErrorMessage = "Поле обязательно для заполнения!")]

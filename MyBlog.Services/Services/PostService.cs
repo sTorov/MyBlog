@@ -13,6 +13,9 @@ using MyBlog.Data.Repositories.Interfaces;
 
 namespace MyBlog.Services.Services
 {
+    /// <summary>
+    /// Сервисы сущности статьи
+    /// </summary>
     public class PostService : IPostService
     {
         private readonly IUnitOfWork _unitOfWork;
@@ -90,7 +93,7 @@ namespace MyBlog.Services.Services
         {
             post.Convert(model);
             if (!string.IsNullOrEmpty(model.PostTags))
-                post.Tags = await _tagService.CreateTagForPostAsync(model.PostTags) ?? new List<Tag>();
+                post.Tags = await _tagService.SetTagsForPostAsync(model.PostTags) ?? new List<Tag>();
 
             await _postRepository.UpdateAsync(post);
             return true;

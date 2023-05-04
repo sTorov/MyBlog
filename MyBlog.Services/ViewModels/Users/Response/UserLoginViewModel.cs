@@ -2,6 +2,9 @@
 
 namespace MyBlog.Services.ViewModels.Users.Response
 {
+    /// <summary>
+    /// Модель представления авторизации пользователя
+    /// </summary>
     public class UserLoginViewModel
     {
         public string? ReturnUrl { get; set; }

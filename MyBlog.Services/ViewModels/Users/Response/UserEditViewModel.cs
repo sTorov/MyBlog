@@ -2,6 +2,9 @@
 
 namespace MyBlog.Services.ViewModels.Users.Response
 {
+    /// <summary>
+    /// Модель представления редактирования пользователя
+    /// </summary>
     public class UserEditViewModel
     {
         public int Id { get; set; }

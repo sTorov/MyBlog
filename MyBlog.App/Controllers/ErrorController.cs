@@ -14,7 +14,7 @@ namespace MyBlog.App.Controllers
         public new IActionResult NotFound() => View();
 
         /// <summary>
-        /// Получение представления при статус коде 400
+        /// Получение представления при статус коде 400, 500
         /// </summary>
         [Route("BadRequest")]
         public new IActionResult BadRequest() => View();

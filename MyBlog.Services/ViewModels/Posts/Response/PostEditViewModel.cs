@@ -3,6 +3,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace MyBlog.Services.ViewModels.Posts.Response
 {
+    /// <summary>
+    /// Модель представления редактирования статьи
+    /// </summary>
     public class PostEditViewModel
     {
         public int Id { get; set; }

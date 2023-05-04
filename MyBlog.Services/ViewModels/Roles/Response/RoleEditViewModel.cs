@@ -2,6 +2,9 @@
 
 namespace MyBlog.Services.ViewModels.Roles.Response
 {
+    /// <summary>
+    /// Модель представления редактирования роли
+    /// </summary>
     public class RoleEditViewModel
     {
         public int Id { get; set; }

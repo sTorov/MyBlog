@@ -10,6 +10,9 @@ using MyBlog.Data.DBModels.Users;
 
 namespace MyBlog.Services.Services
 {
+    /// <summary>
+    /// Сервисы сущности роли
+    /// </summary>
     public class RoleService : IRoleService
     {
         private readonly RoleManager<Role> _roleManager;

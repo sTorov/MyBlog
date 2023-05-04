@@ -11,6 +11,9 @@ using System.Security.Claims;
 
 namespace MyBlog.Services.Services
 {
+    /// <summary>
+    /// Сервисы сущности пользователя
+    /// </summary>
     public class UserService : IUserService
     {
         private readonly UserManager<User> _userManager;
@@ -46,7 +49,6 @@ namespace MyBlog.Services.Services
             return result;
         }
 
-
         public async Task<IdentityResult> UpdateUserAsync(UserEditViewModel model, User user)
         {
             user.Convert(model);
@@ -59,6 +61,9 @@ namespace MyBlog.Services.Services
             return result;
         }
 
+        /// <summary>
+        /// Преобразование словаря имён ролей в список ролей
+        /// </summary>
         private async Task<List<Role>> GetRoleListFromDictionary(Dictionary<string, bool> dict)
         {
             var roles = new List<Role>();
@@ -74,10 +79,6 @@ namespace MyBlog.Services.Services
             return roles;
         }
 
-
-
-        public async Task<IdentityResult> UpdateUserAsync(User user) => await _userManager.UpdateAsync(user);
-
         public async Task<List<User>> GetAllUsersAsync() => await _userManager.Users.ToListAsync();
 
         public async Task<User?> GetUserByIdAsync(int id) => 
@@ -85,6 +86,8 @@ namespace MyBlog.Services.Services
 
         public async Task<User?> GetUserByEmailAsync(string email) => 
             await _userManager.Users.Include(u => u.Roles).FirstOrDefaultAsync(u => u.Email == email);
+
+        public async Task<User?> GetUserByNameAsync(string name) => await _userManager.FindByNameAsync(name);
 
         public async Task<bool> DeleteByIdAsync(int id, int? userId, bool fullAccess)
         {

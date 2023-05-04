@@ -2,6 +2,9 @@
 
 namespace MyBlog.Services.ViewModels.Comments.Response
 {
+    /// <summary>
+    /// Модель представления создания комментария
+    /// </summary>
     public class CommentCreateViewModel
     {
         public int UserId { get; set; }

@@ -7,6 +7,7 @@ using MyBlog.App.Utils.Modules.Interfaces;
 using MyBlog.Data.DBModels.Users;
 using MyBlog.Services.Services.Interfaces;
 using MyBlog.Services.ViewModels.Users.Response;
+using System.Security.Claims;
 
 namespace MyBlog.App.Controllers
 {
@@ -48,10 +49,7 @@ namespace MyBlog.App.Controllers
                 var (result, user) = await _userService.CreateUserAsync(model);
                 if (result.Succeeded)
                 {
-                    await _signInManager.SignInWithClaimsAsync(user, new AuthenticationProperties { 
-                        IsPersistent = false,
-                        AllowRefresh = true                        
-                    }, await _userService.GetClaimsAsync(user));
+                    await _signInManager.SignInWithClaimsAsync(user, false, await _userService.GetClaimsAsync(user));
 
                     return RedirectToAction("Index", "Home");
                 }
@@ -87,10 +85,7 @@ namespace MyBlog.App.Controllers
                 if (result.Succeeded)
                 {
                     var claims = await _userService.GetClaimsAsync(user!);
-                    await _signInManager.SignInWithClaimsAsync(user!, new AuthenticationProperties {
-                        IsPersistent = false,
-                        AllowRefresh = true
-                    }, claims);
+                    await _signInManager.SignInWithClaimsAsync(user!, false, claims);
 
                     if (!string.IsNullOrEmpty(model.ReturnUrl) && Url.IsLocalUrl(model.ReturnUrl))
                         return Redirect(model.ReturnUrl);

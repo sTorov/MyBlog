@@ -16,6 +16,9 @@ using MyBlog.Data.DBModels.Users;
 
 namespace MyBlog.Services
 {
+    /// <summary>
+    /// Конфигурация маппера
+    /// </summary>
     public class MapperProfile : Profile
     {
         public MapperProfile()

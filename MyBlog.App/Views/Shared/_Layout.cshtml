@@ -28,6 +28,20 @@
             @RenderBody()
         </main>
     </div>
+
+    <a asp-action="AddClaim" asp-controller="User">123</a>
+
+    <details>
+        <summary>Claim</summary>
+        @if (User.Identity.IsAuthenticated)
+        {
+            foreach (var claim in User.Claims)
+            {
+                <p>@($"{claim.Type} - {claim.Value}")</p>
+            }
+        }
+    </details>
+
     <footer class="border-top footer bg-dark text-muted">
         <div class="container">
             &copy; 2023 - MyBlog - <a class="text-decoration-none" asp-controller="Home" asp-action="Privacy">Privacy</a>

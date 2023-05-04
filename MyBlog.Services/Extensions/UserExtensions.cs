@@ -3,8 +3,14 @@ using MyBlog.Data.DBModels.Users;
 
 namespace MyBlog.Services.Extensions
 {
+    /// <summary>
+    /// Расширения пользователя
+    /// </summary>
     public static class UserExtensions
     {
+        /// <summary>
+        /// Присвоение значений модели редактирования сущности пользователя
+        /// </summary>
         public static User Convert(this User user, UserEditViewModel model)
         {
             user.FirstName = model.FirstName;

@@ -2,6 +2,9 @@
 
 namespace MyBlog.Services.ViewModels.Roles.Response
 {
+    /// <summary>
+    /// Модель представления создания роли
+    /// </summary>
     public class RoleCreateViewModel
     {
         [Required(ErrorMessage = "Поле обязательно для заполнения!")]

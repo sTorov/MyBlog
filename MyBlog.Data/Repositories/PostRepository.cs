@@ -33,7 +33,7 @@ namespace MyBlog.Data.Repositories
                 .Where(o => o.TagId == tagId).Select(o => o.Post).ToListAsync();
         
         /// <summary>
-        /// Получение последней созданной пользователем статьи 
+        /// Получение идентификатора последней созданной пользователем статьи 
         /// </summary>
         public async Task<int> FindLastCreateIdByUserId(int userId) => 
             await Set.Where(p => p.UserId == userId).Select(p => p.Id)

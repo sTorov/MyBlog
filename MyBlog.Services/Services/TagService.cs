@@ -11,6 +11,9 @@ using System.Text.RegularExpressions;
 
 namespace MyBlog.Services.Services
 {
+    /// <summary>
+    /// Сервисы сущности тега
+    /// </summary>
     public class TagService : ITagService
     {
         private readonly IUnitOfWork _unitOfWork;
@@ -69,11 +72,11 @@ namespace MyBlog.Services.Services
             return true;
         }
 
-        public async Task<List<Tag>?> CreateTagForPostAsync(string? postTags)
+        public async Task<List<Tag>?> SetTagsForPostAsync(string? postTags)
         {
             if (postTags == null) return null;
 
-            var tagSet = await CreateUndefinedTags(postTags ?? "");
+            var tagSet = Regex.Replace(postTags, @"\s+", " ").Trim().Split(" ");
 
             var tags = new List<Tag>();
             foreach (var tagName in tagSet)
@@ -103,18 +106,6 @@ namespace MyBlog.Services.Services
 
             if(await _tagRepository.DeleteAsync(currentTag) == 0) return false;
             return true;
-        }
-
-        private async Task<IEnumerable<string>> CreateUndefinedTags(string stringTags)
-        {
-            var tagSet = Regex.Replace(stringTags, @"\s+", " ").Trim().Split(" ").ToHashSet();
-            var allTagsName = (await _tagRepository.GetAllAsync()).Select(t => t.Name);
-            var createdTags = tagSet.Except(allTagsName);
-
-            foreach (var tagName in createdTags)
-                await _tagRepository.CreateAsync(new Tag(tagName));
-
-            return tagSet;
         }
 
         public async Task<TagViewModel?> GetTagViewModelAsync(int id)

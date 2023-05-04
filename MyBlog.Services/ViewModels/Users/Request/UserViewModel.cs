@@ -2,6 +2,9 @@
 
 namespace MyBlog.Services.ViewModels.Users.Request
 {
+    /// <summary>
+    /// Модель представления профиля пользователя
+    /// </summary>
     public class UserViewModel
     {
         public int Id { get; set; }

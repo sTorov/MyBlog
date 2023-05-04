@@ -4,6 +4,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace MyBlog.Services.ViewModels.Tags.Response
 {
+    /// <summary>
+    /// Модель представления редактирования тега
+    /// </summary>
     public class TagEditViewModel : ITagResponseViewModel
     {
         public int Id { get; set; }

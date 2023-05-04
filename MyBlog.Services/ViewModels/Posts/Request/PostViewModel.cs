@@ -5,6 +5,9 @@ using MyBlog.Services.ViewModels.Comments.Response;
 
 namespace MyBlog.Services.ViewModels.Posts.Request
 {
+    /// <summary>
+    /// Модель представления статьи
+    /// </summary>
     public class PostViewModel
     {
         public int Id { get; set; }
