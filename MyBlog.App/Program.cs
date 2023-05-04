@@ -51,10 +51,11 @@ namespace MyBlog.App
 
             var app = builder.Build();
 
-            if (app.Environment.IsDevelopment())
-                app.UseDeveloperExceptionPage();
-            else
-                app.UseExceptionHandler("/BadRequest");
+            app.UseCustomExceptionHandler();
+            app.UseFollowLogging();
+
+            //if (app.Environment.IsDevelopment())
+            //    app.UseDeveloperExceptionPage();
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
