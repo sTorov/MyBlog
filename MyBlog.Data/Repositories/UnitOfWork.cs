@@ -3,6 +3,9 @@ using MyBlog.Data.Repositories.Interfaces;
 
 namespace MyBlog.Data.Repositories
 {
+    /// <summary>
+    /// Класс для получения указанного кастомного репозитория
+    /// </summary>
     public class UnitOfWork : IUnitOfWork
     {
         private readonly MyBlogContext _context;

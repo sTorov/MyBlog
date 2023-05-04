@@ -3,6 +3,9 @@ using MyBlog.Data.Repositories.Interfaces;
 
 namespace MyBlog.Data.Repositories
 {
+    /// <summary>
+    /// Базовый класс для кастомных репозиториев
+    /// </summary>
     public class Repository<T> : IRepository<T> where T : class
     {
         protected DbContext _dbContext;

@@ -1,10 +1,12 @@
 ﻿using MyBlog.Data.DBModels.Comments;
 using MyBlog.Data.DBModels.Tags;
 using MyBlog.Data.DBModels.Users;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MyBlog.Data.DBModels.Posts
 {
+    /// <summary>
+    /// Сущность статьи
+    /// </summary>
     public class Post
     {
         public int Id { get; set; }

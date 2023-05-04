@@ -8,6 +8,9 @@ using MyBlog.Data.DBModels.Users;
 
 namespace MyBlog.Data
 {
+    /// <summary>
+    /// Контекст базы данных
+    /// </summary>
     public class MyBlogContext : IdentityDbContext<User, Role, int>
     {
         public MyBlogContext(DbContextOptions<MyBlogContext> contextOptions) : base(contextOptions) =>

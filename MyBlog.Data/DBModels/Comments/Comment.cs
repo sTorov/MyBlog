@@ -3,6 +3,9 @@ using MyBlog.Data.DBModels.Posts;
 
 namespace MyBlog.Data.DBModels.Comments
 {
+    /// <summary>
+    /// Сущность комментария
+    /// </summary>
     public class Comment
     {
         public int Id { get; set; }

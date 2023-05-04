@@ -3,6 +3,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MyBlog.Data.DBModels.Posts
 {
+    /// <summary>
+    /// Конфигурация для таблицы статьи
+    /// </summary>
     public class PostConfiguration : IEntityTypeConfiguration<Post>
     {
         public void Configure(EntityTypeBuilder<Post> builder)

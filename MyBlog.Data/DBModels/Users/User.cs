@@ -5,6 +5,9 @@ using MyBlog.Data.DBModels.Roles;
 
 namespace MyBlog.Data.DBModels.Users
 {
+    /// <summary>
+    /// Сущность пользователя
+    /// </summary>
     public class User : IdentityUser<int>
     {
         public string FirstName { get; set; }
