@@ -33,8 +33,6 @@ namespace MyBlog.App
             var assembly = Assembly.GetAssembly(typeof(MapperProfile));
             builder.Services.AddAutoMapper(assembly);
 
-            Console.WriteLine(builder.Environment.IsProduction());
-
             builder.Services.AddIdentity<User, Role>(cfg => {
                 cfg.Password.RequiredLength = 8;
                 cfg.Password.RequireNonAlphanumeric = false;
@@ -53,8 +51,10 @@ namespace MyBlog.App
 
             var app = builder.Build();
 
-            if (!app.Environment.IsDevelopment())
-                app.UseExceptionHandler("/Home/Error");
+            if (app.Environment.IsDevelopment())
+                app.UseDeveloperExceptionPage();
+            else
+                app.UseExceptionHandler("/BadRequest");
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();

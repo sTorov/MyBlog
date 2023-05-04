@@ -29,18 +29,19 @@
         </main>
     </div>
 
-    <a asp-action="AddClaim" asp-controller="User">123</a>
-
-    <details>
-        <summary>Claim</summary>
-        @if (User.Identity.IsAuthenticated)
-        {
-            foreach (var claim in User.Claims)
+    <environment include="Development">
+        <details>
+            <summary>Claim</summary>
+            @if (User.Identity.IsAuthenticated)
             {
-                <p>@($"{claim.Type} - {claim.Value}")</p>
+                foreach (var claim in User.Claims)
+                {
+                    <p>@($"{claim.Type} - {claim.Value}")</p>
+                }
             }
-        }
-    </details>
+        </details>
+        <a asp-action="Bad" asp-controller="Home">ERROR</a>
+    </environment>
 
     <footer class="border-top footer bg-dark text-muted">
         <div class="container">

@@ -7,6 +7,16 @@ namespace MyBlog.App.Controllers
     public class HomeController : Controller
     {
         /// <summary>
+        /// Метод для принудительного вызова ошибки
+        /// </summary>
+        public void Bad()
+        {
+            var a = 1;
+            var b = 0;
+            var c = a / b;
+        }
+
+        /// <summary>
         /// Домашняя страница
         /// </summary>
         public IActionResult Index(string? returnUrl)
