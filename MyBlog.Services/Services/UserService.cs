@@ -87,7 +87,8 @@ namespace MyBlog.Services.Services
         public async Task<User?> GetUserByEmailAsync(string email) => 
             await _userManager.Users.Include(u => u.Roles).FirstOrDefaultAsync(u => u.Email == email);
 
-        public async Task<User?> GetUserByNameAsync(string name) => await _userManager.FindByNameAsync(name);
+        public async Task<User?> GetUserByNameAsync(string name) => 
+            await _userManager.Users.Include(u => u.Roles).FirstOrDefaultAsync(u => u.UserName == name);
 
         public async Task<bool> DeleteByIdAsync(int id, int? userId, bool fullAccess)
         {

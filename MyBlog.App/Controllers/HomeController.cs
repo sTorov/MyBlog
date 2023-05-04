@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using MyBlog.Services.ViewModels;
 using System.Diagnostics;
 
@@ -6,6 +7,7 @@ namespace MyBlog.App.Controllers
 {
     public class HomeController : Controller
     {
+        #region errorTest
         /// <summary>
         /// Метод для принудительного вызова ошибки
         /// </summary>
@@ -15,6 +17,7 @@ namespace MyBlog.App.Controllers
         //    var b = 0;
         //    var c = a / b;
         //}
+        #endregion
 
         /// <summary>
         /// Домашняя страница

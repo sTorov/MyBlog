@@ -29,6 +29,21 @@ namespace MyBlog.App.Controllers
             _module = module;
         }
 
+        #region refreshTest
+        /// <summary>
+        /// Выход из системы и вход без утверждения UserID
+        /// </summary>
+        //public async Task LogoutLogin()
+        //{
+        //    var userName = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value ?? string.Empty;
+        //    var user = await _userService.GetUserByNameAsync(userName);
+
+        //    await _signInManager.SignOutAsync();
+
+        //    await _signInManager.SignInWithClaimsAsync(user!, false, new List<Claim>());
+        //}
+        #endregion
+
         /// <summary>
         /// Страница регистрации пользователя
         /// </summary>
@@ -95,7 +110,7 @@ namespace MyBlog.App.Controllers
                 else
                     ModelState.AddModelError(string.Empty, "Неверный email или(и) пароль!");
             }
-
+            
             return View(model);
         }
 
@@ -110,6 +125,31 @@ namespace MyBlog.App.Controllers
         {
             await _signInManager.SignOutAsync();
             return RedirectToAction("Login", new { ReturnUrl = returnUrl });
+        }
+
+        /// <summary>
+        /// Повторная авторизация при отсутствии необходимых утветждений у пользователя
+        /// </summary>
+        [Authorize]
+        [HttpGet]
+        [Route("Refresh")]
+        public async Task<IActionResult> Refresh(string returnUrl)
+        {
+            if(User.Claims.FirstOrDefault(c => c.Type == "UserID")?.Value == null)
+            {
+                var userName = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value ?? string.Empty;
+                var user = await _userService.GetUserByNameAsync(userName);
+
+                if(user != null)
+                {
+                    var claims = await _userService.GetClaimsAsync(user!);
+                    await _signInManager.SignInWithClaimsAsync(user!, false, claims);
+                }
+            }
+
+            if (returnUrl != null && Url.IsLocalUrl(returnUrl))
+                return Redirect(returnUrl);    
+            return RedirectToAction("Index", "Home");
         }
 
         /// <summary>
