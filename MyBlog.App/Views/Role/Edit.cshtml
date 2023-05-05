@@ -23,7 +23,8 @@
                 <div class="col-sm-9">
                     @if (defaultNameCheck)
                     {
-                        <input asp-for="Name" class="form-control" disabled/>
+                        <input asp-for="Name" type="hidden" />
+                        <input class="form-control" value="@Model.Name" disabled/>
                     }
                     else
                     {

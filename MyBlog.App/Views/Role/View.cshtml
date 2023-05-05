@@ -1,6 +1,8 @@
 ﻿@model MyBlog.Services.ViewModels.Roles.Request.RoleViewModel
 @{
     ViewData["Title"] = "Роль";
+
+    var defaultNameCheck = Model.Name == "Admin" || Model.Name == "Moderator" || Model.Name == "User";
 }
 
 <div class="m-auto max-width-600">
@@ -25,7 +27,7 @@
                         <a class="btn btn-outline-primary btn-sm" asp-action="Edit" asp-controller="Role" asp-route-id="@Model.Id">
                             Редактировать
                         </a>
-                        <button type="submit" class="btn btn-outline-danger btn-sm">Удалить</button>
+                        <button type="submit" class="btn btn-outline-danger btn-sm @(defaultNameCheck ? "disabled" : "")">Удалить</button>
                     </div>
                 </form>
             </div>

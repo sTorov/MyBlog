@@ -2,7 +2,11 @@
 @{
     ViewData["Title"] = "Редактирование комментария";
 
-    var returnUrl = Context.Request.Query["returnUrl"] + "?userId=" + Context.Request.Query["userId"];
+    var path = Context.Request.Query["returnUrl"];
+    var query = path.ToString().Contains("GetComment")
+        ? ""
+        : "?userId=" + Context.Request.Query["userId"];
+    var returnUrl = path + query;
 }
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.js"></script>

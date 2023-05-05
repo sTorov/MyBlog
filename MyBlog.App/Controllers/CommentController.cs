@@ -91,7 +91,7 @@ namespace MyBlog.App.Controllers
                 return BadRequest();
 
             if (returnUrl != null && Url.IsLocalUrl(returnUrl))
-                return Redirect(returnUrl);
+                return Redirect(returnUrl + $"?userId={userId}");
             return RedirectToAction("GetComments");
         }
     }
