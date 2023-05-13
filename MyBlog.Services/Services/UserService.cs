@@ -8,6 +8,8 @@ using MyBlog.Services.ViewModels.Users.Response;
 using MyBlog.Data.DBModels.Roles;
 using MyBlog.Data.DBModels.Users;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
 
 namespace MyBlog.Services.Services
 {
@@ -43,7 +45,7 @@ namespace MyBlog.Services.Services
         public async Task<IdentityResult> CreateUserAsync(UserCreateViewModel model)
         {
             var user = _mapper.Map<User>(model);
-            user.Roles = await GetRoleListFromDictionary(model.AllRoles);
+            user.Roles = await GetRoleListFromDictionary(model.AllRoles ?? new Dictionary<string, bool>());
 
             var result = await _userManager.CreateAsync(user, model.PasswordReg);
             return result;
@@ -154,6 +156,17 @@ namespace MyBlog.Services.Services
 
             if (user == null) return null;
             return _mapper.Map<UserViewModel>(user);
+        }
+
+        public async Task<Dictionary<string, bool>> UpdateRoleStateForEditUserAsync(HttpRequest request)
+        {
+            var dict = new Dictionary<string, bool>();
+            var allRoles = await _roleManager.Roles.ToListAsync();
+
+            foreach (var role in allRoles)
+                dict.Add(role.Name!, request.Form[role.Name!] == "on");
+
+            return dict;
         }
     }
 }

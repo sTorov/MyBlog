@@ -3,6 +3,7 @@ using MyBlog.Services.ViewModels.Users.Request;
 using MyBlog.Services.ViewModels.Users.Response;
 using MyBlog.Data.DBModels.Users;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Http;
 
 namespace MyBlog.Services.Services.Interfaces
 {
@@ -59,5 +60,9 @@ namespace MyBlog.Services.Services.Interfaces
         /// Получение модели профиля пользователя
         /// </summary>
         Task<UserViewModel?> GetUserViewModelAsync(int id);
+        /// <summary>
+        /// Получение данных об обновлении ролей пользователя
+        /// </summary>
+        Task<Dictionary<string, bool>> UpdateRoleStateForEditUserAsync(HttpRequest request);
     }
 }

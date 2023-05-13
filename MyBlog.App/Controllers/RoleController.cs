@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MyBlog.App.Utils.Attributes;
-using MyBlog.App.Utils.Modules.Interfaces;
 using MyBlog.Services.Services.Interfaces;
 using MyBlog.Services.ViewModels.Roles.Response;
 
@@ -14,12 +13,12 @@ namespace MyBlog.App.Controllers
     public class RoleController : Controller
     {
         private readonly IRoleService _roleService;
-        private readonly IRoleControllerModule _module;
+        private readonly ICheckDataService _checkDataService;
 
-        public RoleController(IRoleService roleService, IRoleControllerModule module)
+        public RoleController(IRoleService roleService, ICheckDataService checkDataService)
         {
             _roleService = roleService;
-            _module = module;
+            _checkDataService = checkDataService;
         }
 
         /// <summary>
@@ -50,7 +49,7 @@ namespace MyBlog.App.Controllers
         [Route("CreateRole")]
         public async Task<IActionResult> Create(RoleCreateViewModel model)
         {
-            _ = await _module.CheckDataForCreateAsync(this, model);
+            _ = await _checkDataService.CheckDataForCreateRoleAsync(this, model);
             if (ModelState.IsValid)
             {
                 var result = await _roleService.CreateRoleAsync(model);
@@ -84,7 +83,7 @@ namespace MyBlog.App.Controllers
         [Route("EditRole")]
         public async Task<IActionResult> Edit(RoleEditViewModel model)
         {
-            var currentRole = await _module.CheckDataAtEditAsync(this, model);
+            var currentRole = await _checkDataService.CheckDataForEditRoleAsync(this, model);
             if (ModelState.IsValid)
             {
                 var result = await _roleService.UpdateRoleAsync(currentRole!, model);

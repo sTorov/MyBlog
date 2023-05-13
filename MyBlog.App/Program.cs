@@ -27,8 +27,7 @@ namespace MyBlog.App
                 .AddCustomRepository<Post, PostRepository>()
                 .AddCustomRepository<Comment, CommentRepository>()
                 .AddCustomRepository<Tag, TagRepository>()
-                .AddAppServices()
-                .AddControllerModules();
+                .AddAppServices();
 
             var assembly = Assembly.GetAssembly(typeof(MapperProfile));
             builder.Services.AddAutoMapper(assembly);

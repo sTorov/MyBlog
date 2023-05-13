@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MyBlog.App.Utils.Attributes;
-using MyBlog.App.Utils.Modules.Interfaces;
 using MyBlog.Services.Services.Interfaces;
 using MyBlog.Services.ViewModels.Posts.Response;
 
@@ -16,14 +15,14 @@ namespace MyBlog.App.Controllers
         private readonly IPostService _postService;
         private readonly ITagService _tagService;
         private readonly ICommentService _commentService;
-        private readonly IPostControllerModule _module;
+        private readonly ICheckDataService _checkDataService;
 
-        public PostController(IPostService postService, ITagService tagService, ICommentService commentService, IPostControllerModule module)
+        public PostController(IPostService postService, ITagService tagService, ICommentService commentService, ICheckDataService checkDataService)
         {
             _postService = postService;
             _tagService = tagService;
             _commentService = commentService;
-            _module = module;
+            _checkDataService = checkDataService;
         }
 
         /// <summary>
@@ -102,7 +101,7 @@ namespace MyBlog.App.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(PostEditViewModel model)
         {
-            var currentPost = await _module.CheckDataAtUpdateAsync(this, model);
+            var currentPost = await _checkDataService.CheckDataForUpdatePostAsync(this, model);
             if (ModelState.IsValid)
             {
                 var result = await _postService.UpdatePostAsync(model, currentPost!);
