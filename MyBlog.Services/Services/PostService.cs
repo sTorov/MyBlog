@@ -10,6 +10,7 @@ using MyBlog.Data.DBModels.Tags;
 using MyBlog.Data.DBModels.Users;
 using MyBlog.Data.Repositories;
 using MyBlog.Data.Repositories.Interfaces;
+using Microsoft.AspNetCore.Mvc;
 
 namespace MyBlog.Services.Services
 {
@@ -62,31 +63,33 @@ namespace MyBlog.Services.Services
             return model;
         }
 
-        public async Task<PostEditViewModel?> GetPostEditViewModelAsync(int id, int? userId, bool fullAccess)
+        public async Task<(PostEditViewModel?, IActionResult?)> GetPostEditViewModelAsync(int id, int? userId, bool fullAccess)
         {
             var post = await GetPostByIdAsync(id);
-            var check = fullAccess
-                ? post != null
-                : post != null && post.UserId == (int)userId!;
+            if (post == null) return (null, new NotFoundResult());
 
-            if (!check)
-                return null;
-            return _mapper.Map<PostEditViewModel>(post);
+            if (fullAccess || post.UserId == userId)
+                return (_mapper.Map<PostEditViewModel>(post), null);
+
+            return (null, new ForbidResult());
         }
 
         public async Task<Post?> GetPostByIdAsync(int id) => await _postRepository.GetAsync(id);
 
-        public async Task<bool> DeletePostAsync(int id, int userId, bool fullAccess)
+        public async Task<(IActionResult?, bool)> DeletePostAsync(int id, int userId, bool fullAccess)
         {
             var post = await GetPostByIdAsync(id);
-            var check = fullAccess
-                ? post != null
-                : post != null && post.UserId == userId;
-            if (!check) return false;
+            if (post == null) return (new NotFoundResult(), false);
 
-            if(await _postRepository.DeleteAsync(post!) == 0) return false;
-            
-            return true;
+            if (fullAccess || post.UserId == userId)
+            {
+                if (await _postRepository.DeleteAsync(post!) == 0) 
+                    return (new BadRequestResult(), false);
+
+                return (null, true);
+            }
+
+            return (new ForbidResult(), false);
         }
 
         public async Task<bool> UpdatePostAsync(PostEditViewModel model, Post post)

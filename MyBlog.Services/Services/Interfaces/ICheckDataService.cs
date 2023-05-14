@@ -7,6 +7,7 @@ using MyBlog.Data.DBModels.Tags;
 using MyBlog.Services.ViewModels.Tags.Interfaces;
 using MyBlog.Data.DBModels.Users;
 using MyBlog.Services.ViewModels.Users.Response;
+using MyBlog.Services.ApiModels.Users.Request;
 
 namespace MyBlog.Services.Services.Interfaces
 {
@@ -38,9 +39,13 @@ namespace MyBlog.Services.Services.Interfaces
 
 
         /// <summary>
-        /// Проверка данных полученных контроллером при создании пользователя
+        /// Проверка данных полученных контроллером при создании пользователя (для основного приложения)
         /// </summary>
         Task CheckDataForCreateUserAsync(Controller controller, UserRegisterViewModel model);
+        /// <summary>
+        /// Проверка данных полученных контроллером при создании пользователя (для API)
+        /// </summary>
+        Task<string> CheckDataForCreateUserAsync(UserApiCreateModel model);
         /// <summary>
         /// Проверка данных полученных контроллером при авторизации пользователя
         /// </summary>

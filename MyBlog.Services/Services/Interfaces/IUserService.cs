@@ -4,6 +4,7 @@ using MyBlog.Services.ViewModels.Users.Response;
 using MyBlog.Data.DBModels.Users;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace MyBlog.Services.Services.Interfaces
 {
@@ -51,7 +52,7 @@ namespace MyBlog.Services.Services.Interfaces
         /// <summary>
         /// Получение модели редактирования пользователя
         /// </summary>
-        Task<UserEditViewModel?> GetUserEditViewModelAsync(int id, int? userId, bool fullAccess);
+        Task<(UserEditViewModel?, IActionResult?)> GetUserEditViewModelAsync(int id, int? userId, bool fullAccess);
         /// <summary>
         /// Получение модели всех пользователей
         /// </summary>

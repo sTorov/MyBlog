@@ -8,6 +8,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.11/jquery.validate.unobtrusive.js"></script>
 
 <form method="post" asp-action="Create" asp-controller="Comment">
+    <div asp-validation-summary="ModelOnly" class="text-danger fs-6"></div>
+
     <input type="hidden" asp-for="PostId"/>
     <input type="hidden" asp-for="UserId" value="@claimUserId"/>
 

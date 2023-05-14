@@ -2,6 +2,7 @@
 using MyBlog.Services.ViewModels.Posts.Response;
 using MyBlog.Data.DBModels.Posts;
 using MyBlog.Data.DBModels.Tags;
+using Microsoft.AspNetCore.Mvc;
 
 namespace MyBlog.Services.Services.Interfaces
 {
@@ -25,11 +26,11 @@ namespace MyBlog.Services.Services.Interfaces
         /// <summary>
         /// Получение модели редактирования статьи
         /// </summary>
-        Task<PostEditViewModel?> GetPostEditViewModelAsync(int id, int? userId, bool fullAccess);
+        Task<(PostEditViewModel?, IActionResult?)> GetPostEditViewModelAsync(int id, int? userId, bool fullAccess);
         /// <summary>
         /// Удаление статьи
         /// </summary>
-        Task<bool> DeletePostAsync(int id, int userId, bool fullAccess);
+        Task<(IActionResult?, bool)> DeletePostAsync(int id, int userId, bool fullAccess);
         /// <summary>
         /// Получение статьи по идентификатору
         /// </summary>

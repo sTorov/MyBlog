@@ -5,6 +5,7 @@ using MyBlog.Data.DBModels.Posts;
 using MyBlog.Data.DBModels.Roles;
 using MyBlog.Data.DBModels.Tags;
 using MyBlog.Data.DBModels.Users;
+using MyBlog.Services.ApiModels.Users.Request;
 using MyBlog.Services.Services.Interfaces;
 using MyBlog.Services.ViewModels.Posts.Response;
 using MyBlog.Services.ViewModels.Roles.Response;
@@ -90,6 +91,17 @@ namespace MyBlog.Services.Services
             var checkEmail = (await _userManager.FindByEmailAsync(model.EmailReg))?.Email;
             if (checkEmail != null)
                 controller.ModelState.AddModelError(string.Empty, $"Адрес [{model.EmailReg}] уже зарегистрирован!");
+        }
+
+        public async Task<string> CheckDataForCreateUserAsync(UserApiCreateModel model)
+        {
+            var checkName = (await _userManager.FindByNameAsync(model.Login))?.UserName;
+            if (checkName != null) return $"Логин {model.Login} уже используется!";
+
+            var checkEmail = (await _userManager.FindByEmailAsync(model.EmailReg))?.Email;
+            if (checkEmail != null) return $"Почта {model.EmailReg} уже зарегистрирована!";
+
+            return string.Empty;
         }
 
         public async Task<User?> CheckDataForEditUserAsync(Controller controller, UserEditViewModel model)

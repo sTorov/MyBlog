@@ -47,12 +47,12 @@ namespace MyBlog.App.Controllers
             var tags = await _tagService.SetTagsForPostAsync(model.PostTags);
 
             var result = await _postService.CreatePostAsync(model, tags);
-            if (!result)
-            {
-                ModelState.AddModelError(string.Empty, "Не удалось создать статью!");
-                return View(model);
-            }
-            return RedirectToAction("View", new { Id = await _postService.GetLastCreatePostIdByUserId(model.UserId), model.UserId });
+            if (result)
+                return RedirectToAction("View", new { Id = await _postService.GetLastCreatePostIdByUserId(model.UserId), model.UserId });
+            else
+                ModelState.AddModelError(string.Empty, "Ошибка! Не удалось создать статью!");
+
+            return View(model);
         }
 
         /// <summary>
@@ -73,11 +73,12 @@ namespace MyBlog.App.Controllers
         public async Task<IActionResult> Remove([FromRoute] int id, [FromForm] int userId)
         {
             var access = User.IsInRole("Admin") || User.IsInRole("Moderator");
-            var result = await _postService.DeletePostAsync(id, userId, access);
+            var (result, isDeleted) = await _postService.DeletePostAsync(id, userId, access);
 
-            if (!result) return BadRequest();
-
-            return RedirectToAction("GetPosts");
+            if (isDeleted) 
+                return RedirectToAction("GetPosts");
+            else 
+                return result!;
         }
 
         /// <summary>
@@ -86,13 +87,12 @@ namespace MyBlog.App.Controllers
         [HttpGet]
         public async Task<IActionResult> Edit([FromRoute] int id, [FromQuery] int? userId)
         {
-            var access = User.IsInRole("Admin") || User.IsInRole("Moderator");
-            var model = await _postService.GetPostEditViewModelAsync(id, userId, access);
+            var fullAccess = User.IsInRole("Admin") || User.IsInRole("Moderator");
+            var (model, result) = await _postService.GetPostEditViewModelAsync(id, userId, fullAccess);
 
-            if (model == null) return BadRequest();
+            if (model == null) return result!;
 
             model.AllTags = await _tagService.GetAllTagsAsync();
-
             return View(model);
         }
 
@@ -106,15 +106,17 @@ namespace MyBlog.App.Controllers
             if (ModelState.IsValid)
             {
                 var result = await _postService.UpdatePostAsync(model, currentPost!);
-                if (!result)
-                    return BadRequest();
-
-                if (model.ReturnUrl != null && Url.IsLocalUrl(model.ReturnUrl))
-                    return Redirect(model.ReturnUrl);
-                return RedirectToAction("GetPosts");
+                if (result)
+                {
+                    if (model.ReturnUrl != null && Url.IsLocalUrl(model.ReturnUrl))
+                        return Redirect(model.ReturnUrl);
+                    return RedirectToAction("GetPosts");
+                }
+                else
+                    ModelState.AddModelError(string.Empty, $"Ошибка! Не удалось обновить статью!");                
             }
 
-            model.AllTags = await _tagService.GetAllTagsAsync();
+            model.AllTags ??= await _tagService.GetAllTagsAsync();
             return View(model);
         }
 
@@ -126,8 +128,7 @@ namespace MyBlog.App.Controllers
         public async Task<IActionResult> View([FromRoute] int id, [FromQuery] string userId)
         {
             var model = await _postService.GetPostViewModelAsync(id, userId);
-            if(model == null)
-                return BadRequest();
+            if(model == null) return NotFound();
 
             model.Comments = await _commentService.GetAllCommentsByPostIdAsync(id);
             return View(model);

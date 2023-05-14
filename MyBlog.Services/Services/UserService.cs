@@ -9,6 +9,7 @@ using MyBlog.Data.DBModels.Roles;
 using MyBlog.Data.DBModels.Users;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace MyBlog.Services.Services
 {
@@ -102,16 +103,15 @@ namespace MyBlog.Services.Services
             return false;
         }
 
-        public async Task<UserEditViewModel?> GetUserEditViewModelAsync(int id, int? userId, bool fullAccess)
+        public async Task<(UserEditViewModel?, IActionResult?)> GetUserEditViewModelAsync(int id, int? userId, bool fullAccess)
         {
             var user = await GetUserByIdAsync(id);
-            var check = fullAccess
-                ? user != null
-                : user != null && user.Id == userId;
+            if (user == null) return (null, new NotFoundResult());
 
-            if(!check)
-                return null;
-            return _mapper.Map<UserEditViewModel>(user);
+            if (fullAccess || user.Id == userId)
+                return (_mapper.Map<UserEditViewModel>(user), null);
+
+            return (null, new ForbidResult());
         }
 
         public async Task<UsersViewModel?> GetUsersViewModelAsync(int? roleId)

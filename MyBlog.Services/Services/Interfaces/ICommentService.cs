@@ -1,6 +1,7 @@
 ﻿using MyBlog.Services.ViewModels.Comments.Request;
 using MyBlog.Services.ViewModels.Comments.Response;
 using MyBlog.Data.DBModels.Comments;
+using Microsoft.AspNetCore.Mvc;
 
 namespace MyBlog.Services.Services.Interfaces
 {
@@ -28,7 +29,7 @@ namespace MyBlog.Services.Services.Interfaces
         /// <summary>
         /// Получение модели редактирования комментария
         /// </summary>
-        Task<CommentEditViewModel?> GetCommentEditViewModelAsync(int id, int? userId, bool fullAccess);
+        Task<(CommentEditViewModel?, IActionResult?)> GetCommentEditViewModelAsync(int id, int? userId, bool fullAccess);
         /// <summary>
         /// Обновление комментария
         /// </summary>
@@ -36,6 +37,6 @@ namespace MyBlog.Services.Services.Interfaces
         /// <summary>
         /// Удаление комментария
         /// </summary>
-        Task<bool> DeleteCommentAsync(int id, int? userId, bool fullAccess);
+        Task<(IActionResult?, bool)> DeleteCommentAsync(int id, int? userId, bool fullAccess);
     }
 }

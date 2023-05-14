@@ -6,6 +6,7 @@ using MyBlog.Data.Repositories;
 using MyBlog.Data.Repositories.Interfaces;
 using MyBlog.Services.ViewModels.Comments.Response;
 using MyBlog.Services.ViewModels.Comments.Request;
+using Microsoft.AspNetCore.Mvc;
 
 namespace MyBlog.Services.Services
 {
@@ -66,29 +67,31 @@ namespace MyBlog.Services.Services
 
         public async Task<Comment?> GetCommentByIdAsync(int id) => await _commentRepository.GetAsync(id);
 
-        public async Task<bool> DeleteCommentAsync(int id, int? userId, bool fullAccess)
+        public async Task<(IActionResult?, bool)> DeleteCommentAsync(int id, int? userId, bool fullAccess)
         {
             var deletedComment = await GetCommentByIdAsync(id);
-            var check = fullAccess
-                ? deletedComment != null
-                : deletedComment != null && deletedComment.UserId == userId;
+            if (deletedComment == null) return (new NotFoundResult(), false);
 
-            if (!check) return false;
+            if(fullAccess || deletedComment.UserId == userId)
+            {
+                if (await _commentRepository.DeleteAsync(deletedComment!) == 0)
+                    return (new BadRequestResult(), false);
 
-            if(await _commentRepository.DeleteAsync(deletedComment!) == 0) return false;
-            return true;
+                return (null, true);
+            }
+            
+            return (new ForbidResult(), false);
         }
 
-        public async Task<CommentEditViewModel?> GetCommentEditViewModelAsync(int id, int? userId, bool fullAccess)
+        public async Task<(CommentEditViewModel?, IActionResult?)> GetCommentEditViewModelAsync(int id, int? userId, bool fullAccess)
         {
             var comment = await GetCommentByIdAsync(id);
-            var check = fullAccess
-                ? comment != null
-                : comment != null && comment.UserId == userId;
+            if (comment == null) return (null, new NotFoundResult());
 
-            var model = !check ? null : _mapper.Map<CommentEditViewModel>(comment);
+            if (fullAccess || comment.UserId == userId)
+                return (_mapper.Map<CommentEditViewModel>(comment), null);
 
-            return model;
+            return (null, new ForbidResult());
         }
 
         public async Task<bool> UpdateCommentAsync(CommentEditViewModel model)

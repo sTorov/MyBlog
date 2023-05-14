@@ -1,9 +1,8 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using MyBlog.Data.DBModels.Users;
-using MyBlog.Services.ApiModels.Users;
+using MyBlog.Services.ApiModels.Users.Response;
+using MyBlog.Services.ApiModels.Users.Request;
 using MyBlog.Services.Services.Interfaces;
-using MyBlog.Services.ViewModels.Users.Response;
 
 namespace MyBlog.Api.Controllers
 {
@@ -12,11 +11,13 @@ namespace MyBlog.Api.Controllers
     public class UserApiController : ControllerBase
     {
         private readonly IUserService _userService;
+        private readonly ICheckDataService _checkDataService;
         private readonly IMapper _mapper;
 
-        public UserApiController(IUserService userService, IMapper mapper)
+        public UserApiController(IUserService userService, ICheckDataService checkDataService, IMapper mapper)
         {
             _userService = userService;
+            _checkDataService = checkDataService;
             _mapper = mapper;
         }
 
@@ -46,13 +47,20 @@ namespace MyBlog.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] UserRegisterViewModel model)
+        public async Task<IActionResult> Create([FromBody] UserApiCreateModel model)
         {
-            var (result, _) = await _userService.CreateUserAsync(model);
-            if (!result.Succeeded)
-                return StatusCode(400, $"Произошла ошибка при создании пользователя!");
+            var message = await _checkDataService.CheckDataForCreateUserAsync(model);
 
-            return StatusCode(201, $"Пользователь успешно создан.");
+            if (message == string.Empty)
+            {
+                var (result, _) = await _userService.CreateUserAsync(model);
+                if (!result.Succeeded)
+                    return StatusCode(400, $"Произошла ошибка при создании пользователя!");
+
+                return StatusCode(201, $"Пользователь успешно создан.");
+            }
+
+            return StatusCode(409, message);
         }
 
         [HttpPut]

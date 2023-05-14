@@ -1,4 +1,4 @@
-﻿namespace MyBlog.Services.ApiModels.Users
+﻿namespace MyBlog.Services.ApiModels.Users.Response
 {
     public class UserApiModel
     {

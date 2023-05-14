@@ -30,8 +30,7 @@ namespace MyBlog.App.Controllers
         public async Task<IActionResult> GetRoles([FromRoute]int? userId)
         {
             var model = await _roleService.GetRolesViewModelAsync(userId);
-            if(model == null)
-                return BadRequest();
+            if(model == null) return NotFound();
 
             return View(model);
         }
@@ -54,10 +53,10 @@ namespace MyBlog.App.Controllers
             if (ModelState.IsValid)
             {
                 var result = await _roleService.CreateRoleAsync(model);
-                if (!result)
-                    return BadRequest();
-
-                return RedirectToAction("GetRoles");
+                if (result)
+                    return RedirectToAction("GetRoles");
+                else    
+                    ModelState.AddModelError(string.Empty, $"Ошибка! Не удалось создать роль!");
             }
 
             return View(model);
@@ -71,8 +70,7 @@ namespace MyBlog.App.Controllers
         public async Task<IActionResult> Edit(int id)
         {
             var model = await _roleService.GetRoleEditViewModelAsync(id);
-            if (model == null)
-                return BadRequest();
+            if (model == null) return NotFound();
 
             return View(model);
         }
@@ -88,10 +86,10 @@ namespace MyBlog.App.Controllers
             if (ModelState.IsValid)
             {
                 var result = await _roleService.UpdateRoleAsync(currentRole!, model);
-                if(!result) 
-                    return BadRequest();
-
-                return RedirectToAction("GetRoles");
+                if(result)
+                    return RedirectToAction("GetRoles");
+                else
+                    ModelState.AddModelError(string.Empty, $"Ошибка! Не удалось обновить роль!");
             }
 
             return View(model);
@@ -104,8 +102,7 @@ namespace MyBlog.App.Controllers
         public async Task<IActionResult> Delete(int id)
         {
             var result = await _roleService.DeleteRoleAsync(id);
-            if(!result)
-                return BadRequest();
+            if(!result) return BadRequest();
 
             return RedirectToAction("GetRoles");
         }
@@ -118,8 +115,7 @@ namespace MyBlog.App.Controllers
         public async Task<IActionResult> View([FromRoute] int id)
         {
             var model = await _roleService.GetRoleViewModel(id);
-            if(model == null)
-                return BadRequest();
+            if(model == null) return NotFound();
 
             return View(model);
         }

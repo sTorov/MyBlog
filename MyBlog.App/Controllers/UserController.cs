@@ -64,7 +64,6 @@ namespace MyBlog.App.Controllers
                 if (result.Succeeded)
                 {
                     await _signInManager.SignInWithClaimsAsync(user, false, await _userService.GetClaimsAsync(user));
-
                     return RedirectToAction("Index", "Home");
                 }
                 else
@@ -95,7 +94,6 @@ namespace MyBlog.App.Controllers
             if (ModelState.IsValid)
             {
                 var result = await _signInManager.CheckPasswordSignInAsync(user!, model.Password, false);
-
                 if (result.Succeeded)
                 {
                     var claims = await _userService.GetClaimsAsync(user!);
@@ -103,7 +101,6 @@ namespace MyBlog.App.Controllers
 
                     if (!string.IsNullOrEmpty(model.ReturnUrl) && Url.IsLocalUrl(model.ReturnUrl))
                         return Redirect(model.ReturnUrl);
-
                     return RedirectToAction("Index", "Home");
                 }
                 else
@@ -171,10 +168,10 @@ namespace MyBlog.App.Controllers
         public async Task<IActionResult> Remove(int id, [FromForm] int? userId)
         {
             var result = await _userService.DeleteByIdAsync(id, userId, User.IsInRole("Admin"));
-            if (!result)
-                return BadRequest();
+            if (!result) return BadRequest();
 
-            if (User.IsInRole("Admin")) return RedirectToAction("GetUsers");
+            if (User.IsInRole("Admin")) 
+                return RedirectToAction("GetUsers");
 
             await _signInManager.SignOutAsync();
             return RedirectToAction("Index", "Home");
@@ -188,9 +185,9 @@ namespace MyBlog.App.Controllers
         [Route("EditUser/{id?}")]
         public async Task<IActionResult> Edit([FromRoute] int id, [FromQuery] int? userId)
         {
-            var model = await _userService.GetUserEditViewModelAsync(id, userId, User.IsInRole("Admin"));
-            if (model == null)
-                return BadRequest();
+            var (model, result) = await _userService.GetUserEditViewModelAsync(id, userId, User.IsInRole("Admin"));
+
+            if (model == null) return result!;
 
             model.AllRoles = await _roleService.GetEnabledRolesForUserAsync(id);
             return View(model);
@@ -219,7 +216,7 @@ namespace MyBlog.App.Controllers
                 }
             }
 
-            model.AllRoles = await _roleService.GetEnabledRolesForUserAsync(model.Id);
+            model.AllRoles ??= await _roleService.GetEnabledRolesForUserAsync(model.Id);
             return View(model);
         }
 
@@ -232,8 +229,7 @@ namespace MyBlog.App.Controllers
         public async Task<IActionResult> View([FromRoute] int id)
         {
             var model = await _userService.GetUserViewModelAsync(id);
-            if (model == null)
-                return BadRequest();
+            if (model == null) return NotFound();
 
             return View(model);
         }
@@ -262,13 +258,16 @@ namespace MyBlog.App.Controllers
                 model.AllRoles = await _userService.UpdateRoleStateForEditUserAsync(this.Request);
                 var result = await _userService.CreateUserAsync(model);
 
-                if (!result.Succeeded)
-                    return BadRequest();
-
-                return RedirectToAction("GetUsers");
+                if (result.Succeeded)
+                    return RedirectToAction("GetUsers");
+                else
+                {
+                    foreach (var error in result.Errors)
+                        ModelState.AddModelError(string.Empty, error.Description);
+                }
             }
 
-            model.AllRoles = await _roleService.GetDictionaryRolesDefault();
+            model.AllRoles ??= await _roleService.GetDictionaryRolesDefault();
             return View(model);
         }
     }

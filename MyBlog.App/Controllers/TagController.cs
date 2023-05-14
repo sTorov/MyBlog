@@ -42,13 +42,13 @@ namespace MyBlog.App.Controllers
             if (ModelState.IsValid)
             {
                 var result = await _tagService.CreateTagAsync(model);
-                if (!result)
-                    return BadRequest();
-
-                return RedirectToAction("GetTags");
+                if (result)
+                    return RedirectToAction("GetTags");
+                else
+                    ModelState.AddModelError(string.Empty, $"Ошибка! Не удалось создать тег!");
             }
-            else
-                return View(model);
+            
+            return View(model);
         }
 
         /// <summary>
@@ -71,8 +71,7 @@ namespace MyBlog.App.Controllers
         public async Task<IActionResult> Edit([FromRoute] int id)
         {
             var model = await _tagService.GetTagEditViewModelAsync(id);
-            if (model == null)
-                return BadRequest();
+            if (model == null) return NotFound();
 
             return View(model);
         }
@@ -88,13 +87,13 @@ namespace MyBlog.App.Controllers
             if (ModelState.IsValid)
             {
                 var result = await _tagService.UpdateTagAsync(model);
-                if (!result) 
-                    return BadRequest();
-
-                return RedirectToAction("GetTags");
+                if (result)
+                    return RedirectToAction("GetTags");
+                else
+                    ModelState.AddModelError(string.Empty, $"Ошибка! Не удалось обновить тег!");
             }
-            else
-                return View(model);
+            
+            return View(model);
         }
 
         /// <summary>
@@ -105,8 +104,7 @@ namespace MyBlog.App.Controllers
         public async Task<IActionResult> Remove(int id)
         {
             var reselt = await _tagService.DeleteTagAsync(id);
-            if(!reselt)
-                return BadRequest();
+            if(!reselt) return BadRequest();
 
             return RedirectToAction("GetTags");
         }
@@ -119,8 +117,7 @@ namespace MyBlog.App.Controllers
         public async Task<IActionResult> View([FromRoute]int id)
         {
             var model = await _tagService.GetTagViewModelAsync(id);
-            if(model == null)
-                return BadRequest();
+            if(model == null) return NotFound();
 
             return View(model);
         }

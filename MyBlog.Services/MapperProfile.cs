@@ -13,7 +13,7 @@ using MyBlog.Data.DBModels.Posts;
 using MyBlog.Data.DBModels.Roles;
 using MyBlog.Data.DBModels.Tags;
 using MyBlog.Data.DBModels.Users;
-using MyBlog.Services.ApiModels.Users;
+using MyBlog.Services.ApiModels.Users.Response;
 
 namespace MyBlog.Services
 {
