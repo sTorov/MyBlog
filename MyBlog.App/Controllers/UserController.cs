@@ -12,6 +12,7 @@ namespace MyBlog.App.Controllers
     /// <summary>
     /// Контроллер пользователей
     /// </summary>
+    [ApiExplorerSettings(IgnoreApi = true)]
     public class UserController : Controller
     {
         private readonly SignInManager<User> _signInManager;

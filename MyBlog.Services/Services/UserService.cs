@@ -8,7 +8,6 @@ using MyBlog.Services.ViewModels.Users.Response;
 using MyBlog.Data.DBModels.Roles;
 using MyBlog.Data.DBModels.Users;
 using System.Security.Claims;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
 
 namespace MyBlog.Services.Services
@@ -81,10 +80,10 @@ namespace MyBlog.Services.Services
             return roles;
         }
 
-        public async Task<List<User>> GetAllUsersAsync() => await _userManager.Users.ToListAsync();
+        public async Task<List<User>> GetAllUsersAsync() => await _userManager.Users.Include(u => u.Roles).ToListAsync();
 
         public async Task<User?> GetUserByIdAsync(int id) => 
-            await Task.Run(() => _userManager.Users.Include(u => u.Roles).AsEnumerable().FirstOrDefault(u => u.Id == id));
+            await _userManager.Users.Include(u => u.Roles).FirstOrDefaultAsync(u => u.Id == id);
 
         public async Task<User?> GetUserByEmailAsync(string email) => 
             await _userManager.Users.Include(u => u.Roles).FirstOrDefaultAsync(u => u.Email == email);

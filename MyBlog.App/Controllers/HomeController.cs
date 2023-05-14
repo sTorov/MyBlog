@@ -4,6 +4,7 @@ using System.Diagnostics;
 
 namespace MyBlog.App.Controllers
 {
+    [ApiExplorerSettings(IgnoreApi = true)]
     public class HomeController : Controller
     {
         #region errorTest

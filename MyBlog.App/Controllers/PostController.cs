@@ -10,6 +10,7 @@ namespace MyBlog.App.Controllers
     /// Контроллер статей
     /// </summary>
     [Authorize, CheckUserId]
+    [ApiExplorerSettings(IgnoreApi = true)]
     public class PostController : Controller
     {
         private readonly IPostService _postService;

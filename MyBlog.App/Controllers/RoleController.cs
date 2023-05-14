@@ -10,6 +10,7 @@ namespace MyBlog.App.Controllers
     /// Контроллер ролей
     /// </summary>
     [Authorize(Roles = "Admin"), CheckUserId]
+    [ApiExplorerSettings(IgnoreApi = true)]
     public class RoleController : Controller
     {
         private readonly IRoleService _roleService;

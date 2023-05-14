@@ -10,6 +10,7 @@ namespace MyBlog.App.Controllers
     /// Контроллер комментариев
     /// </summary>
     [Authorize, CheckUserId]
+    [ApiExplorerSettings(IgnoreApi = true)]
     public class CommentController : Controller
     {
         private readonly ICommentService _commentService;

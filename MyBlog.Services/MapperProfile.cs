@@ -13,6 +13,7 @@ using MyBlog.Data.DBModels.Posts;
 using MyBlog.Data.DBModels.Roles;
 using MyBlog.Data.DBModels.Tags;
 using MyBlog.Data.DBModels.Users;
+using MyBlog.Services.ApiModels.Users;
 
 namespace MyBlog.Services
 {
@@ -47,6 +48,12 @@ namespace MyBlog.Services
                 .ForMember(m => m.NormalizedName, opt => opt.MapFrom(p => p.Name.ToUpper()));
             CreateMap<Role, RoleEditViewModel>();
             CreateMap<Role, RoleViewModel>();
+
+            CreateMap<User, UserApiModel>()
+                .ForMember(m => m.Login, opt => opt.MapFrom(u => u.UserName))
+                .ForMember(m => m.Roles, opt => opt.MapFrom(u => u.Roles.Select(r => r.Name)))
+                .ForMember(m => m.BirthDate, opt => opt.MapFrom(u => u.BirthDate.ToString("d")));
+
         }
     }
 }

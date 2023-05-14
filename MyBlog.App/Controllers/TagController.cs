@@ -10,6 +10,7 @@ namespace MyBlog.App.Controllers
     /// Контроллер тегов
     /// </summary>
     [CheckUserId]
+    [ApiExplorerSettings(IgnoreApi = true)]
     public class TagController : Controller
     {
         private readonly ITagService _tagService;
