@@ -1,6 +1,8 @@
 ﻿@model MyBlog.Services.ViewModels.Users.Response.UserLoginViewModel
 @{
-    ViewData["Title"] = "Авторизация"; 
+    ViewData["Title"] = "Авторизация";
+
+    var returnUrl = Context.Request.Query["ReturnUrl"] + "?userId=" + Context.Request.Query["UserId"];
 }
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.js"></script>
@@ -13,7 +15,7 @@
         <hr class="hr"/>
         <div asp-validation-summary="ModelOnly" class="text-danger fs-6"></div>
 
-        <input type="hidden" asp-for="ReturnUrl" value="@Context.Request.Query["ReturnUrl"]"/>
+        <input type="hidden" asp-for="ReturnUrl" value="@returnUrl"/>
 
         <div class="form-group mb-4 position-relative">
             <div class="row">

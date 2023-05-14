@@ -65,9 +65,11 @@ namespace MyBlog.App.Controllers
         /// Страница редактирования комментария
         /// </summary>
         [HttpGet]
-        public async Task<IActionResult> Edit([FromRoute] int id, [FromQuery] int? userId)
+        public async Task<IActionResult> Edit([FromRoute] int id)
         {
+            var userId = User.Claims.FirstOrDefault(c => c.Type == "UserID")?.Value;
             var fullAccess = User.IsInRole("Admin") || User.IsInRole("Moderator");
+
             var (model, result) = await _commentService.GetCommentEditViewModelAsync(id, userId, fullAccess);
 
             if (model == null) return result!;

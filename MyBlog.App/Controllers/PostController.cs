@@ -85,9 +85,11 @@ namespace MyBlog.App.Controllers
         /// Страница редактирования статьи
         /// </summary>
         [HttpGet]
-        public async Task<IActionResult> Edit([FromRoute] int id, [FromQuery] int? userId)
+        public async Task<IActionResult> Edit([FromRoute] int id)
         {
+            var userId = User.Claims.FirstOrDefault(c => c.Type == "UserID")?.Value;
             var fullAccess = User.IsInRole("Admin") || User.IsInRole("Moderator");
+
             var (model, result) = await _postService.GetPostEditViewModelAsync(id, userId, fullAccess);
 
             if (model == null) return result!;
@@ -125,9 +127,11 @@ namespace MyBlog.App.Controllers
         /// </summary>
         [HttpGet]
         [Route("ViewPost/{id}")]
-        public async Task<IActionResult> View([FromRoute] int id, [FromQuery] string userId)
+        public async Task<IActionResult> View([FromRoute] int id)
         {
-            var model = await _postService.GetPostViewModelAsync(id, userId);
+            var userId = User.Claims.FirstOrDefault(c => c.Type == "UserID")?.Value;
+            var model = await _postService.GetPostViewModelAsync(id, userId ?? string.Empty);
+
             if(model == null) return NotFound();
 
             model.Comments = await _commentService.GetAllCommentsByPostIdAsync(id);

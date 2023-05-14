@@ -14,9 +14,8 @@
             <div class="card-body">
                 <div class="ps-4">
                     <span class="text-muted">Статья:</span>
-                    <a class="mb-0 me-4 link-primary" asp-action="View"
-                        asp-controller="Post" asp-route-id="@comment.PostId" asp-route-userId="@claimUserId">
-                            @comment.Post.Title
+                    <a class="mb-0 me-4 link-primary" asp-action="View" asp-controller="Post" asp-route-id="@comment.PostId">
+                        @comment.Post.Title
                     </a>
                     <span class="text-muted">Пользователь:</span>
                     <a class="mb-0 link-primary" asp-action="View"
@@ -32,7 +31,7 @@
                         <input type="hidden" name="userId" value="@claimUserId" />
 
                         <div class="btn-group">
-                            <a class="btn btn-outline-success btn-sm" asp-action="Edit" asp-controller="Comment" asp-route-userId="@claimUserId"
+                            <a class="btn btn-outline-success btn-sm" asp-action="Edit" asp-controller="Comment"
                                 asp-route-id="@comment.Id" asp-route-returnUrl="@Context.Request.Path">
                                 Редактировать
                             </a>

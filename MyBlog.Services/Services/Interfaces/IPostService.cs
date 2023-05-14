@@ -26,7 +26,7 @@ namespace MyBlog.Services.Services.Interfaces
         /// <summary>
         /// Получение модели редактирования статьи
         /// </summary>
-        Task<(PostEditViewModel?, IActionResult?)> GetPostEditViewModelAsync(int id, int? userId, bool fullAccess);
+        Task<(PostEditViewModel?, IActionResult?)> GetPostEditViewModelAsync(int id, string? userId, bool fullAccess);
         /// <summary>
         /// Удаление статьи
         /// </summary>

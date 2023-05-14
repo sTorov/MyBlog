@@ -18,8 +18,9 @@ namespace MyBlog.App.Utils.Attributes
                 context!.Result = new UnauthorizedResult();
                 return;
             }
-
+            
             var userId = context!.HttpContext.User.Claims.FirstOrDefault(c => c.Type == "UserID")?.Value;
+
             if (userId == null)
                 context!.HttpContext.Response.Redirect($"/Refresh?ReturnUrl={context.HttpContext.Request.GetEncodedPathAndQuery()}");
         }

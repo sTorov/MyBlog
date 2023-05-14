@@ -106,7 +106,7 @@ namespace MyBlog.App.Controllers
                 else
                     ModelState.AddModelError(string.Empty, "Неверный email или(и) пароль!");
             }
-            
+
             return View(model);
         }
 
@@ -131,12 +131,12 @@ namespace MyBlog.App.Controllers
         [Route("Refresh")]
         public async Task<IActionResult> Refresh(string returnUrl)
         {
-            if(User.Claims.FirstOrDefault(c => c.Type == "UserID")?.Value == null)
+            if (User.Claims.FirstOrDefault(c => c.Type == "UserID")?.Value == null)
             {
                 var userName = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value ?? string.Empty;
                 var user = await _userService.GetUserByNameAsync(userName);
 
-                if(user != null)
+                if (user != null)
                 {
                     var claims = await _userService.GetClaimsAsync(user!);
                     await _signInManager.SignInWithClaimsAsync(user!, false, claims);
@@ -144,7 +144,7 @@ namespace MyBlog.App.Controllers
             }
 
             if (returnUrl != null && Url.IsLocalUrl(returnUrl))
-                return Redirect(returnUrl);    
+                return Redirect(returnUrl);
             return RedirectToAction("Index", "Home");
         }
 
@@ -183,8 +183,9 @@ namespace MyBlog.App.Controllers
         [Authorize, CheckUserId]
         [HttpGet]
         [Route("EditUser/{id?}")]
-        public async Task<IActionResult> Edit([FromRoute] int id, [FromQuery] int? userId)
+        public async Task<IActionResult> Edit([FromRoute] int id)
         {
+            var userId = User.Claims.FirstOrDefault(c => c.Type == "UserID")?.Value;
             var (model, result) = await _userService.GetUserEditViewModelAsync(id, userId, User.IsInRole("Admin"));
 
             if (model == null) return result!;

@@ -103,12 +103,12 @@ namespace MyBlog.Services.Services
             return false;
         }
 
-        public async Task<(UserEditViewModel?, IActionResult?)> GetUserEditViewModelAsync(int id, int? userId, bool fullAccess)
+        public async Task<(UserEditViewModel?, IActionResult?)> GetUserEditViewModelAsync(int id, string? userId, bool fullAccess)
         {
             var user = await GetUserByIdAsync(id);
             if (user == null) return (null, new NotFoundResult());
 
-            if (fullAccess || user.Id == userId)
+            if (fullAccess || user.Id.ToString() == userId)
                 return (_mapper.Map<UserEditViewModel>(user), null);
 
             return (null, new ForbidResult());

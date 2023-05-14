@@ -29,7 +29,7 @@ namespace MyBlog.Services.Services.Interfaces
         /// <summary>
         /// Получение модели редактирования комментария
         /// </summary>
-        Task<(CommentEditViewModel?, IActionResult?)> GetCommentEditViewModelAsync(int id, int? userId, bool fullAccess);
+        Task<(CommentEditViewModel?, IActionResult?)> GetCommentEditViewModelAsync(int id, string? userId, bool fullAccess);
         /// <summary>
         /// Обновление комментария
         /// </summary>

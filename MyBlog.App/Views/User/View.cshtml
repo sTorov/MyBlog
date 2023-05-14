@@ -44,7 +44,7 @@
                         @if (User.IsInRole("Admin") || (!User.IsInRole("Admin") && Model.Id.ToString() == claimUserId))
                         {
                             <div class="col mt-4 mb-2 justify-content-end">
-                                <a class="btn btn-outline-primary" asp-action="Edit" asp-controller="User" asp-route-userId="@claimUserId"
+                                <a class="btn btn-outline-primary" asp-action="Edit" asp-controller="User"
                                     asp-route-id="@Model.Id" asp-route-returnUrl="@Context.Request.Path">
                                     Редактировать
                                 </a>

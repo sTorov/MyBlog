@@ -52,7 +52,7 @@ namespace MyBlog.Services.Services.Interfaces
         /// <summary>
         /// Получение модели редактирования пользователя
         /// </summary>
-        Task<(UserEditViewModel?, IActionResult?)> GetUserEditViewModelAsync(int id, int? userId, bool fullAccess);
+        Task<(UserEditViewModel?, IActionResult?)> GetUserEditViewModelAsync(int id, string? userId, bool fullAccess);
         /// <summary>
         /// Получение модели всех пользователей
         /// </summary>

@@ -63,12 +63,12 @@ namespace MyBlog.Services.Services
             return model;
         }
 
-        public async Task<(PostEditViewModel?, IActionResult?)> GetPostEditViewModelAsync(int id, int? userId, bool fullAccess)
+        public async Task<(PostEditViewModel?, IActionResult?)> GetPostEditViewModelAsync(int id, string? userId, bool fullAccess)
         {
             var post = await GetPostByIdAsync(id);
             if (post == null) return (null, new NotFoundResult());
 
-            if (fullAccess || post.UserId == userId)
+            if (fullAccess || post.UserId.ToString() == userId)
                 return (_mapper.Map<PostEditViewModel>(post), null);
 
             return (null, new ForbidResult());

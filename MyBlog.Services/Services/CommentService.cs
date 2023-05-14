@@ -83,12 +83,12 @@ namespace MyBlog.Services.Services
             return (new ForbidResult(), false);
         }
 
-        public async Task<(CommentEditViewModel?, IActionResult?)> GetCommentEditViewModelAsync(int id, int? userId, bool fullAccess)
+        public async Task<(CommentEditViewModel?, IActionResult?)> GetCommentEditViewModelAsync(int id, string? userId, bool fullAccess)
         {
             var comment = await GetCommentByIdAsync(id);
             if (comment == null) return (null, new NotFoundResult());
 
-            if (fullAccess || comment.UserId == userId)
+            if (fullAccess || comment.UserId.ToString() == userId)
                 return (_mapper.Map<CommentEditViewModel>(comment), null);
 
             return (null, new ForbidResult());

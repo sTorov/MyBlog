@@ -40,7 +40,7 @@
                 </li>
                 <li>
                     <a class="dropdown-item" href="#" onclick="document.getElementById('logout').submit()">Выход</a>
-                    <form id="logout" method="post" asp-controller="User" asp-action="Logout" 
+                    <form id="logout" method="post" asp-controller="User" asp-action="Logout"
                         asp-route-returnUrl="@(Context.Request.Path + Context.Request.QueryString)"></form>
                 </li>
             </ul>
