@@ -8,6 +8,7 @@ using MyBlog.Services.ViewModels.Tags.Interfaces;
 using MyBlog.Data.DBModels.Users;
 using MyBlog.Services.ViewModels.Users.Response;
 using MyBlog.Services.ApiModels.Users.Request;
+using MyBlog.Services.ViewModels.Users.Intefaces;
 
 namespace MyBlog.Services.Services.Interfaces
 {
@@ -45,14 +46,22 @@ namespace MyBlog.Services.Services.Interfaces
         /// <summary>
         /// Проверка данных полученных контроллером при создании пользователя (для API)
         /// </summary>
-        Task<string> CheckDataForCreateUserAsync(UserApiCreateModel model);
+        Task<List<string>> CheckDataForCreateUserAsync(UserApiCreateModel model);
         /// <summary>
         /// Проверка данных полученных контроллером при авторизации пользователя
         /// </summary>
         Task<User?> CheckDataForLoginAsync(Controller controller, UserLoginViewModel model);
         /// <summary>
-        /// Проверка данных полученных контроллером при редактировании пользователя
+        /// Проверка данных полученных контроллером при редактировании пользователя (для основного приложения)
         /// </summary>
         Task<User?> CheckDataForEditUserAsync(Controller controller, UserEditViewModel model);
+        /// <summary>
+        /// Проверка данных полученных контроллером при редактировании пользователя (для API)
+        /// </summary>
+        Task<(User?, List<string>)> CheckDataForEditUserAsync(UserApiUpdateModel model);
+        /// <summary>
+        /// Проверка корректности переданных ролей в модели обновления пользователя
+        /// </summary>
+        Task<bool> CheckRolesForUserUpdateModel(IUserUpdateModel model);
     }
 }

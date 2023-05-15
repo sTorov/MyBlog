@@ -5,6 +5,7 @@ using MyBlog.Data.DBModels.Users;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using MyBlog.Services.ViewModels.Users.Intefaces;
 
 namespace MyBlog.Services.Services.Interfaces
 {
@@ -24,7 +25,7 @@ namespace MyBlog.Services.Services.Interfaces
         /// <summary>
         /// Обновление пользователя
         /// </summary>
-        Task<IdentityResult> UpdateUserAsync(UserEditViewModel model, User user);
+        Task<IdentityResult> UpdateUserAsync(IUserUpdateModel model, User user);
         /// <summary>
         /// Получение списка всех пользователей
         /// </summary>
@@ -42,9 +43,13 @@ namespace MyBlog.Services.Services.Interfaces
         /// </summary>
         Task<User?> GetUserByNameAsync(string name);
         /// <summary>
-        /// Удаление пользователя
+        /// Удаление пользователя (основное приложение)
         /// </summary>
         Task<bool> DeleteByIdAsync(int id, int? userId, bool fullAccess);
+        /// <summary>
+        /// Удаление пользователя (API)
+        /// </summary>
+        Task<bool> DeleteByIdAsync(User user);
         /// <summary>
         /// Получение утверждений пользователя
         /// </summary>

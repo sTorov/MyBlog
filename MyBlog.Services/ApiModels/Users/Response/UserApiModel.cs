@@ -1,5 +1,8 @@
 ﻿namespace MyBlog.Services.ApiModels.Users.Response
 {
+    /// <summary>
+    /// Модель пользователя для API
+    /// </summary>
     public class UserApiModel
     {
         public int Id { get; set; }

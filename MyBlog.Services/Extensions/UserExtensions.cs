@@ -1,5 +1,6 @@
 ﻿using MyBlog.Services.ViewModels.Users.Response;
 using MyBlog.Data.DBModels.Users;
+using MyBlog.Services.ViewModels.Users.Intefaces;
 
 namespace MyBlog.Services.Extensions
 {
@@ -11,7 +12,7 @@ namespace MyBlog.Services.Extensions
         /// <summary>
         /// Присвоение значений модели редактирования сущности пользователя
         /// </summary>
-        public static User Convert(this User user, UserEditViewModel model)
+        public static User Convert(this User user, IUserUpdateModel model)
         {
             user.FirstName = model.FirstName;
             user.SecondName = model.SecondName;

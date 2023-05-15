@@ -11,6 +11,7 @@ using MyBlog.Services.ViewModels.Posts.Response;
 using MyBlog.Services.ViewModels.Roles.Response;
 using MyBlog.Services.ViewModels.Tags.Interfaces;
 using MyBlog.Services.ViewModels.Tags.Response;
+using MyBlog.Services.ViewModels.Users.Intefaces;
 using MyBlog.Services.ViewModels.Users.Response;
 
 namespace MyBlog.Services.Services
@@ -93,15 +94,17 @@ namespace MyBlog.Services.Services
                 controller.ModelState.AddModelError(string.Empty, $"Адрес [{model.EmailReg}] уже зарегистрирован!");
         }
 
-        public async Task<string> CheckDataForCreateUserAsync(UserApiCreateModel model)
+        public async Task<List<string>> CheckDataForCreateUserAsync(UserApiCreateModel model)
         {
+            var list = new List<string>();
+
             var checkName = (await _userManager.FindByNameAsync(model.Login))?.UserName;
-            if (checkName != null) return $"Логин {model.Login} уже используется!";
+            if (checkName != null) list.Add($"Логин {model.Login} уже используется!");
 
             var checkEmail = (await _userManager.FindByEmailAsync(model.EmailReg))?.Email;
-            if (checkEmail != null) return $"Почта {model.EmailReg} уже зарегистрирована!";
+            if (checkEmail != null) list.Add($"Почта {model.EmailReg} уже зарегистрирована!");
 
-            return string.Empty;
+            return list;
         }
 
         public async Task<User?> CheckDataForEditUserAsync(Controller controller, UserEditViewModel model)
@@ -124,6 +127,28 @@ namespace MyBlog.Services.Services
             return currentUser;
         }
 
+        public async Task<(User?, List<string>)> CheckDataForEditUserAsync(UserApiUpdateModel model)
+        {
+            var list = new List<string>();
+
+            var currentUser = await _userManager.Users.Include(u => u.Roles).FirstOrDefaultAsync(u => u.Id == model.Id);
+            if (currentUser == null)
+            {
+                list.Add($"Пользователь не найден!");
+                return (null, list);
+            }
+
+            var checkLogin = (await _userManager.FindByNameAsync(model.Login))?.UserName;
+            if (checkLogin != null && checkLogin != currentUser.UserName) 
+                list.Add($"Никнейм [{model.Login}] уже используется!");
+
+            var checkEmail = (await _userManager.FindByEmailAsync(model.Email))?.Email;
+            if (checkEmail != null && checkEmail != currentUser.Email)
+                list.Add($"Адрес [{model.Email}] уже зарегистрирован!");
+
+            return (currentUser, list);
+        }
+
         public async Task<User?> CheckDataForLoginAsync(Controller controller, UserLoginViewModel model)
         {
             var user = await _userManager.Users.Include(u => u.Roles).FirstOrDefaultAsync(u => u.Email == model.UserEmail);
@@ -131,6 +156,17 @@ namespace MyBlog.Services.Services
                 controller.ModelState.AddModelError(string.Empty, "Неверный email или(и) пароль!");
 
             return user;
+        }
+
+        public async Task<bool> CheckRolesForUserUpdateModel(IUserUpdateModel model)
+        {
+            foreach(var role in model.AllRoles)
+            {
+                if (await _roleManager.FindByNameAsync(role.Key) == null)
+                    return false;
+            }
+
+            return true;
         }
         #endregion
     }

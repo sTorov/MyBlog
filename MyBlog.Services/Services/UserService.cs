@@ -10,6 +10,7 @@ using MyBlog.Data.DBModels.Users;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using MyBlog.Services.ViewModels.Users.Intefaces;
 
 namespace MyBlog.Services.Services
 {
@@ -51,7 +52,7 @@ namespace MyBlog.Services.Services
             return result;
         }
 
-        public async Task<IdentityResult> UpdateUserAsync(UserEditViewModel model, User user)
+        public async Task<IdentityResult> UpdateUserAsync(IUserUpdateModel model, User user)
         {
             user.Convert(model);
             user.Roles = await GetRoleListFromDictionary(model.AllRoles!);
@@ -101,6 +102,12 @@ namespace MyBlog.Services.Services
 
             if (check) return (await _userManager.DeleteAsync(user!)).Succeeded;
             return false;
+        }
+
+        public async Task<bool> DeleteByIdAsync(User user)
+        {
+            var result = await _userManager.DeleteAsync(user);
+            return result.Succeeded;
         }
 
         public async Task<(UserEditViewModel?, IActionResult?)> GetUserEditViewModelAsync(int id, string? userId, bool fullAccess)
