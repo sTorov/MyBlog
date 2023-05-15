@@ -34,9 +34,13 @@ namespace MyBlog.Services.Services.Interfaces
 
 
         /// <summary>
-        /// Проверка данных о теге, полученных контроллером
+        /// Проверка данных о теге, полученных контроллером (основное приложение)
         /// </summary>
         Task<Tag?> CheckTagNameAsync<T>(Controller controller, T model) where T : ITagResponseViewModel;
+        /// <summary>
+        /// Проверка данных о теге, полученных контроллером (API)
+        /// </summary>
+        Task<string> CheckTagNameAsync<T>(T model) where T : ITagResponseViewModel;
 
 
         /// <summary>

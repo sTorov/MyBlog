@@ -5,6 +5,7 @@ using MyBlog.Data.DBModels.Posts;
 using MyBlog.Data.DBModels.Roles;
 using MyBlog.Data.DBModels.Tags;
 using MyBlog.Data.DBModels.Users;
+using MyBlog.Services.ApiModels.Tags.Request;
 using MyBlog.Services.ApiModels.Users.Request;
 using MyBlog.Services.Services.Interfaces;
 using MyBlog.Services.ViewModels.Posts.Response;
@@ -76,8 +77,18 @@ namespace MyBlog.Services.Services
 
             if (check)
                 controller.ModelState.AddModelError(string.Empty, $"Тег с именем [{model.Name}] уже существует!");
-
             return checkTag;
+        }
+
+        public async Task<string> CheckTagNameAsync<T>(T model) where T : ITagResponseViewModel
+        {
+            var checkTag = await _tagService.GetTagByNameAsync(model.Name);
+            var check = model is TagApiUpdateModel updateModel
+                ? (checkTag != null && checkTag.Id != updateModel.Id) : checkTag != null;
+
+            if (check)
+                return $"Тег с именем [{model.Name}] уже существует!";
+            return string.Empty;
         }
         #endregion
 
