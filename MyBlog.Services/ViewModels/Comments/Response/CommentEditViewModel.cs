@@ -8,7 +8,6 @@ namespace MyBlog.Services.ViewModels.Comments.Response
     /// </summary>
     public class CommentEditViewModel : ICommentEditModel
     {
-        public int UserId { get; set; }
         public int Id { get; set; }
         public string? ReturnUrl { get; set; }
 

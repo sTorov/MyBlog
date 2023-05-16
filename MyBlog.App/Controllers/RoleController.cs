@@ -49,7 +49,7 @@ namespace MyBlog.App.Controllers
         [Route("CreateRole")]
         public async Task<IActionResult> Create(RoleCreateViewModel model)
         {
-            _ = await _checkDataService.CheckDataForCreateRoleAsync(this, model);
+            await _checkDataService.CheckDataForCreateRoleAsync(this, model);
             if (ModelState.IsValid)
             {
                 var result = await _roleService.CreateRoleAsync(model);
@@ -82,7 +82,7 @@ namespace MyBlog.App.Controllers
         [Route("EditRole")]
         public async Task<IActionResult> Edit(RoleEditViewModel model)
         {
-            _ = await _checkDataService.CheckDataForEditRoleAsync(this, model);
+            await _checkDataService.CheckDataForEditRoleAsync(this, model);
             if (ModelState.IsValid)
             {
                 var result = await _roleService.UpdateRoleAsync(model);

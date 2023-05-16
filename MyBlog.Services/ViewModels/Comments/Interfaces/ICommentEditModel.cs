@@ -6,7 +6,6 @@
     public interface ICommentEditModel
     {
         int Id { get; set; }
-        int UserId { get; set; }
         string Text { get; set; }
     }
 }

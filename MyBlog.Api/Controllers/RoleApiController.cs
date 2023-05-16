@@ -10,7 +10,7 @@ namespace MyBlog.Api.Controllers
     /// Контроллер ролей (API)
     /// </summary>
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]/[action]")]
     public class RoleApiController : ControllerBase
     {
         private readonly IRoleService _roleService;
@@ -30,20 +30,27 @@ namespace MyBlog.Api.Controllers
         /// <param name="id"></param>
         [HttpGet]
         [Route("{id}")]
-        public async Task<IActionResult> Get([FromRoute] int id = 0)
+        public async Task<IActionResult> Get([FromRoute] int id)
+        {
+            var role = await _roleService.GetRoleByIdAsync(id);
+            if (role == null)
+                return StatusCode(404, $"Роль не найдена!");
+
+            return StatusCode(200, _mapper.Map<RoleApiModel>(role));
+        }
+
+        /// <summary>
+        /// Получение всех ролей. Возможна фильтрация по идентификатору пользователя
+        /// </summary>
+        [HttpGet]
+        public async Task<IActionResult> GetAll([FromQuery] int? userId)
         {
             var list = new List<RoleApiModel>();
 
-            if (id == 0)
-                list = _mapper.Map<List<RoleApiModel>>(await _roleService.GetAllRolesAsync());
+            if (userId != null)
+                list = _mapper.Map<List<RoleApiModel>>(await _roleService.GetRolesByUserAsync((int)userId));
             else
-            {
-                var role = await _roleService.GetRoleByIdAsync(id);
-                if (role == null)
-                    return StatusCode(404, $"Роль не найдена!");
-
-                list.Add(_mapper.Map<RoleApiModel>(role));
-            }
+                list = _mapper.Map<List<RoleApiModel>>(await _roleService.GetAllRolesAsync());
 
             return StatusCode(200, list);
         }
@@ -54,9 +61,9 @@ namespace MyBlog.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] RoleApiCreateModel model)
         {
-            var message = await _checkDataService.CheckDataForCreateRoleAsync(model);
+            var messages = await _checkDataService.CheckEntitiesByNameAsync(roleName: model.Name);
 
-            if(message == string.Empty)
+            if(messages.Count == 0)
             {
                 var result = await _roleService.CreateRoleAsync(model);
                 if (!result)
@@ -65,7 +72,7 @@ namespace MyBlog.Api.Controllers
                 return StatusCode(201, $"Роль успешно создана.");
             }
 
-            return StatusCode(409, message);
+            return StatusCode(409, messages[0]);
         }
 
         /// <summary>

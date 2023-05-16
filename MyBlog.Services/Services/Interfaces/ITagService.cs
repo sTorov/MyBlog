@@ -1,6 +1,7 @@
 ﻿using MyBlog.Services.ViewModels.Tags.Request;
 using MyBlog.Services.ViewModels.Tags.Response;
 using MyBlog.Data.DBModels.Tags;
+using MyBlog.Data.Repositories;
 
 namespace MyBlog.Services.Services.Interfaces
 {
@@ -17,6 +18,10 @@ namespace MyBlog.Services.Services.Interfaces
         /// Получение тега по идентификатору
         /// </summary>
         Task<Tag?> GetTagByIdAsync(int id);
+        /// <summary>
+        /// Получение списка тегов для статьи
+        /// </summary>
+        Task<List<Tag>?> GetTagByPostAsync(int postId);
         /// <summary>
         /// Получение тега по имени
         /// </summary>

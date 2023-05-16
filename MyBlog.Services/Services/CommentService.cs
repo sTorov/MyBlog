@@ -66,6 +66,8 @@ namespace MyBlog.Services.Services
             return model;
         }
 
+        public async Task<List<Comment>> GetAllComments() => await _commentRepository.GetAllAsync();
+
         public async Task<Comment?> GetCommentByIdAsync(int id) => await _commentRepository.GetAsync(id);
 
         public async Task<(IActionResult?, bool)> DeleteCommentAsync(int id, int? userId, bool fullAccess)
@@ -83,6 +85,8 @@ namespace MyBlog.Services.Services
             
             return (new ForbidResult(), false);
         }
+
+        public async Task<int> DeleteCommentAsync(Comment comment) => await _commentRepository.DeleteAsync(comment);
 
         public async Task<(CommentEditViewModel?, IActionResult?)> GetCommentEditViewModelAsync(int id, string? userId, bool fullAccess)
         {

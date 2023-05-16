@@ -104,10 +104,10 @@ namespace MyBlog.App.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(PostEditViewModel model)
         {
-            var currentPost = await _checkDataService.CheckDataForUpdatePostAsync(this, model);
+            await _checkDataService.CheckDataForUpdatePostAsync(this, model);
             if (ModelState.IsValid)
             {
-                var result = await _postService.UpdatePostAsync(model, currentPost!);
+                var result = await _postService.UpdatePostAsync(model);
                 if (result)
                 {
                     if (model.ReturnUrl != null && Url.IsLocalUrl(model.ReturnUrl))

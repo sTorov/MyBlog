@@ -93,8 +93,11 @@ namespace MyBlog.Services.Services
             return (new ForbidResult(), false);
         }
 
-        public async Task<bool> UpdatePostAsync(IPostResponceModel model, Post post)
+        public async Task<bool> UpdatePostAsync(IPostUpdateModel model)
         {
+            var post = await _postRepository.GetAsync(model.Id);
+            if (post == null) return false;
+
             post.Convert(model);
             if (!string.IsNullOrEmpty(model.PostTags))
                 post.Tags = await _tagService.SetTagsForPostAsync(model.PostTags) ?? new List<Tag>();

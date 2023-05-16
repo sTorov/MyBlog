@@ -64,6 +64,8 @@ namespace MyBlog.Services.Services
 
         public async Task<Tag?> GetTagByNameAsync(string name) => await _tagRepository.GetTagByNameAsync(name);
 
+        public async Task<List<Tag>?> GetTagByPostAsync(int postId) => await _tagRepository.GetTagsByPostIdAsync(postId);
+
         public async Task<bool> CreateTagAsync(TagCreateViewModel model)
         {
             var tag = _mapper.Map<Tag>(model);

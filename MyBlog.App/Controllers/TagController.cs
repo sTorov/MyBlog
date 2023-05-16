@@ -38,7 +38,7 @@ namespace MyBlog.App.Controllers
         [Route("CreateTag")]
         public async Task<IActionResult> Create(TagCreateViewModel model)
         {
-            _ = await _checkDataService.CheckTagNameAsync(this, model);
+            await _checkDataService.CheckTagNameAsync(this, model);
             if (ModelState.IsValid)
             {
                 var result = await _tagService.CreateTagAsync(model);
@@ -83,7 +83,7 @@ namespace MyBlog.App.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(TagEditViewModel model)
         {
-            _ = await _checkDataService.CheckTagNameAsync(this, model);
+            await _checkDataService.CheckTagNameAsync(this, model);
             if (ModelState.IsValid)
             {
                 var result = await _tagService.UpdateTagAsync(model);

@@ -10,7 +10,7 @@ namespace MyBlog.Api.Controllers
     /// Контроллер пользователей (API)
     /// </summary>
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     public class UserApiController : ControllerBase
     {
         private readonly IUserService _userService;
@@ -25,19 +25,18 @@ namespace MyBlog.Api.Controllers
         }
 
         /// <summary>
-        /// Получение объекта пользователя
+        /// Получение объекта пользователя. Получение списка всех пользователей.
         /// </summary>
         [HttpGet]
-        [Route("{id?}")]
-        public async Task<IActionResult> Get([FromRoute] int id = 0)
+        public async Task<IActionResult> Get([FromQuery] int? id)
         {
             var response = new List<UserApiModel>();
 
-            if (id == 0)
+            if (id == null)
                 response = _mapper.Map<List<UserApiModel>>(await _userService.GetAllUsersAsync());
             else
             {
-                var user = await _userService.GetUserByIdAsync(id);
+                var user = await _userService.GetUserByIdAsync((int)id);
                 if (user == null)
                     return StatusCode(404, $"Пользователь не найден!");
 

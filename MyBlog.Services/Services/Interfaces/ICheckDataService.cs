@@ -19,23 +19,30 @@ namespace MyBlog.Services.Services.Interfaces
     public interface ICheckDataService
     {
         /// <summary>
+        /// Проверка сущностей по идентификаторам
+        /// </summary>
+        Task<List<string>> CheckEntitiesByIdAsync(int? postId = null, int? userId = null, int? roleId = null, int? tagId = null, int? commentId = null);
+
+        /// <summary>
+        /// Проверка сущностей по имени
+        /// </summary>
+        Task<List<string>> CheckEntitiesByNameAsync(string? userName = null, string? roleName = null, string? tagName = null);
+
+
+        /// <summary>
         /// Проверка данных полученных контроллером при обновлении статьи
         /// </summary>
-        Task<Post?> CheckDataForUpdatePostAsync(Controller controller, PostEditViewModel model);
+        Task CheckDataForUpdatePostAsync(Controller controller, PostEditViewModel model);
 
 
         /// <summary>
-        /// Проверка данных полученных контроллером при создании роли (основное приложение)
+        /// Проверка данных полученных контроллером при создании роли
         /// </summary>
-        Task<Role?> CheckDataForCreateRoleAsync(Controller controller, RoleCreateViewModel model);
-        /// <summary>
-        /// Проверка данных полученных контроллером при создании роли (API)
-        /// </summary>
-        Task<string> CheckDataForCreateRoleAsync(RoleApiCreateModel model);
+        Task CheckDataForCreateRoleAsync(Controller controller, RoleCreateViewModel model);
         /// <summary>
         /// Проверка данных полученных контроллером при редактировании роли
         /// </summary>
-        Task<Role?> CheckDataForEditRoleAsync(Controller controller, RoleEditViewModel model);
+        Task CheckDataForEditRoleAsync(Controller controller, RoleEditViewModel model);
         /// <summary>
         /// Проверка изменения стандартных ролей приложения
         /// </summary>
@@ -45,7 +52,7 @@ namespace MyBlog.Services.Services.Interfaces
         /// <summary>
         /// Проверка данных о теге, полученных контроллером (основное приложение)
         /// </summary>
-        Task<Tag?> CheckTagNameAsync<T>(Controller controller, T model) where T : ITagResponseViewModel;
+        Task CheckTagNameAsync<T>(Controller controller, T model) where T : ITagResponseViewModel;
         /// <summary>
         /// Проверка данных о теге, полученных контроллером (API)
         /// </summary>
@@ -59,7 +66,7 @@ namespace MyBlog.Services.Services.Interfaces
         /// <summary>
         /// Проверка данных полученных контроллером при создании пользователя (API)
         /// </summary>
-        Task<List<string>> CheckDataForCreateUserAsync(UserApiCreateModel model);
+        Task<List<string>> CheckDataForCreateUserAsync(UserRegisterViewModel model);
         /// <summary>
         /// Проверка данных полученных контроллером при авторизации пользователя
         /// </summary>
@@ -71,7 +78,7 @@ namespace MyBlog.Services.Services.Interfaces
         /// <summary>
         /// Проверка данных полученных контроллером при редактировании пользователя (API)
         /// </summary>
-        Task<(User?, List<string>)> CheckDataForEditUserAsync(UserApiUpdateModel model);
+        Task<(User?, List<string>)> CheckDataForEditUserAsync(IUserUpdateModel model);
         /// <summary>
         /// Проверка корректности переданных ролей в модели обновления пользователя
         /// </summary>

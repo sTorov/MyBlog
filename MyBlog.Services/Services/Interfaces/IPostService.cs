@@ -39,7 +39,7 @@ namespace MyBlog.Services.Services.Interfaces
         /// <summary>
         /// Обновление статьи
         /// </summary>
-        Task<bool> UpdatePostAsync(IPostResponceModel model, Post post);
+        Task<bool> UpdatePostAsync(IPostUpdateModel model);
         /// <summary>
         /// Получение идентификатора последней созданой статьи указанного пользователя
         /// </summary>

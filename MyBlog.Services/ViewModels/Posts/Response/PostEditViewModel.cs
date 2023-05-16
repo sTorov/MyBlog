@@ -7,7 +7,7 @@ namespace MyBlog.Services.ViewModels.Posts.Response
     /// <summary>
     /// Модель представления редактирования статьи
     /// </summary>
-    public class PostEditViewModel : IPostResponceModel
+    public class PostEditViewModel : IPostUpdateModel
     {
         public int Id { get; set; }
 

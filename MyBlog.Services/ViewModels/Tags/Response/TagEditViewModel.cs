@@ -7,7 +7,7 @@ namespace MyBlog.Services.ViewModels.Tags.Response
     /// <summary>
     /// Модель представления редактирования тега
     /// </summary>
-    public class TagEditViewModel : ITagResponseViewModel
+    public class TagEditViewModel : ITagUpdateModel
     {
         public int Id { get; set; }
 

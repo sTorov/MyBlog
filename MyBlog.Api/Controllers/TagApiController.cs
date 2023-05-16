@@ -10,7 +10,7 @@ namespace MyBlog.Api.Controllers
     /// Контроллер тегов (API)
     /// </summary>
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     public class TagApiController : ControllerBase
     {
         private readonly ITagService _tagService;
@@ -30,20 +30,28 @@ namespace MyBlog.Api.Controllers
         /// <param name="id"></param>
         [HttpGet]
         [Route("{id}")]
-        public async Task<IActionResult> Get([FromRoute] int id = 0)
+        public async Task<IActionResult> Get([FromRoute] int id)
+        {
+            var tag = await _tagService.GetTagByIdAsync(id);
+            if (tag == null)
+                return StatusCode(404, $"Тег не найден!");
+
+            return StatusCode(200, _mapper.Map<TagApiModel>(tag));
+        }
+
+        /// <summary>
+        /// Получение списка всех тегов. Возможна фильтрация по идентификатору статьи.
+        /// </summary>
+        /// <param name="postId"></param>
+        [HttpGet]
+        public async Task<IActionResult> GetAll([FromQuery] int? postId)
         {
             var list = new List<TagApiModel>();
 
-            if (id == 0)
-                list = _mapper.Map<List<TagApiModel>>(await _tagService.GetAllTagsAsync());
+            if (postId != null)
+                list = _mapper.Map<List<TagApiModel>>(await _tagService.GetTagByPostAsync((int)postId));
             else
-            {
-                var tag = await _tagService.GetTagByIdAsync(id);
-                if(tag == null)
-                    return StatusCode(404, $"Тег не найден!");
-
-                list.Add(_mapper.Map<TagApiModel>(tag));
-            }
+                list = _mapper.Map<List<TagApiModel>>(await _tagService.GetAllTagsAsync());
 
             return StatusCode(200, list);
         }

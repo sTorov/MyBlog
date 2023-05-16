@@ -20,6 +20,10 @@ namespace MyBlog.Services.Services.Interfaces
         /// </summary>
         Task<CommentsViewModel> GetCommentsViewModelAsync(int? postId, int? userId);
         /// <summary>
+        /// Получение списка всех комментариев
+        /// </summary>
+        Task<List<Comment>> GetAllComments();
+        /// <summary>
         /// Получение комментария по идентификатору
         /// </summary>
         Task<Comment?> GetCommentByIdAsync(int id);
@@ -36,8 +40,12 @@ namespace MyBlog.Services.Services.Interfaces
         /// </summary>
         Task<bool> UpdateCommentAsync(ICommentEditModel model);
         /// <summary>
-        /// Удаление комментария
+        /// Удаление комментария (основное приложение)
         /// </summary>
         Task<(IActionResult?, bool)> DeleteCommentAsync(int id, int? userId, bool fullAccess);
+        /// <summary>
+        /// Удаление комментария (API)
+        /// </summary>
+        Task<int> DeleteCommentAsync(Comment comment);
     }
 }
