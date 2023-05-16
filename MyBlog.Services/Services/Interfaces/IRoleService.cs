@@ -18,6 +18,10 @@ namespace MyBlog.Services.Services.Interfaces
         /// </summary>
         Task<Role?> GetRoleByNameAsync(string roleName);
         /// <summary>
+        /// Получение роли по идентификатору
+        /// </summary>
+        Task<Role?> GetRoleByIdAsync(int id);
+        /// <summary>
         /// Получение модели всех ролей
         /// </summary>
         Task<RolesViewModel?> GetRolesViewModelAsync(int? userId);
@@ -40,7 +44,7 @@ namespace MyBlog.Services.Services.Interfaces
         /// <summary>
         /// Обновление роли
         /// </summary>
-        Task<bool> UpdateRoleAsync(Role role, RoleEditViewModel model);
+        Task<bool> UpdateRoleAsync(RoleEditViewModel model);
         /// <summary>
         /// Удаление роли
         /// </summary>

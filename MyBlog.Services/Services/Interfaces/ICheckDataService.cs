@@ -9,6 +9,7 @@ using MyBlog.Data.DBModels.Users;
 using MyBlog.Services.ViewModels.Users.Response;
 using MyBlog.Services.ApiModels.Users.Request;
 using MyBlog.Services.ViewModels.Users.Intefaces;
+using MyBlog.Services.ApiModels.Roles.Request;
 
 namespace MyBlog.Services.Services.Interfaces
 {
@@ -24,13 +25,21 @@ namespace MyBlog.Services.Services.Interfaces
 
 
         /// <summary>
-        /// Проверка данных полученных контроллером при создании роли
+        /// Проверка данных полученных контроллером при создании роли (основное приложение)
         /// </summary>
         Task<Role?> CheckDataForCreateRoleAsync(Controller controller, RoleCreateViewModel model);
+        /// <summary>
+        /// Проверка данных полученных контроллером при создании роли (API)
+        /// </summary>
+        Task<string> CheckDataForCreateRoleAsync(RoleApiCreateModel model);
         /// <summary>
         /// Проверка данных полученных контроллером при редактировании роли
         /// </summary>
         Task<Role?> CheckDataForEditRoleAsync(Controller controller, RoleEditViewModel model);
+        /// <summary>
+        /// Проверка изменения стандартных ролей приложения
+        /// </summary>
+        Task<bool> CheckChangeDefaultRolesAsync(int roleId, string roleName = "");
 
 
         /// <summary>
@@ -44,11 +53,11 @@ namespace MyBlog.Services.Services.Interfaces
 
 
         /// <summary>
-        /// Проверка данных полученных контроллером при создании пользователя (для основного приложения)
+        /// Проверка данных полученных контроллером при создании пользователя (основное приложение)
         /// </summary>
         Task CheckDataForCreateUserAsync(Controller controller, UserRegisterViewModel model);
         /// <summary>
-        /// Проверка данных полученных контроллером при создании пользователя (для API)
+        /// Проверка данных полученных контроллером при создании пользователя (API)
         /// </summary>
         Task<List<string>> CheckDataForCreateUserAsync(UserApiCreateModel model);
         /// <summary>
@@ -56,11 +65,11 @@ namespace MyBlog.Services.Services.Interfaces
         /// </summary>
         Task<User?> CheckDataForLoginAsync(Controller controller, UserLoginViewModel model);
         /// <summary>
-        /// Проверка данных полученных контроллером при редактировании пользователя (для основного приложения)
+        /// Проверка данных полученных контроллером при редактировании пользователя (основное приложение)
         /// </summary>
         Task<User?> CheckDataForEditUserAsync(Controller controller, UserEditViewModel model);
         /// <summary>
-        /// Проверка данных полученных контроллером при редактировании пользователя (для API)
+        /// Проверка данных полученных контроллером при редактировании пользователя (API)
         /// </summary>
         Task<(User?, List<string>)> CheckDataForEditUserAsync(UserApiUpdateModel model);
         /// <summary>

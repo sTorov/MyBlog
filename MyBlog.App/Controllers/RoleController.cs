@@ -82,10 +82,10 @@ namespace MyBlog.App.Controllers
         [Route("EditRole")]
         public async Task<IActionResult> Edit(RoleEditViewModel model)
         {
-            var currentRole = await _checkDataService.CheckDataForEditRoleAsync(this, model);
+            _ = await _checkDataService.CheckDataForEditRoleAsync(this, model);
             if (ModelState.IsValid)
             {
-                var result = await _roleService.UpdateRoleAsync(currentRole!, model);
+                var result = await _roleService.UpdateRoleAsync(model);
                 if(result)
                     return RedirectToAction("GetRoles");
                 else

@@ -1,17 +1,16 @@
-﻿using MyBlog.Services.ViewModels.Comments.Interfaces;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace MyBlog.Services.ViewModels.Comments.Response
 {
     /// <summary>
     /// Модель представления создания комментария
     /// </summary>
-    public class CommentCreateViewModel : ICommentEditModel
+    public class CommentCreateViewModel
     {
         public int UserId { get; set; }
         public int PostId { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Добавьте текст комментария!")]
         [Display(Name = "Комментарий")]
         public string Text { get; set; }
     }

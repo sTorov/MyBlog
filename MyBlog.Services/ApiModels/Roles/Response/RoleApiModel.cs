@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using MyBlog.Services.ViewModels.Roles.Request;
 
 namespace MyBlog.Services.ApiModels.Roles.Response
 {
-    internal class RoleApiModel
+    /// <summary>
+    /// Модель роли для API
+    /// </summary>
+    public class RoleApiModel : RoleViewModel
     {
     }
 }

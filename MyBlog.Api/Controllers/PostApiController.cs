@@ -28,7 +28,7 @@ namespace MyBlog.Api.Controllers
         [Route("{id}")]
         public async Task<IActionResult> Get([FromRoute] int id)
         {
-
+            return StatusCode(200);
         }
 
         /// <summary>
@@ -37,7 +37,7 @@ namespace MyBlog.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] PostApiCreateModel model)
         {
-
+            return StatusCode(200);
         }
 
         /// <summary>
@@ -48,7 +48,7 @@ namespace MyBlog.Api.Controllers
         [Route("{id}")]
         public async Task<IActionResult> Update([FromBody] PostApiUpdateModel model)
         {
-
+            return StatusCode(200);
         }
 
         /// <summary>
@@ -59,7 +59,7 @@ namespace MyBlog.Api.Controllers
         [Route("{id}")]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
-
+            return StatusCode(200);
         }
     }
 }

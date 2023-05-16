@@ -5,8 +5,10 @@ using MyBlog.Data.DBModels.Posts;
 using MyBlog.Data.DBModels.Roles;
 using MyBlog.Data.DBModels.Tags;
 using MyBlog.Data.DBModels.Users;
+using MyBlog.Services.ApiModels.Roles.Request;
 using MyBlog.Services.ApiModels.Tags.Request;
 using MyBlog.Services.ApiModels.Users.Request;
+using MyBlog.Services.Services.Data;
 using MyBlog.Services.Services.Interfaces;
 using MyBlog.Services.ViewModels.Posts.Response;
 using MyBlog.Services.ViewModels.Roles.Response;
@@ -64,6 +66,30 @@ namespace MyBlog.Services.Services
                 controller.ModelState.AddModelError(string.Empty, $"Роль с именем [{model.Name}] уже существует!");
 
             return checkRole;
+        }
+
+        public async Task<string> CheckDataForCreateRoleAsync(RoleApiCreateModel model)
+        {
+            var checkRole = await _roleManager.FindByNameAsync(model.Name);
+            if (checkRole != null)
+                return $"Роль с именем [{model.Name}] уже существует!";
+
+            return string.Empty;
+        }
+
+        public async Task<bool> CheckChangeDefaultRolesAsync(int roleId, string roleName = "")
+        {
+            if (DefaultRoles.DefaultRoleNames.Contains(roleName)) 
+                return true;
+
+            foreach(var defaultRoleName in DefaultRoles.DefaultRoleNames)
+            {
+                var role = await _roleManager.FindByNameAsync($"{defaultRoleName}");
+                if (role != null && role.Id == roleId)
+                    return false;
+            }
+
+            return true;
         }
         #endregion
 

@@ -33,6 +33,8 @@ namespace MyBlog.Services.Services
             
         public async Task<Role?> GetRoleByNameAsync(string roleName) => await _roleManager.FindByNameAsync(roleName);
 
+        public async Task<Role?> GetRoleByIdAsync(int id) => await _roleManager.FindByIdAsync(id.ToString());
+
         public async Task<RolesViewModel?> GetRolesViewModelAsync(int? userId)
         {
             var model = new RolesViewModel();
@@ -90,8 +92,11 @@ namespace MyBlog.Services.Services
 
         public async Task<List<Role>> GetAllRolesAsync() => await _roleManager.Roles.ToListAsync();
 
-        public async Task<bool> UpdateRoleAsync(Role role, RoleEditViewModel model)
+        public async Task<bool> UpdateRoleAsync(RoleEditViewModel model)
         {
+            var role = await _roleManager.FindByIdAsync(model.Id.ToString());
+            if (role == null) return false;
+
             role.Convert(model);
             var result = await _roleManager.UpdateAsync(role);
 

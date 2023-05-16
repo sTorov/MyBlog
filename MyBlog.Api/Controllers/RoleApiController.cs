@@ -1,5 +1,7 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using MyBlog.Services.ApiModels.Posts.Request;
+using MyBlog.Services.ApiModels.Roles.Request;
+using MyBlog.Services.ApiModels.Roles.Response;
 using MyBlog.Services.Services.Interfaces;
 
 namespace MyBlog.Api.Controllers
@@ -13,11 +15,13 @@ namespace MyBlog.Api.Controllers
     {
         private readonly IRoleService _roleService;
         private readonly ICheckDataService _checkDataService;
+        private readonly IMapper _mapper;
 
-        public RoleApiController(IRoleService roleService, ICheckDataService checkDataService)
+        public RoleApiController(IRoleService roleService, ICheckDataService checkDataService, IMapper mapper)
         {
             _roleService = roleService;
             _checkDataService = checkDataService;
+            _mapper = mapper;
         }
 
         /// <summary>
@@ -26,18 +30,42 @@ namespace MyBlog.Api.Controllers
         /// <param name="id"></param>
         [HttpGet]
         [Route("{id}")]
-        public async Task<IActionResult> Get([FromRoute] int id)
+        public async Task<IActionResult> Get([FromRoute] int id = 0)
         {
-            return StatusCode(200);
+            var list = new List<RoleApiModel>();
+
+            if (id == 0)
+                list = _mapper.Map<List<RoleApiModel>>(await _roleService.GetAllRolesAsync());
+            else
+            {
+                var role = await _roleService.GetRoleByIdAsync(id);
+                if (role == null)
+                    return StatusCode(404, $"Роль не найдена!");
+
+                list.Add(_mapper.Map<RoleApiModel>(role));
+            }
+
+            return StatusCode(200, list);
         }
 
         /// <summary>
         /// Создание роли
         /// </summary>
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] PostApiCreateModel model)
+        public async Task<IActionResult> Create([FromBody] RoleApiCreateModel model)
         {
-            return StatusCode(200);
+            var message = await _checkDataService.CheckDataForCreateRoleAsync(model);
+
+            if(message == string.Empty)
+            {
+                var result = await _roleService.CreateRoleAsync(model);
+                if (!result)
+                    return StatusCode(400, $"Произошла ошибка при создании роли!");
+
+                return StatusCode(201, $"Роль успешно создана.");
+            }
+
+            return StatusCode(409, message);
         }
 
         /// <summary>
@@ -45,10 +73,21 @@ namespace MyBlog.Api.Controllers
         /// </summary>
         /// <param name="model"></param>
         [HttpPut]
-        [Route("{id}")]
-        public async Task<IActionResult> Update([FromBody] PostApiUpdateModel model)
+        public async Task<IActionResult> Update([FromBody] RoleApiUpdateModel model)
         {
-            return StatusCode(200);
+            var role = await _roleService.GetRoleByIdAsync(model.Id);
+            if (role == null)
+                return StatusCode(404, $"Роль не найдена!");
+
+            var check = await _checkDataService.CheckChangeDefaultRolesAsync(model.Id, model.Name);
+            if (!check)
+                return StatusCode(209, $"Невозможно изменить имя стандартной роли приложения!");
+
+            var result = await _roleService.UpdateRoleAsync(model);
+            if (!result)
+                return StatusCode(400, $"Произошла ошибка при обновлении роли!");
+
+            return StatusCode(200, _mapper.Map<RoleApiModel>(role));
         }
 
         /// <summary>
@@ -59,7 +98,19 @@ namespace MyBlog.Api.Controllers
         [Route("{id}")]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
-            return StatusCode(200);
+            var role = await _roleService.GetRoleByIdAsync(id);
+            if (role == null)
+                return StatusCode(404, $"Роль не найдена!");
+
+            var check = await _checkDataService.CheckChangeDefaultRolesAsync(id);
+            if (!check)
+                return StatusCode(209, $"Невозможно удаление стандартной роли приложения!");
+
+            var result = await _roleService.DeleteRoleAsync(id);
+            if (!result)
+                return StatusCode(400, $"Произошла ошибка при удалении роли!");
+
+            return StatusCode(200, _mapper.Map<RoleApiModel>(role));
         }
     }
 }

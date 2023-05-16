@@ -1,9 +1,11 @@
-﻿namespace MyBlog.Services.ApiModels.Roles.Request
+﻿using MyBlog.Services.ViewModels.Roles.Response;
+
+namespace MyBlog.Services.ApiModels.Roles.Request
 {
     /// <summary>
     /// Модель создания роли для API
     /// </summary>
-    public class RoleApiCreateModel
+    public class RoleApiCreateModel : RoleCreateViewModel
     {
     }
 }
