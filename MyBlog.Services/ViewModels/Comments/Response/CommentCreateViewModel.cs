@@ -1,11 +1,12 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using MyBlog.Services.ViewModels.Comments.Interfaces;
+using System.ComponentModel.DataAnnotations;
 
 namespace MyBlog.Services.ViewModels.Comments.Response
 {
     /// <summary>
     /// Модель представления создания комментария
     /// </summary>
-    public class CommentCreateViewModel
+    public class CommentCreateViewModel : ICommentEditModel
     {
         public int UserId { get; set; }
         public int PostId { get; set; }

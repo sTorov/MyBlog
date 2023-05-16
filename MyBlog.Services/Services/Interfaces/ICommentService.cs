@@ -2,6 +2,7 @@
 using MyBlog.Services.ViewModels.Comments.Response;
 using MyBlog.Data.DBModels.Comments;
 using Microsoft.AspNetCore.Mvc;
+using MyBlog.Services.ViewModels.Comments.Interfaces;
 
 namespace MyBlog.Services.Services.Interfaces
 {
@@ -33,7 +34,7 @@ namespace MyBlog.Services.Services.Interfaces
         /// <summary>
         /// Обновление комментария
         /// </summary>
-        Task<bool> UpdateCommentAsync(CommentEditViewModel model);
+        Task<bool> UpdateCommentAsync(ICommentEditModel model);
         /// <summary>
         /// Удаление комментария
         /// </summary>

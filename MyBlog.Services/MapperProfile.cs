@@ -15,6 +15,7 @@ using MyBlog.Data.DBModels.Tags;
 using MyBlog.Data.DBModels.Users;
 using MyBlog.Services.ApiModels.Users.Response;
 using MyBlog.Services.ApiModels.Tags.Response;
+using MyBlog.Services.ApiModels.Posts.Response;
 
 namespace MyBlog.Services
 {
@@ -56,6 +57,10 @@ namespace MyBlog.Services
                 .ForMember(m => m.BirthDate, opt => opt.MapFrom(u => u.BirthDate.ToString("d")));
 
             CreateMap<Tag, TagApiModel>();
+
+            CreateMap<Post, PostApiModel>()
+                .ForMember(m => m.Tags, opt => opt.MapFrom(p => p.Tags.Select(t => t.Name)))
+                .ForMember(m => m.CreatedDate, opt => opt.MapFrom(u => u.CreatedDate.ToString("d")));
         }
     }
 }

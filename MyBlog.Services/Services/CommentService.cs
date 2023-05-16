@@ -7,6 +7,7 @@ using MyBlog.Data.Repositories.Interfaces;
 using MyBlog.Services.ViewModels.Comments.Response;
 using MyBlog.Services.ViewModels.Comments.Request;
 using Microsoft.AspNetCore.Mvc;
+using MyBlog.Services.ViewModels.Comments.Interfaces;
 
 namespace MyBlog.Services.Services
 {
@@ -94,7 +95,7 @@ namespace MyBlog.Services.Services
             return (null, new ForbidResult());
         }
 
-        public async Task<bool> UpdateCommentAsync(CommentEditViewModel model)
+        public async Task<bool> UpdateCommentAsync(ICommentEditModel model)
         {
             var currentComment = await GetCommentByIdAsync(model.Id);
             if (currentComment == null)

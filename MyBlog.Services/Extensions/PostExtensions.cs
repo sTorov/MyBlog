@@ -1,7 +1,5 @@
-﻿using MyBlog.Services.ViewModels.Posts.Response;
-using MyBlog.Data.DBModels.Posts;
-using MyBlog.Data.DBModels.Tags;
-using System.Text.RegularExpressions;
+﻿using MyBlog.Data.DBModels.Posts;
+using MyBlog.Services.ViewModels.Posts.Interfaces;
 
 namespace MyBlog.Services.Extensions
 {
@@ -13,7 +11,7 @@ namespace MyBlog.Services.Extensions
         /// <summary>
         /// Присвоение значений модели редактирования сущности статьи
         /// </summary>
-        public static Post Convert(this Post post, PostEditViewModel model)
+        public static Post Convert(this Post post, IPostResponceModel model)
         {
             post.Title = model.Title;
             post.Content = model.Content;

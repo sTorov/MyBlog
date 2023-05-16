@@ -3,6 +3,7 @@ using MyBlog.Services.ViewModels.Posts.Response;
 using MyBlog.Data.DBModels.Posts;
 using MyBlog.Data.DBModels.Tags;
 using Microsoft.AspNetCore.Mvc;
+using MyBlog.Services.ViewModels.Posts.Interfaces;
 
 namespace MyBlog.Services.Services.Interfaces
 {
@@ -14,7 +15,7 @@ namespace MyBlog.Services.Services.Interfaces
         /// <summary>
         /// Создание статьи
         /// </summary>
-        Task<bool> CreatePostAsync(PostCreateViewModel model, List<Tag>? tags);
+        Task<bool> CreatePostAsync(IPostCreateModel model, List<Tag>? tags);
         /// <summary>
         /// Получение модели всез статей
         /// </summary>
@@ -38,7 +39,7 @@ namespace MyBlog.Services.Services.Interfaces
         /// <summary>
         /// Обновление статьи
         /// </summary>
-        Task<bool> UpdatePostAsync(PostEditViewModel model, Post post);
+        Task<bool> UpdatePostAsync(IPostResponceModel model, Post post);
         /// <summary>
         /// Получение идентификатора последней созданой статьи указанного пользователя
         /// </summary>

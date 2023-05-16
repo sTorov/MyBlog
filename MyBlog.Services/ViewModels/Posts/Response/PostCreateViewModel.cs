@@ -1,4 +1,5 @@
 ﻿using MyBlog.Data.DBModels.Tags;
+using MyBlog.Services.ViewModels.Posts.Interfaces;
 using System.ComponentModel.DataAnnotations;
 
 namespace MyBlog.Services.ViewModels.Posts.Response
@@ -6,7 +7,7 @@ namespace MyBlog.Services.ViewModels.Posts.Response
     /// <summary>
     /// Модель представления создания статьи
     /// </summary>
-    public class PostCreateViewModel
+    public class PostCreateViewModel : IPostCreateModel
     {
         public int UserId { get; set; }
 

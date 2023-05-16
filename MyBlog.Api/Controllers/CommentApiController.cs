@@ -1,40 +1,63 @@
 using Microsoft.AspNetCore.Mvc;
-using System.Reflection;
+using MyBlog.Services.ApiModels.Comments.Request;
+using MyBlog.Services.Services.Interfaces;
 
 namespace MyBlog.Api.Controllers
 {
+    /// <summary>
+    /// Контроллер комментариев (API)
+    /// </summary>
     [ApiController]
     [Route("api/[controller]")]
     public class CommentApiController : ControllerBase
     {
+        private readonly ICommentService _commentService;
+        private readonly ICheckDataService _checkDataService;
+
+        public CommentApiController(ICommentService commentService, ICheckDataService checkDataService)
+        {
+            _commentService = commentService;
+            _checkDataService = checkDataService;
+        }
+
+        /// <summary>
+        /// Получение объекта комментария
+        /// </summary>
+        /// <param name="id"></param>
         [HttpGet]
         [Route("{id}")]
-        public void Get([FromRoute] int id)
+        public async Task<IActionResult> Get([FromRoute] int id)
         {
 
         }
 
-        [HttpGet]
-        public void GetAll()
-        {
-        }
-
+        /// <summary>
+        /// Создание комментария
+        /// </summary>
         [HttpPost]
-        public void Create(/*[FromBody] model*/)
+        public async Task<IActionResult> Create([FromBody] CommentApiCreateModel model)
         {
 
         }
 
+        /// <summary>
+        /// Обновление комментария
+        /// </summary>
+        /// <param name="id"></param>
         [HttpPut]
         [Route("{id}")]
-        public void Update([FromRoute] int id /*[FromBody] model*/)
+        public async Task<IActionResult> Update([FromBody] CommentApiUpdateModel model)
         {
 
         }
 
+        /// <summary>
+        /// Удаление комментария
+        /// </summary>
+        /// <param name="id"></param>
         [HttpDelete]
         [Route("{id}")]
-        public void Delete([FromRoute] int id)
+        public async Task<IActionResult> Delete([FromRoute] int id)
         {
 
         }

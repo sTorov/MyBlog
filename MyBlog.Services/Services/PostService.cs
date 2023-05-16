@@ -11,6 +11,7 @@ using MyBlog.Data.DBModels.Users;
 using MyBlog.Data.Repositories;
 using MyBlog.Data.Repositories.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using MyBlog.Services.ViewModels.Posts.Interfaces;
 
 namespace MyBlog.Services.Services
 {
@@ -36,7 +37,7 @@ namespace MyBlog.Services.Services
             _postRepository = (PostRepository)_unitOfWork.GetRepository<Post>();
         }
 
-        public async Task<bool> CreatePostAsync(PostCreateViewModel model, List<Tag>? tags)
+        public async Task<bool> CreatePostAsync(IPostCreateModel model, List<Tag>? tags)
         {
             var user = await _userManager.FindByIdAsync(model.UserId.ToString());
             if (user == null) return false;
@@ -92,7 +93,7 @@ namespace MyBlog.Services.Services
             return (new ForbidResult(), false);
         }
 
-        public async Task<bool> UpdatePostAsync(PostEditViewModel model, Post post)
+        public async Task<bool> UpdatePostAsync(IPostResponceModel model, Post post)
         {
             post.Convert(model);
             if (!string.IsNullOrEmpty(model.PostTags))
