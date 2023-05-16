@@ -44,9 +44,8 @@ namespace MyBlog.App.Controllers
         [Route("CreatePost")]
         public async Task<IActionResult> Create(PostCreateViewModel model)
         {
-            var tags = await _tagService.SetTagsForPostAsync(model.PostTags);
+            var result = await _postService.CreatePostAsync(model);
 
-            var result = await _postService.CreatePostAsync(model, tags);
             if (result)
                 return RedirectToAction("View", new { Id = await _postService.GetLastCreatePostIdByUserId(model.UserId), model.UserId });
             else

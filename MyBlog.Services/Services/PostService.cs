@@ -37,14 +37,14 @@ namespace MyBlog.Services.Services
             _postRepository = (PostRepository)_unitOfWork.GetRepository<Post>();
         }
 
-        public async Task<bool> CreatePostAsync(IPostCreateModel model, List<Tag>? tags)
+        public async Task<bool> CreatePostAsync(IPostCreateModel model)
         {
             var user = await _userManager.FindByIdAsync(model.UserId.ToString());
             if (user == null) return false;
 
             var post = _mapper.Map<Post>(model);
             post.User = user;
-            if(tags != null) post.Tags = tags;
+            post.Tags = await _tagService.SetTagsForPostAsync(model.PostTags);
 
             await _postRepository.CreateAsync(post);
             return true;
@@ -77,6 +77,12 @@ namespace MyBlog.Services.Services
 
         public async Task<Post?> GetPostByIdAsync(int id) => await _postRepository.GetAsync(id);
 
+        public async Task<List<Post>> GetAllPostsAsync() => await _postRepository.GetAllAsync();
+
+        public async Task<List<Post>?> GetPostsByUserIdAsync(int userId) => await _postRepository.GetPostsByUserIdAsync(userId);
+
+        public async Task<List<Post>?> GetPostsByTagIdAsync(int tagId) => await _postRepository.GetPostsByTagIdAsync(tagId);
+
         public async Task<(IActionResult?, bool)> DeletePostAsync(int id, int userId, bool fullAccess)
         {
             var post = await GetPostByIdAsync(id);
@@ -92,6 +98,8 @@ namespace MyBlog.Services.Services
 
             return (new ForbidResult(), false);
         }
+
+        public async Task<int> DeletePostAsync(Post post) => await _postRepository.DeleteAsync(post);
 
         public async Task<bool> UpdatePostAsync(IPostUpdateModel model)
         {

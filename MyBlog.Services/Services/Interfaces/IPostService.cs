@@ -1,7 +1,6 @@
 ﻿using MyBlog.Services.ViewModels.Posts.Request;
 using MyBlog.Services.ViewModels.Posts.Response;
 using MyBlog.Data.DBModels.Posts;
-using MyBlog.Data.DBModels.Tags;
 using Microsoft.AspNetCore.Mvc;
 using MyBlog.Services.ViewModels.Posts.Interfaces;
 
@@ -15,7 +14,7 @@ namespace MyBlog.Services.Services.Interfaces
         /// <summary>
         /// Создание статьи
         /// </summary>
-        Task<bool> CreatePostAsync(IPostCreateModel model, List<Tag>? tags);
+        Task<bool> CreatePostAsync(IPostCreateModel model);
         /// <summary>
         /// Получение модели всез статей
         /// </summary>
@@ -29,13 +28,29 @@ namespace MyBlog.Services.Services.Interfaces
         /// </summary>
         Task<(PostEditViewModel?, IActionResult?)> GetPostEditViewModelAsync(int id, string? userId, bool fullAccess);
         /// <summary>
-        /// Удаление статьи
+        /// Удаление статьи (основное приложение)
         /// </summary>
         Task<(IActionResult?, bool)> DeletePostAsync(int id, int userId, bool fullAccess);
+        /// <summary>
+        /// Удаление статьи (API)
+        /// </summary>
+        Task<int> DeletePostAsync(Post post);
         /// <summary>
         /// Получение статьи по идентификатору
         /// </summary>
         Task<Post?> GetPostByIdAsync(int id);
+        /// <summary>
+        /// Получение списка всех статей
+        /// </summary>
+        Task<List<Post>> GetAllPostsAsync();
+        /// <summary>
+        /// Получение статей определённого пользователя
+        /// </summary>
+        Task<List<Post>?> GetPostsByUserIdAsync(int userId);
+        /// <summary>
+        /// Получение статей с определённым тегом
+        /// </summary>
+        Task<List<Post>?> GetPostsByTagIdAsync(int tagId);
         /// <summary>
         /// Обновление статьи
         /// </summary>

@@ -37,7 +37,7 @@ namespace MyBlog.Services.Services.Interfaces
         /// <summary>
         /// Присвоение тегов посту
         /// </summary>
-        Task<List<Tag>?> SetTagsForPostAsync(string? postTags);
+        Task<List<Tag>> SetTagsForPostAsync(string? postTags);
         /// <summary>
         /// Получение модели редактирования тега
         /// </summary>

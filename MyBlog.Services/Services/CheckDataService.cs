@@ -166,6 +166,19 @@ namespace MyBlog.Services.Services
                 return $"Тег с именем [{model.Name}] уже существует!";
             return string.Empty;
         }
+
+        public async Task<bool> CheckTagsForCreatePostAsync(string tags)
+        {
+            var tagsArr = tags.Trim().Split(' ');
+
+            foreach(var tagName in tagsArr)
+            {
+                var tag = await _tagService.GetTagByNameAsync(tagName);
+                if (tag == null)
+                    return false;
+            }
+            return true;
+        }
         #endregion
 
 

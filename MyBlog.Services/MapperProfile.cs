@@ -18,6 +18,7 @@ using MyBlog.Services.ApiModels.Tags.Response;
 using MyBlog.Services.ApiModels.Posts.Response;
 using MyBlog.Services.ApiModels.Comments.Response;
 using MyBlog.Services.ApiModels.Roles.Response;
+using MyBlog.Services.ViewModels.Posts.Interfaces;
 
 namespace MyBlog.Services
 {
@@ -36,7 +37,7 @@ namespace MyBlog.Services
                 .ForMember(u => u.Login, opt => opt.MapFrom(m => m.UserName));
             CreateMap<User, UserViewModel>();
 
-            CreateMap<PostCreateViewModel, Post>();
+            CreateMap<IPostCreateModel, Post>();
             CreateMap<Post, PostEditViewModel>()
                 .ForMember(m => m.PostTags, opt => opt.MapFrom(p => string.Join(" ", p.Tags.Select(p => p.Name))));
             CreateMap<Post, PostViewModel>();

@@ -57,6 +57,10 @@ namespace MyBlog.Services.Services.Interfaces
         /// Проверка данных о теге, полученных контроллером (API)
         /// </summary>
         Task<string> CheckTagNameAsync<T>(T model) where T : ITagResponseViewModel;
+        /// <summary>
+        /// Проверка тегов на существование при создании статьи
+        /// </summary>
+        Task<bool> CheckTagsForCreatePostAsync(string tags);
 
 
         /// <summary>

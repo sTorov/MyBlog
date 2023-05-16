@@ -74,17 +74,19 @@ namespace MyBlog.Services.Services
             return true;
         }
 
-        public async Task<List<Tag>?> SetTagsForPostAsync(string? postTags)
+        public async Task<List<Tag>> SetTagsForPostAsync(string? postTags)
         {
-            if (postTags == null) return null;
-
-            var tagSet = Regex.Replace(postTags, @"\s+", " ").Trim().Split(" ");
-
             var tags = new List<Tag>();
-            foreach (var tagName in tagSet)
+
+            if (postTags != null)
             {
-                var tag = await GetTagByNameAsync(tagName);
-                if (tag != null) tags.Add(tag);
+                var tagSet = Regex.Replace(postTags, @"\s+", " ").Trim().Split(" ");
+
+                foreach (var tagName in tagSet)
+                {
+                    var tag = await GetTagByNameAsync(tagName);
+                    if (tag != null) tags.Add(tag);
+                }
             }
 
             return tags;
