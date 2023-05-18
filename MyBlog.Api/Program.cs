@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using MyBlog.App.Utils.Extensions;
 using MyBlog.Data;
 using MyBlog.Data.DBModels.Comments;
@@ -8,6 +9,7 @@ using MyBlog.Data.DBModels.Tags;
 using MyBlog.Data.DBModels.Users;
 using MyBlog.Data.Repositories;
 using MyBlog.Services;
+using MyBlog.Services.ApiModels.Users.Response;
 using System.Reflection;
 using System.Text.Json.Serialization;
 
@@ -25,7 +27,10 @@ namespace MyBlog.Api
             builder.Services.AddSwaggerGen(opt =>
             {
                 var xmlFileName = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xml = $"{Assembly.GetAssembly(typeof(UserApiModel)).GetName().Name}.xml";
                 opt.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFileName));
+                opt.IncludeXmlComments(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, xml));
+                opt.SupportNonNullableReferenceTypes();
             });
 
             var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");

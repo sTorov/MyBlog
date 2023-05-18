@@ -36,7 +36,6 @@ namespace MyBlog.Api.Controllers
         /// <response code="404">Пользователь не найден по указанному идентификатору</response>
         [HttpGet]
         [ProducesResponseType(typeof(UserApiModel[]), 200)]
-        [Produces("application/json")]
         public async Task<IActionResult> Get([FromQuery] int? id)
         {
             var response = new List<UserApiModel>();
@@ -59,26 +58,12 @@ namespace MyBlog.Api.Controllers
         /// Создание пользователя
         /// </summary>
         /// <remarks>
-        /// Данный метод позволяет создать нового пользователя.
-        /// 
-        ///     Параметры:
-        ///     
-        ///     "firstName":        "string"        Имя пользователя                                                                        (Обязательно)
-        ///     "secondName":       "string"        Фамилия пользователя                                                                    (Обязательно)
-        ///     "lastName":         "string"        Отчество пользователя
-        ///     "emailReg":         "string"        Email пользователя                                                                      (Обязательно)
-        ///     "login":            "string"        Логин пользователя                                                                      (Обязательно)
-        ///     "birthDate":        "string"        Дата рождения пользователя          Пример: [2000-12-12]                                (Обязательно)   
-        ///     "passwordReg":      "string"        Пароль пользователя. Минимум 8 символов.                                                (Обязательно)
-        ///     "passwordConfirm":  "string"        Повторный ввод пароля. Должен совпадать с passwordReg.                                  (Обязательно)
-        ///     "roles":            "string[]"      Список ролей. Указывается через зарятую. В списке обязательно должна быть роль User.    (Обязательно)
-        ///
+        /// Данный метод позволяет создать нового пользователя. Для подробного описания свойств см. схему UserApiCreateModel
         /// </remarks>
         /// <response code="200">Новый пользователь успешно создан</response>
         /// <response code="400">Ошибка при создании нового пользователя</response>
         /// <response code="409">Ошибки при указании данных для создания пользователя</response>
         [HttpPost]
-        [Produces("application/json")]
         public async Task<IActionResult> Create([FromBody] UserApiCreateModel model)
         {
             var messages = new List<string>();
@@ -100,9 +85,15 @@ namespace MyBlog.Api.Controllers
         /// <summary>
         /// Обновление пользователя
         /// </summary>
-        /// <param name="model"></param>
-        /// <returns></returns>
+        /// <remarks>
+        /// Данный метод позволяет обновлять информацию существующего пользователя. Для подробного описания свойств см. схему UserApiUpdateModel
+        /// </remarks>
+        /// <response code="200">Возвращает объект пользователя с обновленными данными</response>
+        /// <response code="400">Ошибка при обновлении пользователя</response>
+        /// <response code="404">Пользователь для обновления не найден</response>
+        /// <response code="422">Ошибки при обновлении ролей пользователя</response>
         [HttpPut]
+        [ProducesResponseType(typeof(UserApiModel), 200)]
         public async Task<IActionResult> Update([FromBody] UserApiUpdateModel model)
         {
             var (user, messages) = await _checkDataService.CheckDataForEditUserAsync(model);
@@ -123,8 +114,14 @@ namespace MyBlog.Api.Controllers
         /// <summary>
         /// Удаление пользователя
         /// </summary>
-        /// <param name="id"></param>
+        /// <remarks>Данный метод позволяет удалить пользователя</remarks>
+        /// <param name="id">Идентификатор пользователя, которого необходимо удалить</param>
+        /// <response code="200">Возвращает объект пользователя, который был удалён</response>
+        /// <response code="400">Ошибка при удалении пользователя</response>
+        /// <response code="404">Пользователь для удаления не найден</response>
         [HttpDelete]
+        [ProducesResponseType(typeof(UserApiModel), 200)]
+        [Produces("application/json")]
         [Route("{id}")]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
