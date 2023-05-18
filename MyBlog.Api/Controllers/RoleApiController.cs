@@ -61,18 +61,15 @@ namespace MyBlog.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] RoleApiCreateModel model)
         {
-            var messages = await _checkDataService.CheckEntitiesByNameAsync(roleName: model.Name);
+            var message = await _checkDataService.CheckDataForCreateRoleAsync(model);
+            if (message != string.Empty)
+                return StatusCode(409, message);
 
-            if(messages.Count == 0)
-            {
-                var result = await _roleService.CreateRoleAsync(model);
-                if (!result)
-                    return StatusCode(400, $"Произошла ошибка при создании роли!");
+            var result = await _roleService.CreateRoleAsync(model);
+            if (!result)
+                return StatusCode(400, $"Произошла ошибка при создании роли!");
 
-                return StatusCode(201, $"Роль успешно создана.");
-            }
-
-            return StatusCode(409, messages[0]);
+            return StatusCode(201, $"Роль успешно создана.");
         }
 
         /// <summary>
@@ -85,6 +82,10 @@ namespace MyBlog.Api.Controllers
             var role = await _roleService.GetRoleByIdAsync(model.Id);
             if (role == null)
                 return StatusCode(404, $"Роль не найдена!");
+
+            var message = await _checkDataService.CheckDataForEditRoleAsync(model);
+            if (message != string.Empty)
+                return StatusCode(409, message);
 
             var check = await _checkDataService.CheckChangeDefaultRolesAsync(model.Id, model.Name);
             if (!check)

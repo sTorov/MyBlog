@@ -77,31 +77,6 @@ namespace MyBlog.Services.Services
             return list;
         }
 
-        public async Task<List<string>> CheckEntitiesByNameAsync(string? userName = null, string? roleName = null, string? tagName = null)
-        {
-            var list = new List<string>();
-
-            if (userName != null)
-            {
-                var user = await _userManager.FindByNameAsync(userName);
-                if (user == null) list.Add($"Пользователь не найден! Name = [{userName}]");
-            }
-
-            if (roleName != null)
-            {
-                var role = _roleManager.FindByNameAsync(roleName);
-                if (role == null) list.Add($"Роль не найдена! Name = [{roleName}]");
-            }
-
-            if (tagName != null)
-            {
-                var tag = _tagService.GetTagByNameAsync(tagName);
-                if (tag == null) list.Add($"Тег не найден! Name = [{tagName}]");
-            }
-
-            return list;
-        }
-
         #region PostController
         public async Task CheckDataForUpdatePostAsync(Controller controller, PostEditViewModel model)
         {
@@ -116,16 +91,36 @@ namespace MyBlog.Services.Services
         #region RoleController
         public async Task CheckDataForEditRoleAsync(Controller controller, RoleEditViewModel model)
         {
+            var message = await CheckDataForEditRoleAsync(model);
+
+            if (message != string.Empty)            
+                controller.ModelState.AddModelError(string.Empty, message);
+        }
+
+        public async Task<string> CheckDataForEditRoleAsync(RoleEditViewModel model)
+        {
             var role = await _roleManager.FindByNameAsync(model.Name ?? "");
             if (role != null && role.Id != model.Id)
-                controller.ModelState.AddModelError(string.Empty, $"Роль [{model.Name}] уже существует!");
+                return $"Роль [{model.Name}] уже существует!";
+
+            return string.Empty;
         }
 
         public async Task CheckDataForCreateRoleAsync(Controller controller, RoleCreateViewModel model)
         {
+            var message = await CheckDataForCreateRoleAsync(model);
+
+            if (message != string.Empty)
+                controller.ModelState.AddModelError(string.Empty, message);
+        }
+
+        public async Task<string> CheckDataForCreateRoleAsync(RoleCreateViewModel model)
+        {
             var role = await _roleManager.FindByNameAsync(model.Name ?? "");
             if (role != null)
-                controller.ModelState.AddModelError(string.Empty, $"Роль [{model.Name}] уже существует!");
+                return $"Роль [{model.Name}] уже существует!";
+
+            return string.Empty;
         }
 
         public async Task<bool> CheckChangeDefaultRolesAsync(int roleId, string roleName = "")

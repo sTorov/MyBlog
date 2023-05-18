@@ -87,11 +87,18 @@ namespace MyBlog.Api.Controllers
             if (tag == null)
                 return StatusCode(404, $"Тег не найден");
 
-            var result = await _tagService.UpdateTagAsync(model);
-            if (!result)
-                return StatusCode(400, $"Произошла ошибка при обновлении тега!");
+            var message = await _checkDataService.CheckTagNameAsync(model);
 
-            return StatusCode(200, _mapper.Map<TagApiModel>(tag));
+            if (message == string.Empty)            
+            {
+                var result = await _tagService.UpdateTagAsync(model);
+                if (!result)
+                    return StatusCode(400, $"Произошла ошибка при обновлении тега!");
+
+                return StatusCode(200, _mapper.Map<TagApiModel>(tag));
+            }
+
+            return StatusCode(409, message);
         }
 
         /// <summary>

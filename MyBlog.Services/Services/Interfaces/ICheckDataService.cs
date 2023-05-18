@@ -23,11 +23,6 @@ namespace MyBlog.Services.Services.Interfaces
         /// </summary>
         Task<List<string>> CheckEntitiesByIdAsync(int? postId = null, int? userId = null, int? roleId = null, int? tagId = null, int? commentId = null);
 
-        /// <summary>
-        /// Проверка сущностей по имени
-        /// </summary>
-        Task<List<string>> CheckEntitiesByNameAsync(string? userName = null, string? roleName = null, string? tagName = null);
-
 
         /// <summary>
         /// Проверка данных полученных контроллером при обновлении статьи
@@ -36,13 +31,21 @@ namespace MyBlog.Services.Services.Interfaces
 
 
         /// <summary>
-        /// Проверка данных полученных контроллером при создании роли
+        /// Проверка данных полученных контроллером при создании роли (основное приложение)
         /// </summary>
         Task CheckDataForCreateRoleAsync(Controller controller, RoleCreateViewModel model);
         /// <summary>
-        /// Проверка данных полученных контроллером при редактировании роли
+        /// Проверка данных полученных контроллером при создании роли (API)
+        /// </summary>
+        Task<string> CheckDataForCreateRoleAsync(RoleCreateViewModel model);
+        /// <summary>
+        /// Проверка данных полученных контроллером при редактировании роли (основное приложение)
         /// </summary>
         Task CheckDataForEditRoleAsync(Controller controller, RoleEditViewModel model);
+        /// <summary>
+        /// Проверка данных полученных контроллером при редактировании роли (API)
+        /// </summary>
+        Task<string> CheckDataForEditRoleAsync(RoleEditViewModel model);
         /// <summary>
         /// Проверка изменения стандартных ролей приложения
         /// </summary>
