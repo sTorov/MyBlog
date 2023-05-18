@@ -7,12 +7,25 @@ namespace MyBlog.Services.ViewModels.Roles.Request
     /// </summary>
     public class RoleEditViewModel
     {
+        /// <summary>
+        /// Идентификатор роли
+        /// </summary>
+        /// <example>4</example>
+        [Required(ErrorMessage = "Поле обязательно для заполнения!")]
         public int Id { get; set; }
 
+        /// <summary>
+        /// Имя роли
+        /// </summary>
+        /// <example>roleName</example>
         [Required(ErrorMessage = "Поле обязательно для заполнения!")]
         [Display(Name = "Название")]
         public string Name { get; set; }
 
+        /// <summary>
+        /// Описание роли
+        /// </summary>
+        /// <example>description</example>
         [Display(Name = "Описание")]
         public string? Description { get; set; }
     }
