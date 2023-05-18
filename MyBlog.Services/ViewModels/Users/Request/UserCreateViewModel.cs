@@ -1,6 +1,6 @@
 ﻿using MyBlog.Data.DBModels.Roles;
 
-namespace MyBlog.Services.ViewModels.Users.Response
+namespace MyBlog.Services.ViewModels.Users.Request
 {
     /// <summary>
     /// Модель представления создания пользователя

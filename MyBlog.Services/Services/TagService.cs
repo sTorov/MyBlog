@@ -2,8 +2,8 @@
 using MyBlog.Services.Extensions;
 using MyBlog.Services.Services.Interfaces;
 using MyBlog.Services.ViewModels.Tags.Interfaces;
-using MyBlog.Services.ViewModels.Tags.Request;
 using MyBlog.Services.ViewModels.Tags.Response;
+using MyBlog.Services.ViewModels.Tags.Request;
 using MyBlog.Data.DBModels.Tags;
 using MyBlog.Data.Repositories;
 using MyBlog.Data.Repositories.Interfaces;

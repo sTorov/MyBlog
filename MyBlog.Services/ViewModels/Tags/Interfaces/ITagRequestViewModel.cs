@@ -3,7 +3,7 @@
     /// <summary>
     /// Инлтерфейс моделей представлений ответов для тега
     /// </summary>
-    public interface ITagResponseViewModel
+    public interface ITagRequestViewModel
     {
         string Name { get; set; }
     }

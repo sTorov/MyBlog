@@ -1,4 +1,4 @@
-﻿using MyBlog.Services.ViewModels.Roles.Response;
+﻿using MyBlog.Services.ViewModels.Roles.Request;
 
 namespace MyBlog.Services.ApiModels.Roles.Request
 {

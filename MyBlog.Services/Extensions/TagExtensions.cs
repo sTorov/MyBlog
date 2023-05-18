@@ -1,4 +1,4 @@
-﻿using MyBlog.Services.ViewModels.Tags.Response;
+﻿using MyBlog.Services.ViewModels.Tags.Request;
 using MyBlog.Data.DBModels.Tags;
 
 namespace MyBlog.Services.Extensions

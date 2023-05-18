@@ -1,5 +1,5 @@
-﻿using MyBlog.Services.ViewModels.Tags.Request;
-using MyBlog.Services.ViewModels.Tags.Response;
+﻿using MyBlog.Services.ViewModels.Tags.Response;
+using MyBlog.Services.ViewModels.Tags.Request;
 using MyBlog.Data.DBModels.Tags;
 using MyBlog.Data.Repositories;
 

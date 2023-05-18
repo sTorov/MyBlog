@@ -1,4 +1,4 @@
-﻿@model MyBlog.Services.ViewModels.Comments.Response.CommentCreateViewModel
+﻿@model MyBlog.Services.ViewModels.Comments.Request.CommentCreateViewModel
 @{
     var claimUserId = User.Claims.FirstOrDefault(c => c.Type == "UserID")?.Value;
 }

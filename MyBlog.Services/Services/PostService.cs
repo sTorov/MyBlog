@@ -2,9 +2,9 @@
 using Microsoft.AspNetCore.Identity;
 using MyBlog.Services.Extensions;
 using MyBlog.Services.Services.Interfaces;
-using MyBlog.Services.ViewModels.Posts.Request;
 using MyBlog.Services.ViewModels.Posts.Response;
-using MyBlog.Services.ViewModels.Comments.Response;
+using MyBlog.Services.ViewModels.Posts.Request;
+using MyBlog.Services.ViewModels.Comments.Request;
 using MyBlog.Data.DBModels.Posts;
 using MyBlog.Data.DBModels.Tags;
 using MyBlog.Data.DBModels.Users;

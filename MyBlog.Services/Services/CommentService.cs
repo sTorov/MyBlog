@@ -4,8 +4,8 @@ using MyBlog.Data.DBModels.Comments;
 using MyBlog.Services.Extensions;
 using MyBlog.Data.Repositories;
 using MyBlog.Data.Repositories.Interfaces;
-using MyBlog.Services.ViewModels.Comments.Response;
 using MyBlog.Services.ViewModels.Comments.Request;
+using MyBlog.Services.ViewModels.Comments.Response;
 using Microsoft.AspNetCore.Mvc;
 using MyBlog.Services.ViewModels.Comments.Interfaces;
 

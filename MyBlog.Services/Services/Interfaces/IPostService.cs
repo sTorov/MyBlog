@@ -1,5 +1,5 @@
-﻿using MyBlog.Services.ViewModels.Posts.Request;
-using MyBlog.Services.ViewModels.Posts.Response;
+﻿using MyBlog.Services.ViewModels.Posts.Response;
+using MyBlog.Services.ViewModels.Posts.Request;
 using MyBlog.Data.DBModels.Posts;
 using Microsoft.AspNetCore.Mvc;
 using MyBlog.Services.ViewModels.Posts.Interfaces;

@@ -3,7 +3,7 @@
     /// <summary>
     /// Интерфейс модели создания статьи
     /// </summary>
-    public interface IPostUpdateModel : IPostResponceModel
+    public interface IPostUpdateModel : IPostRequestModel
     {
         int Id { get; set; }
     }

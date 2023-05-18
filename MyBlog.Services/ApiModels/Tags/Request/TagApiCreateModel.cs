@@ -1,4 +1,4 @@
-﻿using MyBlog.Services.ViewModels.Tags.Response;
+﻿using MyBlog.Services.ViewModels.Tags.Request;
 
 namespace MyBlog.Services.ApiModels.Tags.Request
 {

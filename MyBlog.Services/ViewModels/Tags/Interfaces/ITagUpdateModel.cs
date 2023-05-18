@@ -3,7 +3,7 @@
     /// <summary>
     /// Интерфейс моделей для обновления тега
     /// </summary>
-    public interface ITagUpdateModel : ITagResponseViewModel
+    public interface ITagUpdateModel : ITagRequestViewModel
     {
         int Id { get; set; }
     }

@@ -2,16 +2,18 @@
 using MyBlog.Services.ViewModels.Posts.Interfaces;
 using System.ComponentModel.DataAnnotations;
 
-namespace MyBlog.Services.ViewModels.Posts.Response
+namespace MyBlog.Services.ViewModels.Posts.Request
 {
     /// <summary>
-    /// Модель представления создания статьи
+    /// Модель представления редактирования статьи
     /// </summary>
-    public class PostCreateViewModel : IPostCreateModel
+    public class PostEditViewModel : IPostUpdateModel
     {
-        public int UserId { get; set; }
+        public int Id { get; set; }
 
-        public List<Tag> AllTags { get; set; }
+        public string? ReturnUrl { get; set; }
+
+        public List<Tag>? AllTags { get; set; }
 
         public string? PostTags { get; set; }
 

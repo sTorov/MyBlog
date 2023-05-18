@@ -1,6 +1,6 @@
 ﻿using MyBlog.Data.DBModels.Posts;
 
-namespace MyBlog.Services.ViewModels.Posts.Request
+namespace MyBlog.Services.ViewModels.Posts.Response
 {
     /// <summary>
     /// Модель представления всез статей

@@ -2,12 +2,12 @@
 using MyBlog.Services.ViewModels.Tags.Interfaces;
 using System.ComponentModel.DataAnnotations;
 
-namespace MyBlog.Services.ViewModels.Tags.Response
+namespace MyBlog.Services.ViewModels.Tags.Request
 {
     /// <summary>
     /// Модель представления создания тега
     /// </summary>
-    public class TagCreateViewModel : ITagResponseViewModel
+    public class TagCreateViewModel : ITagRequestViewModel
     {
         [Required(ErrorMessage = "Поле обязательно для заполнения!")]
         [NotWhiteSpace(ErrorMessage = "Название тега не может содержать пробелов!")]

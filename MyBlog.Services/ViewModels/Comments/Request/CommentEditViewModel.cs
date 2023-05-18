@@ -2,7 +2,7 @@
 using MyBlog.Services.ViewModels.Comments.Interfaces;
 using System.ComponentModel.DataAnnotations;
 
-namespace MyBlog.Services.ViewModels.Comments.Response
+namespace MyBlog.Services.ViewModels.Comments.Request
 {
     /// <summary>
     /// Модель представления редактирования комментария

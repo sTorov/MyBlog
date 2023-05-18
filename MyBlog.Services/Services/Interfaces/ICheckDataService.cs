@@ -1,12 +1,12 @@
 ﻿using MyBlog.Data.DBModels.Posts;
-using MyBlog.Services.ViewModels.Posts.Response;
+using MyBlog.Services.ViewModels.Posts.Request;
 using Microsoft.AspNetCore.Mvc;
 using MyBlog.Data.DBModels.Roles;
-using MyBlog.Services.ViewModels.Roles.Response;
+using MyBlog.Services.ViewModels.Roles.Request;
 using MyBlog.Data.DBModels.Tags;
 using MyBlog.Services.ViewModels.Tags.Interfaces;
 using MyBlog.Data.DBModels.Users;
-using MyBlog.Services.ViewModels.Users.Response;
+using MyBlog.Services.ViewModels.Users.Request;
 using MyBlog.Services.ApiModels.Users.Request;
 using MyBlog.Services.ViewModels.Users.Intefaces;
 using MyBlog.Services.ApiModels.Roles.Request;
@@ -55,11 +55,11 @@ namespace MyBlog.Services.Services.Interfaces
         /// <summary>
         /// Проверка данных о теге, полученных контроллером (основное приложение)
         /// </summary>
-        Task CheckTagNameAsync<T>(Controller controller, T model) where T : ITagResponseViewModel;
+        Task CheckTagNameAsync<T>(Controller controller, T model) where T : ITagRequestViewModel;
         /// <summary>
         /// Проверка данных о теге, полученных контроллером (API)
         /// </summary>
-        Task<string> CheckTagNameAsync<T>(T model) where T : ITagResponseViewModel;
+        Task<string> CheckTagNameAsync<T>(T model) where T : ITagRequestViewModel;
         /// <summary>
         /// Проверка тегов на существование при создании статьи
         /// </summary>

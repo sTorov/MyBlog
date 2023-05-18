@@ -1,5 +1,5 @@
-﻿using MyBlog.Services.ViewModels.Comments.Request;
-using MyBlog.Services.ViewModels.Comments.Response;
+﻿using MyBlog.Services.ViewModels.Comments.Response;
+using MyBlog.Services.ViewModels.Comments.Request;
 using MyBlog.Data.DBModels.Comments;
 using Microsoft.AspNetCore.Mvc;
 using MyBlog.Services.ViewModels.Comments.Interfaces;

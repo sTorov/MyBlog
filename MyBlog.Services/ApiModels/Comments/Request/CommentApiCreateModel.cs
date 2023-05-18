@@ -1,4 +1,4 @@
-﻿using MyBlog.Services.ViewModels.Comments.Response;
+﻿using MyBlog.Services.ViewModels.Comments.Request;
 
 namespace MyBlog.Services.ApiModels.Comments.Request
 {

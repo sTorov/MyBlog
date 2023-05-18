@@ -1,4 +1,4 @@
-﻿using MyBlog.Services.ViewModels.Users.Response;
+﻿using MyBlog.Services.ViewModels.Users.Request;
 using MyBlog.Data.DBModels.Users;
 using MyBlog.Services.ViewModels.Users.Intefaces;
 

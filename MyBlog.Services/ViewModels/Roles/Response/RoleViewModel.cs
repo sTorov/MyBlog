@@ -1,4 +1,4 @@
-﻿namespace MyBlog.Services.ViewModels.Roles.Request
+﻿namespace MyBlog.Services.ViewModels.Roles.Response
 {
     /// <summary>
     /// Модель представления роли

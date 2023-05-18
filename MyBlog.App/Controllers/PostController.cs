@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using MyBlog.App.Utils.Attributes;
 using MyBlog.Services.Services.Interfaces;
-using MyBlog.Services.ViewModels.Posts.Response;
+using MyBlog.Services.ViewModels.Posts.Request;
 
 namespace MyBlog.App.Controllers
 {

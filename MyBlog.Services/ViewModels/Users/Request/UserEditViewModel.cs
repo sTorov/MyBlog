@@ -2,7 +2,7 @@
 using MyBlog.Services.ViewModels.Users.Intefaces;
 using System.ComponentModel.DataAnnotations;
 
-namespace MyBlog.Services.ViewModels.Users.Response
+namespace MyBlog.Services.ViewModels.Users.Request
 {
     /// <summary>
     /// Модель представления редактирования пользователя

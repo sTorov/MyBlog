@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using MyBlog.App.Utils.Attributes;
 using MyBlog.Data.DBModels.Users;
 using MyBlog.Services.Services.Interfaces;
-using MyBlog.Services.ViewModels.Users.Response;
+using MyBlog.Services.ViewModels.Users.Request;
 using System.Security.Claims;
 
 namespace MyBlog.App.Controllers

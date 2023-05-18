@@ -1,5 +1,5 @@
-﻿using MyBlog.Services.ViewModels.Roles.Request;
-using MyBlog.Services.ViewModels.Roles.Response;
+﻿using MyBlog.Services.ViewModels.Roles.Response;
+using MyBlog.Services.ViewModels.Roles.Request;
 using MyBlog.Data.DBModels.Roles;
 using Microsoft.AspNetCore.Http;
 

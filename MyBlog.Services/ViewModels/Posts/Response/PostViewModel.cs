@@ -1,9 +1,9 @@
 ﻿using MyBlog.Data.DBModels.Comments;
 using MyBlog.Data.DBModels.Tags;
 using MyBlog.Data.DBModels.Users;
-using MyBlog.Services.ViewModels.Comments.Response;
+using MyBlog.Services.ViewModels.Comments.Request;
 
-namespace MyBlog.Services.ViewModels.Posts.Request
+namespace MyBlog.Services.ViewModels.Posts.Response
 {
     /// <summary>
     /// Модель представления статьи

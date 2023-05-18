@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using MyBlog.App.Utils.Attributes;
 using MyBlog.Data.DBModels.Users;
 using MyBlog.Services.Services.Interfaces;
-using MyBlog.Services.ViewModels.Comments.Response;
+using MyBlog.Services.ViewModels.Comments.Request;
 
 namespace MyBlog.App.Controllers
 {
@@ -90,19 +90,19 @@ namespace MyBlog.App.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(CommentEditViewModel model)
         {
-            if(!ModelState.IsValid)
-                return View(model);
-
-            var result = await _commentService.UpdateCommentAsync(model);
-            if (result)
+            if (ModelState.IsValid)
             {
-                if (model.ReturnUrl != null && Url.IsLocalUrl(model.ReturnUrl))
-                    return Redirect(model.ReturnUrl);
-                return RedirectToAction("GetComments");
+                var result = await _commentService.UpdateCommentAsync(model);
+                if (result)
+                {
+                    if (model.ReturnUrl != null && Url.IsLocalUrl(model.ReturnUrl))
+                        return Redirect(model.ReturnUrl);
+                    return RedirectToAction("GetComments");
+                }
+                else
+                    ModelState.AddModelError(string.Empty, $"Ошибка! Не удалось обновить комментарий!");
             }
-            else
-                ModelState.AddModelError(string.Empty, $"Ошибка! Не удалось обновить комментарий!");
-            
+
             return View(model);
         }
 

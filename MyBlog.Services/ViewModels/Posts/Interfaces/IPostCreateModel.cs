@@ -3,7 +3,7 @@
     /// <summary>
     /// Интерфейс модели создания статьи
     /// </summary>
-    public interface IPostCreateModel : IPostResponceModel
+    public interface IPostCreateModel : IPostRequestModel
     {
         int UserId { get; set; }
     }

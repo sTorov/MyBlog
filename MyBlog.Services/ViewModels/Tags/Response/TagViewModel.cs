@@ -1,4 +1,4 @@
-﻿namespace MyBlog.Services.ViewModels.Tags.Request
+﻿namespace MyBlog.Services.ViewModels.Tags.Response
 {
     /// <summary>
     /// Модель представления тега

@@ -1,6 +1,6 @@
 ﻿using MyBlog.Data.DBModels.Comments;
 
-namespace MyBlog.Services.ViewModels.Comments.Request
+namespace MyBlog.Services.ViewModels.Comments.Response
 {
     /// <summary>
     /// Модель представления комментариев

@@ -3,7 +3,7 @@
     /// <summary>
     /// Интерфейс модели ответа статьи 
     /// </summary>
-    public interface IPostResponceModel
+    public interface IPostRequestModel
     {
         string? PostTags { get; set; }
         string Title { get; set; }

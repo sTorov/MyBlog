@@ -2,7 +2,7 @@
 using MyBlog.Services.ViewModels.Tags.Interfaces;
 using System.ComponentModel.DataAnnotations;
 
-namespace MyBlog.Services.ViewModels.Tags.Response
+namespace MyBlog.Services.ViewModels.Tags.Request
 {
     /// <summary>
     /// Модель представления редактирования тега

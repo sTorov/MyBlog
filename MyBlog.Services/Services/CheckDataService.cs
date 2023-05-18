@@ -10,12 +10,12 @@ using MyBlog.Services.ApiModels.Tags.Request;
 using MyBlog.Services.ApiModels.Users.Request;
 using MyBlog.Services.Services.Data;
 using MyBlog.Services.Services.Interfaces;
-using MyBlog.Services.ViewModels.Posts.Response;
-using MyBlog.Services.ViewModels.Roles.Response;
+using MyBlog.Services.ViewModels.Posts.Request;
+using MyBlog.Services.ViewModels.Roles.Request;
 using MyBlog.Services.ViewModels.Tags.Interfaces;
-using MyBlog.Services.ViewModels.Tags.Response;
+using MyBlog.Services.ViewModels.Tags.Request;
 using MyBlog.Services.ViewModels.Users.Intefaces;
-using MyBlog.Services.ViewModels.Users.Response;
+using MyBlog.Services.ViewModels.Users.Request;
 using SQLitePCL;
 
 namespace MyBlog.Services.Services
@@ -141,7 +141,7 @@ namespace MyBlog.Services.Services
 
 
         #region TagController
-        public async Task CheckTagNameAsync<T>(Controller controller, T model) where T : ITagResponseViewModel
+        public async Task CheckTagNameAsync<T>(Controller controller, T model) where T : ITagRequestViewModel
         {
             var message = await CheckTagNameAsync(model);
 
@@ -149,7 +149,7 @@ namespace MyBlog.Services.Services
                 controller.ModelState.AddModelError(string.Empty, message);
         }
 
-        public async Task<string> CheckTagNameAsync<T>(T model) where T : ITagResponseViewModel
+        public async Task<string> CheckTagNameAsync<T>(T model) where T : ITagRequestViewModel
         {
             var checkTag = await _tagService.GetTagByNameAsync(model.Name ?? "");
             var check = model is ITagUpdateModel updateModel
