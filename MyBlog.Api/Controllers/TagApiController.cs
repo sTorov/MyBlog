@@ -27,8 +27,12 @@ namespace MyBlog.Api.Controllers
         /// <summary>
         /// Получение объекта тега
         /// </summary>
-        /// <param name="id"></param>
+        /// <remarks>Данный метод позволяет получить объект тега по идентификатору</remarks>
+        /// <param name="id">Идентификатор тега</param>
+        /// <response code="200">Получение объекта тега</response>
+        /// <response code="404">Не удалось найти тег по указанному идентификатору</response>
         [HttpGet]
+        [ProducesResponseType(typeof(TagApiModel), 200)]
         [Route("{id}")]
         public async Task<IActionResult> Get([FromRoute] int id)
         {
@@ -42,8 +46,17 @@ namespace MyBlog.Api.Controllers
         /// <summary>
         /// Получение списка всех тегов. Возможна фильтрация по идентификатору статьи.
         /// </summary>
-        /// <param name="postId"></param>
+        /// <remarks>
+        /// Данный метод позволяет получить список всех тегов. Так же, при указании идентификатора статьи,
+        /// возможно получение списка тегов для данной статьи
+        /// </remarks>
+        /// <param name="postId">
+        /// Идентификатор статьи. Указать для фильтрации тегов по идентификатору статьи. 
+        /// Оставить пустым для получения полного списка тегов
+        /// </param>
+        /// <response code="200">Получение массива тегов</response>
         [HttpGet]
+        [ProducesResponseType(typeof(TagApiModel[]), 200)]
         public async Task<IActionResult> GetAll([FromQuery] int? postId)
         {
             var list = new List<TagApiModel>();
@@ -59,6 +72,12 @@ namespace MyBlog.Api.Controllers
         /// <summary>
         /// Создание тега
         /// </summary>
+        /// <remarks>
+        /// Данный метод позволяет создать новый тег. Подробное описание свойств  -  см. схему TagApiCreateModel
+        /// </remarks>
+        /// <response code="200">Успешное создание нового тега</response>
+        /// <response code="400">Ошибка при создании тега</response>
+        /// <response code="409">Указанное имя нового тега совпадает с именем существующего тега</response>
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] TagApiCreateModel model)
         {
@@ -70,7 +89,7 @@ namespace MyBlog.Api.Controllers
                 if (!result)
                     return StatusCode(400, $"Произошла ошибка при создании тега!");
 
-                return StatusCode(201, $"Тег успешно создан.");
+                return StatusCode(200, $"Тег успешно создан.");
             }
 
             return StatusCode(409, message);
@@ -79,8 +98,15 @@ namespace MyBlog.Api.Controllers
         /// <summary>
         /// Обновление тега
         /// </summary>
-        /// <param name="model"></param>
+        /// <remarks>
+        /// Данный метод позволяет обновить существующий тег. Подробное описание свойств  -  см. схему TagApiUpdateModel
+        /// </remarks>
+        /// <response code="200">Получение объекта тега с обновленными данными</response>
+        /// <response code="400">Ошибка при обновлении тега</response>
+        /// <response code="404">Тег не найден по указанному идентификатору</response>
+        /// <response code="409">Новое имя тега совпадает с именем существующего тега</response>
         [HttpPut]
+        [ProducesResponseType(typeof(TagApiModel), 200)]
         public async Task<IActionResult> Update([FromBody] TagApiUpdateModel model)
         {
             var tag = await _tagService.GetTagByIdAsync(model.Id);
@@ -104,9 +130,16 @@ namespace MyBlog.Api.Controllers
         /// <summary>
         /// Удаление тега
         /// </summary>
-        /// <param name="id"></param>
+        /// <remarks>
+        /// Данный метод позволяет удалить тег по его идентификатору
+        /// </remarks>
+        /// <param name="id">Идентификатор тега, который необходимо удалить</param>
+        /// <response code="200">Получение объекта удалённого тега</response>
+        /// <response code="400">Ошибка при удалении тега</response>
+        /// <response code="404">Тег не найден по указанному идентификатору</response>
         [HttpDelete]
         [Route("{id}")]
+        [ProducesResponseType(typeof(TagApiModel), 200)]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
             var tag = await _tagService.GetTagByIdAsync(id);
