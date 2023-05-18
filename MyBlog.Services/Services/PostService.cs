@@ -44,7 +44,7 @@ namespace MyBlog.Services.Services
 
             var post = _mapper.Map<Post>(model);
             post.User = user;
-            post.Tags = await _tagService.SetTagsForPostAsync(model.PostTags);
+            post.Tags = (await _tagService.SetTagsForPostAsync(model.PostTags)).Distinct().ToList();
 
             await _postRepository.CreateAsync(post);
             return true;
@@ -108,7 +108,7 @@ namespace MyBlog.Services.Services
 
             post.Convert(model);
             if (!string.IsNullOrEmpty(model.PostTags))
-                post.Tags = await _tagService.SetTagsForPostAsync(model.PostTags) ?? new List<Tag>();
+                post.Tags = (await _tagService.SetTagsForPostAsync(model.PostTags)).Distinct().ToList();
 
             await _postRepository.UpdateAsync(post);
             return true;

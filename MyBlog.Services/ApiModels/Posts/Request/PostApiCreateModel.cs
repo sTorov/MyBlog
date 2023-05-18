@@ -18,7 +18,7 @@ namespace MyBlog.Services.ApiModels.Posts.Request
         /// <summary>
         /// Список тегов. Указывать через пробел. Имена тегов не могут содержать пробелов.
         /// </summary>
-        /// <example>"tag1 tag2"</example>
+        /// <example>tag1 tag2</example>
         public string? PostTags { get; set; }
 
         /// <summary>

@@ -41,7 +41,7 @@ namespace MyBlog.Services.Services
                     user.Roles = new List<Role> { defaultRole };
             }
             else
-                user.Roles = roles;
+                user.Roles = roles.Distinct().ToList();
 
             var result = await _userManager.CreateAsync(user, model.PasswordReg);
 
@@ -54,7 +54,7 @@ namespace MyBlog.Services.Services
             if(user == null) return false;
 
             user.Convert(model);
-            user.Roles = await _roleService.ConvertRoleNamesInRoles(model.Roles);
+            user.Roles = (await _roleService.ConvertRoleNamesInRoles(model.Roles)).Distinct().ToList();
             
             var result = await _userManager.UpdateAsync(user);
             if(result.Succeeded)
