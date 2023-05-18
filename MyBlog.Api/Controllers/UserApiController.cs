@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using MyBlog.Services.ApiModels.Users.Response;
 using MyBlog.Services.ApiModels.Users.Request;
 using MyBlog.Services.Services.Interfaces;
+using Microsoft.AspNetCore.Mvc.Formatters;
 
 namespace MyBlog.Api.Controllers
 {
@@ -29,7 +30,13 @@ namespace MyBlog.Api.Controllers
         /// <summary>
         /// Получение объекта пользователя. Получение списка всех пользователей.
         /// </summary>
+        /// <remarks>Данный метод возвращает массив пользователей</remarks>
+        /// <param name="id">ID пользователя. Оставить пустым для получения полного списка пользователей</param>
+        /// <response code="200">Массив пользователей. При указании ID массив будет состоять из одного элемента</response>
+        /// <response code="404">Пользователь не найден по указанному идентификатору</response>
         [HttpGet]
+        [ProducesResponseType(typeof(UserApiModel[]), 200)]
+        [Produces("application/json")]
         public async Task<IActionResult> Get([FromQuery] int? id)
         {
             var response = new List<UserApiModel>();
@@ -51,9 +58,27 @@ namespace MyBlog.Api.Controllers
         /// <summary>
         /// Создание пользователя
         /// </summary>
-        /// <response code="201">Новый пользователь успешно создан</response>
+        /// <remarks>
+        /// Данный метод позволяет создать нового пользователя.
+        /// 
+        ///     Параметры:
+        ///     
+        ///     "firstName":        "string"        Имя пользователя                                                                        (Обязательно)
+        ///     "secondName":       "string"        Фамилия пользователя                                                                    (Обязательно)
+        ///     "lastName":         "string"        Отчество пользователя
+        ///     "emailReg":         "string"        Email пользователя                                                                      (Обязательно)
+        ///     "login":            "string"        Логин пользователя                                                                      (Обязательно)
+        ///     "birthDate":        "string"        Дата рождения пользователя          Пример: [2000-12-12]                                (Обязательно)   
+        ///     "passwordReg":      "string"        Пароль пользователя. Минимум 8 символов.                                                (Обязательно)
+        ///     "passwordConfirm":  "string"        Повторный ввод пароля. Должен совпадать с passwordReg.                                  (Обязательно)
+        ///     "roles":            "string[]"      Список ролей. Указывается через зарятую. В списке обязательно должна быть роль User.    (Обязательно)
+        ///
+        /// </remarks>
+        /// <response code="200">Новый пользователь успешно создан</response>
+        /// <response code="400">Ошибка при создании нового пользователя</response>
+        /// <response code="409">Ошибки при указании данных для создания пользователя</response>
         [HttpPost]
-        [ProducesResponseType(StatusCodes.Status201Created)]
+        [Produces("application/json")]
         public async Task<IActionResult> Create([FromBody] UserApiCreateModel model)
         {
             var messages = new List<string>();
@@ -66,7 +91,7 @@ namespace MyBlog.Api.Controllers
                 if (!result)
                     return StatusCode(400, $"Произошла ошибка при создании пользователя!");
 
-                return StatusCode(201, $"Пользователь успешно создан.");
+                return StatusCode(200, $"Пользователь успешно создан.");
             }
 
             return StatusCode(409, messages);
@@ -81,7 +106,7 @@ namespace MyBlog.Api.Controllers
         public async Task<IActionResult> Update([FromBody] UserApiUpdateModel model)
         {
             var (user, messages) = await _checkDataService.CheckDataForEditUserAsync(model);
-            if (user == null) 
+            if (user == null)
                 return StatusCode(404, messages[0]);
 
             var errors = await _checkDataService.CheckRolesForUserChanged(model.Roles);
@@ -89,7 +114,7 @@ namespace MyBlog.Api.Controllers
                 return StatusCode(422, errors);
 
             var result = await _userService.UpdateUserAsync(model);
-            if (result) 
+            if (result)
                 return StatusCode(200, _mapper.Map<UserApiModel>(user));
 
             return StatusCode(400, $"Произошла ошибка при обновлении пользователя!");
@@ -104,11 +129,11 @@ namespace MyBlog.Api.Controllers
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
             var deletedUser = await _userService.GetUserByIdAsync(id);
-            if (deletedUser == null) 
+            if (deletedUser == null)
                 return StatusCode(404, $"Пользователь не найден!");
 
             var result = await _userService.DeleteByIdAsync(deletedUser);
-            if (!result) 
+            if (!result)
                 return StatusCode(400, $"Ошибка при удалении пользователя!");
 
             return StatusCode(200, _mapper.Map<UserApiModel>(deletedUser));

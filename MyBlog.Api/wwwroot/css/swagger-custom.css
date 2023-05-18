@@ -1,0 +1,16 @@
+﻿p{
+    font-size: 13px;
+}
+
+.parameters-col_name {
+    width: 20%;
+}
+
+.response-col_links{
+    display: none;
+}
+
+pre.example.microlight{
+    width: 25%;
+    min-width: 230px;
+}
