@@ -60,7 +60,7 @@ namespace MyBlog.Services.Services.Interfaces
         /// <summary>
         /// Проверка тегов на существование при создании статьи
         /// </summary>
-        Task<bool> CheckTagsForCreatePostAsync(string tags);
+        Task<List<string>> CheckTagsForCreatePostAsync(string tags);
 
 
         /// <summary>
@@ -78,7 +78,7 @@ namespace MyBlog.Services.Services.Interfaces
         /// <summary>
         /// Проверка данных полученных контроллером при редактировании пользователя (основное приложение)
         /// </summary>
-        Task<User?> CheckDataForEditUserAsync(Controller controller, UserEditViewModel model);
+        Task CheckDataForEditUserAsync(Controller controller, UserEditViewModel model);
         /// <summary>
         /// Проверка данных полученных контроллером при редактировании пользователя (API)
         /// </summary>
@@ -86,6 +86,6 @@ namespace MyBlog.Services.Services.Interfaces
         /// <summary>
         /// Проверка корректности переданных ролей в модели обновления пользователя
         /// </summary>
-        Task<bool> CheckRolesForUserUpdateModel(IUserUpdateModel model);
+        Task<List<string>> CheckRolesForUserChanged(List<string> roleNames);
     }
 }

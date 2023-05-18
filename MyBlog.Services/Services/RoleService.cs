@@ -7,6 +7,7 @@ using MyBlog.Services.ViewModels.Roles.Request;
 using MyBlog.Services.ViewModels.Roles.Response;
 using MyBlog.Data.DBModels.Roles;
 using MyBlog.Data.DBModels.Users;
+using Microsoft.AspNetCore.Http;
 
 namespace MyBlog.Services.Services
 {
@@ -60,27 +61,6 @@ namespace MyBlog.Services.Services
             return result.Succeeded;
         }
 
-        public async Task<Dictionary<string, bool>> GetEnabledRolesForUserAsync(int id)
-        {
-            var dictionary = new Dictionary<string, bool>();
-            var userRoles = await _roleManager.Roles.Include(r => r.Users)
-                .SelectMany(r => r.Users, (r, u) => new { r.Name, u.Id }).Where(o => o.Id == id)
-                .Select(i => i.Name).ToListAsync();
-
-            var allRoles = await _roleManager.Roles.Select(r => r.Name).ToListAsync();
-            var missRoles = allRoles.Except(userRoles);
-            
-            foreach(var role in missRoles)
-            {
-                if(role == null) continue;
-                dictionary.Add(role, false);
-            }
-            foreach (var role in userRoles)
-                dictionary.Add(role, true);
-
-            return dictionary.OrderBy(p => p.Key).ToDictionary(x => x.Key, x => x.Value);
-        }
-
         public async Task<RoleEditViewModel?> GetRoleEditViewModelAsync(int id)
         {
             var checkRole = await _roleManager.FindByIdAsync(id.ToString());
@@ -120,18 +100,31 @@ namespace MyBlog.Services.Services
             return _mapper.Map<RoleViewModel>(role);
         }
 
-        public async Task<Dictionary<string, bool>> GetDictionaryRolesDefault()
+        public List<string> GetEnabledRoleNamesWithRequest(HttpRequest request)
         {
-            var roles = await _roleManager.Roles.ToListAsync();
-            var dict = new Dictionary<string, bool>();
-            foreach (var role in roles)
+            var list = new List<string>();
+
+            foreach (var pair in request.Form)
             {
-                if (role.Name == "User")
-                    dict.Add(role.Name, true);
-                else
-                    dict.Add(role.Name!, false);
+                if (pair.Value == "on")
+                    list.Add(pair.Key);
             }
-            return dict;
+
+            return list;
+        }
+
+        public async Task<List<Role>> ConvertRoleNamesInRoles(List<string> roleNames)
+        {
+            var list = new List<Role>();
+
+            foreach (var roleName in roleNames)
+            {
+                var role = await _roleManager.FindByNameAsync(roleName);
+                if (role != null)
+                    list.Add(role);
+            }
+
+            return list;
         }
     }
 }

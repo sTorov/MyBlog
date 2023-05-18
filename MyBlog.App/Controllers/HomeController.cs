@@ -7,18 +7,6 @@ namespace MyBlog.App.Controllers
     [ApiExplorerSettings(IgnoreApi = true)]
     public class HomeController : Controller
     {
-        #region errorTest
-        /// <summary>
-        /// Метод для принудительного вызова ошибки
-        /// </summary>
-        //public void Bad()
-        //{
-        //    var a = 1;
-        //    var b = 0;
-        //    var c = a / b;
-        //}
-        #endregion
-
         /// <summary>
         /// Домашняя страница
         /// </summary>

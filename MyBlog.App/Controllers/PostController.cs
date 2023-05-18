@@ -44,13 +44,17 @@ namespace MyBlog.App.Controllers
         [Route("CreatePost")]
         public async Task<IActionResult> Create(PostCreateViewModel model)
         {
-            var result = await _postService.CreatePostAsync(model);
+            if (ModelState.IsValid)
+            {
+                var result = await _postService.CreatePostAsync(model);
 
-            if (result)
-                return RedirectToAction("View", new { Id = await _postService.GetLastCreatePostIdByUserId(model.UserId), model.UserId });
-            else
-                ModelState.AddModelError(string.Empty, "Ошибка! Не удалось создать статью!");
+                if (result)
+                    return RedirectToAction("View", new { Id = await _postService.GetLastCreatePostIdByUserId(model.UserId), model.UserId });
+                else
+                    ModelState.AddModelError(string.Empty, "Ошибка! Не удалось создать статью!");
+            }
 
+            model.AllTags ??= await _tagService.GetAllTagsAsync();
             return View(model);
         }
 

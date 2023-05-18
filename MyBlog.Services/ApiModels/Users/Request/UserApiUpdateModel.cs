@@ -10,7 +10,7 @@ namespace MyBlog.Services.ApiModels.Users.Request
     {
         public int Id { get; set; }
 
-        public Dictionary<string, bool> AllRoles { get; set; }
+        public List<string> Roles { get; set; }
 
         [Required(ErrorMessage = "Поле обязательно для заполнения!")]
         public string FirstName { get; set; }

@@ -14,12 +14,14 @@ namespace MyBlog.Api.Controllers
     public class UserApiController : ControllerBase
     {
         private readonly IUserService _userService;
+        private readonly IRoleService _roleService;
         private readonly ICheckDataService _checkDataService;
         private readonly IMapper _mapper;
 
-        public UserApiController(IUserService userService, ICheckDataService checkDataService, IMapper mapper)
+        public UserApiController(IUserService userService, IRoleService roleService, ICheckDataService checkDataService, IMapper mapper)
         {
             _userService = userService;
+            _roleService = roleService;
             _checkDataService = checkDataService;
             _mapper = mapper;
         }
@@ -54,12 +56,14 @@ namespace MyBlog.Api.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         public async Task<IActionResult> Create([FromBody] UserApiCreateModel model)
         {
-            var messages = await _checkDataService.CheckDataForCreateUserAsync(model);
+            var messages = new List<string>();
+            messages.AddRange(await _checkDataService.CheckDataForCreateUserAsync(model));
+            messages.AddRange(await _checkDataService.CheckRolesForUserChanged(model.Roles));
 
             if (messages.Count == 0)
             {
-                var (result, _) = await _userService.CreateUserAsync(model);
-                if (!result.Succeeded)
+                var (result, _) = await _userService.CreateUserAsync(model, await _roleService.ConvertRoleNamesInRoles(model.Roles));
+                if (!result)
                     return StatusCode(400, $"Произошла ошибка при создании пользователя!");
 
                 return StatusCode(201, $"Пользователь успешно создан.");
@@ -80,19 +84,15 @@ namespace MyBlog.Api.Controllers
             if (user == null) 
                 return StatusCode(404, messages[0]);
 
-            if (!await _checkDataService.CheckRolesForUserUpdateModel(model))
-                return StatusCode(422, $"Указаны несуществующие роли!");
+            var errors = await _checkDataService.CheckRolesForUserChanged(model.Roles);
+            if (errors.Count > 0)
+                return StatusCode(422, errors);
 
-            if (messages.Count == 0) 
-            {
-                var result = await _userService.UpdateUserAsync(model, user);
-                if (result.Succeeded) 
-                    return StatusCode(200, _mapper.Map<UserApiModel>(user));
+            var result = await _userService.UpdateUserAsync(model);
+            if (result) 
+                return StatusCode(200, _mapper.Map<UserApiModel>(user));
 
-                return StatusCode(400, $"Произошла ошибка при обновлении пользователя!");
-            }
-
-            return StatusCode(409, messages);
+            return StatusCode(400, $"Произошла ошибка при обновлении пользователя!");
         }
 
         /// <summary>

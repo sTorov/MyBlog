@@ -6,6 +6,7 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MyBlog.Services.ViewModels.Users.Intefaces;
+using MyBlog.Data.DBModels.Roles;
 
 namespace MyBlog.Services.Services.Interfaces
 {
@@ -17,15 +18,11 @@ namespace MyBlog.Services.Services.Interfaces
         /// <summary>
         /// Создание пользователя
         /// </summary>
-        Task<(IdentityResult, User)> CreateUserAsync(UserRegisterViewModel model);
+        Task<(bool, User)> CreateUserAsync(UserRegisterViewModel model, List<Role>? roles = null);
         /// <summary>
         /// Создание пользователя
         /// </summary>
-        Task<IdentityResult> CreateUserAsync(UserCreateViewModel model);
-        /// <summary>
-        /// Обновление пользователя
-        /// </summary>
-        Task<IdentityResult> UpdateUserAsync(IUserUpdateModel model, User user);
+        Task<bool> UpdateUserAsync(IUserUpdateModel model);
         /// <summary>
         /// Получение списка всех пользователей
         /// </summary>
@@ -51,9 +48,9 @@ namespace MyBlog.Services.Services.Interfaces
         /// </summary>
         Task<bool> DeleteByIdAsync(User user);
         /// <summary>
-        /// Получение утверждений пользователя
+        /// Получение утверждений пользователя (роли, идентификатор)
         /// </summary>
-        Task<List<Claim>> GetClaimsAsync(User user);
+        Task<List<Claim>> GetUserClaimsAsync(User user);
         /// <summary>
         /// Получение модели редактирования пользователя
         /// </summary>
@@ -66,9 +63,5 @@ namespace MyBlog.Services.Services.Interfaces
         /// Получение модели профиля пользователя
         /// </summary>
         Task<UserViewModel?> GetUserViewModelAsync(int id);
-        /// <summary>
-        /// Получение данных об обновлении ролей пользователя
-        /// </summary>
-        Task<Dictionary<string, bool>> UpdateRoleStateForEditUserAsync(HttpRequest request);
     }
 }

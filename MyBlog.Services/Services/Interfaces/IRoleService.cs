@@ -1,6 +1,7 @@
 ﻿using MyBlog.Services.ViewModels.Roles.Request;
 using MyBlog.Services.ViewModels.Roles.Response;
 using MyBlog.Data.DBModels.Roles;
+using Microsoft.AspNetCore.Http;
 
 namespace MyBlog.Services.Services.Interfaces
 {
@@ -34,10 +35,6 @@ namespace MyBlog.Services.Services.Interfaces
         /// </summary>
         Task<List<Role>> GetAllRolesAsync();
         /// <summary>
-        /// Получение словаря всех ролей. Ключ - название роли. Значение - наличие роли у пользователя
-        /// </summary>
-        Task<Dictionary<string, bool>> GetEnabledRolesForUserAsync(int id);
-        /// <summary>
         /// Получение модели редактирования роли
         /// </summary>
         Task<RoleEditViewModel?> GetRoleEditViewModelAsync(int id);
@@ -54,8 +51,12 @@ namespace MyBlog.Services.Services.Interfaces
         /// </summary>
         Task<RoleViewModel?> GetRoleViewModel(int id);
         /// <summary>
-        /// Получение словаря ролей по умолчанию
+        /// Получение данных об обновлении ролей пользователя
         /// </summary>
-        Task<Dictionary<string, bool>> GetDictionaryRolesDefault();
+        List<string> GetEnabledRoleNamesWithRequest(HttpRequest request);
+        /// <summary>
+        /// Преобразование списка имён ролей в список ролей 
+        /// </summary>
+        Task<List<Role>> ConvertRoleNamesInRoles(List<string> roleNames);
     }
 }

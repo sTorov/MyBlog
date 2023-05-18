@@ -7,5 +7,6 @@ namespace MyBlog.Services.ApiModels.Users.Request
     /// </summary>
     public class UserApiCreateModel : UserRegisterViewModel
     {
+        public List<string> Roles { get; set; }
     }
 }

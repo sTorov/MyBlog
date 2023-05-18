@@ -20,66 +20,50 @@ namespace MyBlog.Services.Services
     public class UserService : IUserService
     {
         private readonly UserManager<User> _userManager;
-        private readonly RoleManager<Role> _roleManager;
+        private readonly IRoleService _roleService;
         private readonly IMapper _mapper;
 
-        public UserService(UserManager<User> userManager, IMapper mapper, RoleManager<Role> roleManager)
+        public UserService(UserManager<User> userManager, IMapper mapper, IRoleService roleService)
         {
             _userManager = userManager;
             _mapper = mapper;
-            _roleManager = roleManager;
+            _roleService = roleService;
         }
 
-        public async Task<(IdentityResult, User)> CreateUserAsync(UserRegisterViewModel model)
+        public async Task<(bool, User)> CreateUserAsync(UserRegisterViewModel model, List<Role>? roles = null)
         {
             var user = _mapper.Map<User>(model);
-            
-            var defaultRole = await _roleManager.FindByNameAsync("User");
-            if (defaultRole != null) 
-                user.Roles = new List<Role> { defaultRole };
+
+            if (roles == null)
+            {
+                var defaultRole = await _roleService.GetRoleByNameAsync("User");
+                if (defaultRole != null)
+                    user.Roles = new List<Role> { defaultRole };
+            }
+            else
+                user.Roles = roles;
 
             var result = await _userManager.CreateAsync(user, model.PasswordReg);
 
-            return (result, user);
+            return (result.Succeeded, user);
         }
 
-        public async Task<IdentityResult> CreateUserAsync(UserCreateViewModel model)
+        public async Task<bool> UpdateUserAsync(IUserUpdateModel model)
         {
-            var user = _mapper.Map<User>(model);
-            user.Roles = await GetRoleListFromDictionary(model.AllRoles ?? new Dictionary<string, bool>());
+            var user = await _userManager.FindByIdAsync(model.Id.ToString());
+            if(user == null) return false;
 
-            var result = await _userManager.CreateAsync(user, model.PasswordReg);
-            return result;
-        }
-
-        public async Task<IdentityResult> UpdateUserAsync(IUserUpdateModel model, User user)
-        {
             user.Convert(model);
-            user.Roles = await GetRoleListFromDictionary(model.AllRoles!);
+            user.Roles = await _roleService.ConvertRoleNamesInRoles(model.Roles);
             
             var result = await _userManager.UpdateAsync(user);
-            if(result.Succeeded) 
-                return await _userManager.UpdateSecurityStampAsync(user);
-
-            return result;
-        }
-
-        /// <summary>
-        /// Преобразование словаря имён ролей в список ролей
-        /// </summary>
-        private async Task<List<Role>> GetRoleListFromDictionary(Dictionary<string, bool> dict)
-        {
-            var roles = new List<Role>();
-            foreach (var pair in dict)
+            if(result.Succeeded)
             {
-                if (pair.Value)
-                {
-                    var role = await _roleManager.FindByNameAsync(pair.Key);
-                    if (role != null)
-                        roles.Add(role);
-                }
+                var updateSecurityStampRes = await _userManager.UpdateSecurityStampAsync(user);
+                return updateSecurityStampRes.Succeeded;
             }
-            return roles;
+
+            return false;
         }
 
         public async Task<List<User>> GetAllUsersAsync() => await _userManager.Users.Include(u => u.Roles).ToListAsync();
@@ -116,35 +100,31 @@ namespace MyBlog.Services.Services
             if (user == null) return (null, new NotFoundResult());
 
             if (fullAccess || user.Id.ToString() == userId)
-                return (_mapper.Map<UserEditViewModel>(user), null);
+            {
+                var model = _mapper.Map<UserEditViewModel>(user);
+                model.AllRoles = (await _roleService.GetAllRolesAsync()).Select(r => r.Name!).ToList();
+                return (model, null);
+            }
 
             return (null, new ForbidResult());
         }
 
         public async Task<UsersViewModel?> GetUsersViewModelAsync(int? roleId)
         {
-            var model = new UsersViewModel();
-            
-            if (roleId == null)
-                model.Users = await _userManager.Users.Include(u => u.Roles).ToListAsync();
-            else
+            var model = new UsersViewModel
             {
-                var role = await _roleManager.Roles.Include(r => r.Users).FirstOrDefaultAsync(r => r.Id == roleId);
-                if (role == null) return null;
+                Users = await _userManager.Users.Include(u => u.Roles).ToListAsync()
+            };
 
-                model.Users = role.Users;
-                for(int i = 0; i < model.Users.Count; i++)
-                {
-                    model.Users[i].Roles = await _roleManager.Roles.Include(r => r.Users)
-                        .SelectMany(r => r.Users, (r, u) => new { Role = r, User = u })
-                        .Where(o => o.User.Id == model.Users[i].Id).Select(o => o.Role).ToListAsync();
-                }
-            }
+            if (roleId != null)
+                model.Users = model.Users
+                    .SelectMany(u => u.Roles, (u, r) => new { User = u, RoleId = r.Id })
+                    .Where(o => o.RoleId == roleId).Select(o => o.User).ToList();
 
             return model;
         }
 
-        public async Task<List<Claim>> GetClaimsAsync(User user)
+        public async Task<List<Claim>> GetUserClaimsAsync(User user)
         {
             var userId = await _userManager.GetUserIdAsync(user);
             var claims = new List<Claim>();
@@ -162,17 +142,6 @@ namespace MyBlog.Services.Services
 
             if (user == null) return null;
             return _mapper.Map<UserViewModel>(user);
-        }
-
-        public async Task<Dictionary<string, bool>> UpdateRoleStateForEditUserAsync(HttpRequest request)
-        {
-            var dict = new Dictionary<string, bool>();
-            var allRoles = await _roleManager.Roles.ToListAsync();
-
-            foreach (var role in allRoles)
-                dict.Add(role.Name!, request.Form[role.Name!] == "on");
-
-            return dict;
         }
     }
 }

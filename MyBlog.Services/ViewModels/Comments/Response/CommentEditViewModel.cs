@@ -1,4 +1,5 @@
-﻿using MyBlog.Services.ViewModels.Comments.Interfaces;
+﻿using MyBlog.Services.ViewModels.Attributes;
+using MyBlog.Services.ViewModels.Comments.Interfaces;
 using System.ComponentModel.DataAnnotations;
 
 namespace MyBlog.Services.ViewModels.Comments.Response

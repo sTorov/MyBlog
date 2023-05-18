@@ -22,14 +22,14 @@
             {
                 <div class="col-md-3 col-sm-4">
                     <div class="form-check">
-                        @if(role.Key == "User")
+                        @if(role == "User")
                         {
                             <input type="hidden" name="User" value="on"/>
                         }
-                        <input class="form-check-input" type="checkbox" id="@role.Key" @(role.Key == "User" ? "disabled" : "")
-                               name="@(role.Key != "User" ? $"{@role.Key}" : "")" @(role.Key == "User" ? "checked" : null) />
-                        <label class="from-check-label @(role.Key == "User" ? "text-secondary" : "")" for="@role.Key">
-                            @role.Key
+                        <input class="form-check-input" type="checkbox" id="@role" @(role == "User" ? "disabled" : "")
+                               name="@(role != "User" ? $"{role}" : "")" @(Model.Roles.Contains(role) ? "checked" : null) />
+                        <label class="from-check-label @(role == "User" ? "text-secondary" : "")" for="@role">
+                            @role
                         </label>
                     </div>
                 </div>

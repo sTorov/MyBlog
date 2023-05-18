@@ -50,11 +50,11 @@ namespace MyBlog.App
 
             var app = builder.Build();
 
-            app.UseCustomExceptionHandler();
+            //app.UseCustomExceptionHandler();
             app.UseFollowLogging();
 
-            //if (app.Environment.IsDevelopment())
-            //    app.UseDeveloperExceptionPage();
+            if (app.Environment.IsDevelopment())
+                app.UseDeveloperExceptionPage();
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();

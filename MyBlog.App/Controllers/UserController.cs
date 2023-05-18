@@ -28,21 +28,6 @@ namespace MyBlog.App.Controllers
             _checkDataService = checkDataService;
         }
 
-        #region refreshTest
-        /// <summary>
-        /// Выход из системы и вход без утверждения UserID
-        /// </summary>
-        //public async Task LogoutLogin()
-        //{
-        //    var userName = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value ?? string.Empty;
-        //    var user = await _userService.GetUserByNameAsync(userName);
-
-        //    await _signInManager.SignOutAsync();
-
-        //    await _signInManager.SignInWithClaimsAsync(user!, false, new List<Claim>());
-        //}
-        #endregion
-
         /// <summary>
         /// Страница регистрации пользователя
         /// </summary>
@@ -61,18 +46,16 @@ namespace MyBlog.App.Controllers
             if (ModelState.IsValid)
             {
                 var (result, user) = await _userService.CreateUserAsync(model);
-                if (result.Succeeded)
+                if (result)
                 {
-                    await _signInManager.SignInWithClaimsAsync(user, false, await _userService.GetClaimsAsync(user));
+                    await _signInManager.SignInWithClaimsAsync(user, false, await _userService.GetUserClaimsAsync(user));
                     return RedirectToAction("Index", "Home");
                 }
                 else
-                {
-                    foreach (var error in result.Errors)
-                        ModelState.AddModelError(string.Empty, error.Description);
-                }
+                    ModelState.AddModelError(string.Empty, $"Произошла ошибка при регистрации пользователя!");
             }
-            return View("Register", model);
+
+            return View(model);
         }
 
         /// <summary>
@@ -96,10 +79,11 @@ namespace MyBlog.App.Controllers
                 var result = await _signInManager.CheckPasswordSignInAsync(user!, model.Password, false);
                 if (result.Succeeded)
                 {
-                    var claims = await _userService.GetClaimsAsync(user!);
+                    var claims = await _userService.GetUserClaimsAsync(user!);
                     await _signInManager.SignInWithClaimsAsync(user!, false, claims);
 
-                    if (!string.IsNullOrEmpty(model.ReturnUrl) && Url.IsLocalUrl(model.ReturnUrl))
+                    var userId = claims.FirstOrDefault(c => c.Type == "UserID")?.Value;
+                    if (!string.IsNullOrEmpty(model.ReturnUrl) && Url.IsLocalUrl(model.ReturnUrl) && userId == Request.Query["UserId"])
                         return Redirect(model.ReturnUrl);
                     return RedirectToAction("Index", "Home");
                 }
@@ -119,8 +103,9 @@ namespace MyBlog.App.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Logout([FromQuery] string returnUrl)
         {
+            var userId = User.Claims.FirstOrDefault(c => c.Type == "UserID")?.Value;
             await _signInManager.SignOutAsync();
-            return RedirectToAction("Login", new { ReturnUrl = returnUrl });
+            return RedirectToAction("Login", new { ReturnUrl = returnUrl, UserId = userId });
         }
 
         /// <summary>
@@ -137,10 +122,7 @@ namespace MyBlog.App.Controllers
                 var user = await _userService.GetUserByNameAsync(userName);
 
                 if (user != null)
-                {
-                    var claims = await _userService.GetClaimsAsync(user!);
-                    await _signInManager.SignInWithClaimsAsync(user!, false, claims);
-                }
+                    await _signInManager.SignInWithClaimsAsync(user!, false, await _userService.GetUserClaimsAsync(user!));
             }
 
             if (returnUrl != null && Url.IsLocalUrl(returnUrl))
@@ -190,7 +172,6 @@ namespace MyBlog.App.Controllers
 
             if (model == null) return result!;
 
-            model.AllRoles = await _roleService.GetEnabledRolesForUserAsync(id);
             return View(model);
         }
 
@@ -202,22 +183,21 @@ namespace MyBlog.App.Controllers
         [Route("EditUser/{id}")]
         public async Task<IActionResult> Edit(UserEditViewModel model)
         {
-            var currentUser = await _checkDataService.CheckDataForEditUserAsync(this, model);
+            await _checkDataService.CheckDataForEditUserAsync(this, model);
             if (ModelState.IsValid)
             {
-                model.AllRoles = await _userService.UpdateRoleStateForEditUserAsync(this.Request);
-                var result = await _userService.UpdateUserAsync(model, currentUser!);
+                model.Roles = _roleService.GetEnabledRoleNamesWithRequest(this.Request);
+                var result = await _userService.UpdateUserAsync(model);
 
-                if (result.Succeeded)
+                if (result)
                     return RedirectToAction("Index", "Home", new { model.ReturnUrl });
                 else
-                {
-                    foreach (var error in result.Errors)
-                        ModelState.AddModelError(string.Empty, error.Description);
-                }
+                    ModelState.AddModelError(string.Empty, $"Произошла ошибка при обновлении пользователя!");
             }
 
-            model.AllRoles ??= await _roleService.GetEnabledRolesForUserAsync(model.Id);
+            model.Roles ??= (await _roleService.GetRolesByUserAsync(model.Id)).Select(r => r.Name!).ToList();
+            model.AllRoles ??= (await _roleService.GetAllRolesAsync()).Select(r => r.Name!).ToList();
+
             return View(model);
         }
 
@@ -240,11 +220,7 @@ namespace MyBlog.App.Controllers
         /// </summary>
         [Authorize(Roles = "Admin"), CheckUserId]
         [HttpGet]
-        public async Task<IActionResult> Create()
-        {
-            var model = new UserCreateViewModel() { AllRoles = await _roleService.GetDictionaryRolesDefault() };
-            return View(model);
-        }
+        public async Task<IActionResult> Create() => View(new UserCreateViewModel(await _roleService.GetAllRolesAsync()));
 
         /// <summary>
         /// Создание пользователя
@@ -256,19 +232,16 @@ namespace MyBlog.App.Controllers
             await _checkDataService.CheckDataForCreateUserAsync(this, model);
             if (ModelState.IsValid)
             {
-                model.AllRoles = await _userService.UpdateRoleStateForEditUserAsync(this.Request);
-                var result = await _userService.CreateUserAsync(model);
+                model.Roles = _roleService.GetEnabledRoleNamesWithRequest(this.Request);
+                var (result, _) = await _userService.CreateUserAsync(model, await _roleService.ConvertRoleNamesInRoles(model.Roles));
 
-                if (result.Succeeded)
+                if (result)
                     return RedirectToAction("GetUsers");
                 else
-                {
-                    foreach (var error in result.Errors)
-                        ModelState.AddModelError(string.Empty, error.Description);
-                }
+                    ModelState.AddModelError(string.Empty, $"Произошла ошибка при создании пользователя!");
             }
 
-            model.AllRoles ??= await _roleService.GetDictionaryRolesDefault();
+            model.AllRoles ??= (await _roleService.GetAllRolesAsync()).Select(r => r.Name!).ToList();
             return View(model);
         }
     }

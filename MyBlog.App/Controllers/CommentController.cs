@@ -32,19 +32,26 @@ namespace MyBlog.App.Controllers
         {
             var userId = User.Claims.FirstOrDefault(c => c.Type == "UserID")?.Value;
 
+            if (!ModelState.IsValid)
+                return await GetPostViewModel();
+
             var result = await _commentService.CreateCommentAsync(model);
             if (result)
                 return RedirectToAction("View", "Post", new { Id = model.PostId, UserId = userId });
             else
             {
                 ModelState.AddModelError(string.Empty, $"Ошибка! Не удалось создать комментарий!");
-
+                return await GetPostViewModel();
+            }
+            
+            async Task<IActionResult> GetPostViewModel()
+            {
                 var postViewModel = await _postService.GetPostViewModelAsync(model.PostId, userId ?? string.Empty);
                 if (postViewModel == null) return NotFound();
 
                 postViewModel.CommentCreateViewModel = model;
                 return View("/Views/Post/View.cshtml", postViewModel);
-            }            
+            }
         }
 
         /// <summary>
@@ -83,6 +90,9 @@ namespace MyBlog.App.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(CommentEditViewModel model)
         {
+            if(!ModelState.IsValid)
+                return View(model);
+
             var result = await _commentService.UpdateCommentAsync(model);
             if (result)
             {

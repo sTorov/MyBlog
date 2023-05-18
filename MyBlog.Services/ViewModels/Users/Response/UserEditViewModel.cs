@@ -1,4 +1,5 @@
-﻿using MyBlog.Services.ViewModels.Users.Intefaces;
+﻿using MyBlog.Data.DBModels.Roles;
+using MyBlog.Services.ViewModels.Users.Intefaces;
 using System.ComponentModel.DataAnnotations;
 
 namespace MyBlog.Services.ViewModels.Users.Response
@@ -12,7 +13,9 @@ namespace MyBlog.Services.ViewModels.Users.Response
 
         public string? ReturnUrl { get; set; } 
 
-        public Dictionary<string, bool>? AllRoles { get; set; }
+        public List<string>? Roles { get; set; }
+
+        public List<string>? AllRoles { get; set; }
 
         [Required(ErrorMessage = "Поле обязательно для заполнения!")]
         [Display(Name = "Имя")]

@@ -69,9 +69,9 @@ namespace MyBlog.Api.Controllers
 
             if(messages.Count == 0)
             {
-                var check = await _checkDataService.CheckTagsForCreatePostAsync(model.PostTags ?? string.Empty);
-                if (!check)
-                    return StatusCode(422, $"Указаны несуществующие теги!");
+                var errors = await _checkDataService.CheckTagsForCreatePostAsync(model.PostTags ?? string.Empty);
+                if (errors.Count > 0)
+                    return StatusCode(422, errors);
 
                 var result = await _postService.CreatePostAsync(model);
                 if (!result)
@@ -94,9 +94,9 @@ namespace MyBlog.Api.Controllers
             if (post == null)
                 return StatusCode(404, $"Статья не найдена!");
 
-            var check = await _checkDataService.CheckTagsForCreatePostAsync(model.PostTags ?? string.Empty);
-            if (!check)
-                return StatusCode(422, $"Указаны несуществующие теги!");
+            var errors = await _checkDataService.CheckTagsForCreatePostAsync(model.PostTags ?? string.Empty);
+            if (errors.Count > 0)
+                return StatusCode(422, errors);
 
             var result = await _postService.UpdatePostAsync(model);
             if (!result)

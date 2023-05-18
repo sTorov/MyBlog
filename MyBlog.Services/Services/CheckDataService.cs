@@ -116,18 +116,16 @@ namespace MyBlog.Services.Services
         #region RoleController
         public async Task CheckDataForEditRoleAsync(Controller controller, RoleEditViewModel model)
         {
-            var messages = await CheckEntitiesByIdAsync(roleId: model.Id);
-
-            if (messages.Count > 0)
-                controller.ModelState.AddModelError(string.Empty, messages[0]);
+            var role = await _roleManager.FindByNameAsync(model.Name ?? "");
+            if (role != null && role.Id != model.Id)
+                controller.ModelState.AddModelError(string.Empty, $"Роль [{model.Name}] уже существует!");
         }
 
         public async Task CheckDataForCreateRoleAsync(Controller controller, RoleCreateViewModel model)
         {
-            var messages = await CheckEntitiesByNameAsync(roleName: model.Name);
-
-            if (messages.Count > 0)
-                controller.ModelState.AddModelError(string.Empty, messages[0]);
+            var role = await _roleManager.FindByNameAsync(model.Name ?? "");
+            if (role != null)
+                controller.ModelState.AddModelError(string.Empty, $"Роль [{model.Name}] уже существует!");
         }
 
         public async Task<bool> CheckChangeDefaultRolesAsync(int roleId, string roleName = "")
@@ -158,7 +156,7 @@ namespace MyBlog.Services.Services
 
         public async Task<string> CheckTagNameAsync<T>(T model) where T : ITagResponseViewModel
         {
-            var checkTag = await _tagService.GetTagByNameAsync(model.Name);
+            var checkTag = await _tagService.GetTagByNameAsync(model.Name ?? "");
             var check = model is ITagUpdateModel updateModel
                 ? (checkTag != null && checkTag.Id != updateModel.Id) : checkTag != null;
 
@@ -167,17 +165,19 @@ namespace MyBlog.Services.Services
             return string.Empty;
         }
 
-        public async Task<bool> CheckTagsForCreatePostAsync(string tags)
+        public async Task<List<string>> CheckTagsForCreatePostAsync(string tags)
         {
+            var messages = new List<string>();
             var tagsArr = tags.Trim().Split(' ');
 
             foreach(var tagName in tagsArr)
             {
-                var tag = await _tagService.GetTagByNameAsync(tagName);
+                var tag = await _tagService.GetTagByNameAsync(tagName ?? "");
                 if (tag == null)
-                    return false;
+                    messages.Add($"Тег [{tagName}] не существует!");
             }
-            return true;
+
+            return messages;
         }
         #endregion
 
@@ -196,26 +196,28 @@ namespace MyBlog.Services.Services
 
         public async Task<List<string>> CheckDataForCreateUserAsync(UserRegisterViewModel model)
         {
-            var messages = await CheckEntitiesByNameAsync(userName: model.Login);
+            var messages = new List<string>();
 
-            var checkEmail = (await _userManager.FindByEmailAsync(model.EmailReg))?.Email;
+            var checkName = (await _userManager.FindByNameAsync(model.Login ?? ""))?.UserName;
+            if (checkName != null)
+                messages.Add($"Имя пользователя [{checkName}] уже используется!");
+
+            var checkEmail = (await _userManager.FindByEmailAsync(model.EmailReg ?? ""))?.Email;
             if (checkEmail != null) 
                 messages.Add($"Почта {model.EmailReg} уже зарегистрирована!");
 
             return messages;
         }
 
-        public async Task<User?> CheckDataForEditUserAsync(Controller controller, UserEditViewModel model)
+        public async Task CheckDataForEditUserAsync(Controller controller, UserEditViewModel model)
         {
-            var (currentUser, messages) = await CheckDataForEditUserAsync(model);
+            var (_, messages) = await CheckDataForEditUserAsync(model);
 
             if(messages.Count > 0)
             {
                 foreach (var message in messages)
                     controller.ModelState.AddModelError(string.Empty, message);
             }
-
-            return currentUser;
         }
 
         public async Task<(User?, List<string>)> CheckDataForEditUserAsync(IUserUpdateModel model)
@@ -229,11 +231,11 @@ namespace MyBlog.Services.Services
                 return (null, list);
             }
 
-            var checkLogin = (await _userManager.FindByNameAsync(model.Login))?.UserName;
+            var checkLogin = (await _userManager.FindByNameAsync(model.Login ?? ""))?.UserName;
             if (checkLogin != null && checkLogin != currentUser.UserName) 
                 list.Add($"Никнейм [{model.Login}] уже используется!");
 
-            var checkEmail = (await _userManager.FindByEmailAsync(model.Email))?.Email;
+            var checkEmail = (await _userManager.FindByEmailAsync(model.Email ?? ""))?.Email;
             if (checkEmail != null && checkEmail != currentUser.Email)
                 list.Add($"Адрес [{model.Email}] уже зарегистрирован!");
 
@@ -249,15 +251,23 @@ namespace MyBlog.Services.Services
             return user;
         }
 
-        public async Task<bool> CheckRolesForUserUpdateModel(IUserUpdateModel model)
+        public async Task<List<string>> CheckRolesForUserChanged(List<string> roleNames)
         {
-            foreach(var role in model.AllRoles)
+            var messages = new List<string>();
+
+            if (!roleNames.Contains("User"))
             {
-                if (await _roleManager.FindByNameAsync(role.Key) == null)
-                    return false;
+                messages.Add("Список ролей не содержит обязательных ролей!");
+                return messages;
             }
 
-            return true;
+            foreach(var role in roleNames)
+            {
+                if (await _roleManager.FindByNameAsync(role ?? "") == null)
+                    messages.Add($"Роль [{role}] не найдена!");
+            }
+
+            return messages;
         }
         #endregion
     }

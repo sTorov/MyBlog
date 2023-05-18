@@ -34,7 +34,8 @@ namespace MyBlog.Services
                 .ForMember(u => u.Email, opt => opt.MapFrom(m => m.EmailReg))
                 .ForMember(u => u.PasswordHash, opt => opt.MapFrom(m => m.PasswordReg.GetHashCode()));
             CreateMap<User, UserEditViewModel>()
-                .ForMember(u => u.Login, opt => opt.MapFrom(m => m.UserName));
+                .ForMember(u => u.Login, opt => opt.MapFrom(m => m.UserName))
+                .ForMember(u => u.Roles, opt => opt.MapFrom(m => m.Roles.Select(r => r.Name)));
             CreateMap<User, UserViewModel>();
 
             CreateMap<IPostCreateModel, Post>();
