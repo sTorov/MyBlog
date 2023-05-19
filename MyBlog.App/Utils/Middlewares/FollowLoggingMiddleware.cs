@@ -14,13 +14,15 @@ namespace MyBlog.App.Utils.Middlewares
         public FollowLoggingMiddleware(RequestDelegate next)
         {
             _next = next;
-            _logger = LogManager.GetCurrentClassLogger();
+            _logger = LogManager.GetCurrentClassLogger(); 
         }
 
         public async Task InvokeAsync(HttpContext context)
         {
             var path = context.Request.GetEncodedUrl();
-            _logger.Info(path);
+            var userName = context.Session.GetString("username") ?? "_";
+
+            _logger.Info($"{userName} => {path}");
 
             await _next.Invoke(context);
         }

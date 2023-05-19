@@ -49,6 +49,9 @@ namespace MyBlog.App.Controllers
                 if (result)
                 {
                     await _signInManager.SignInWithClaimsAsync(user, false, await _userService.GetUserClaimsAsync(user));
+
+                    HttpContext.Session.SetString("username", user!.UserName ?? "");
+
                     return RedirectToAction("Index", "Home");
                 }
                 else
@@ -73,6 +76,7 @@ namespace MyBlog.App.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(UserLoginViewModel model)
         {
+            
             var user = await _checkDataService.CheckDataForLoginAsync(this, model);
             if (ModelState.IsValid)
             {
@@ -81,6 +85,8 @@ namespace MyBlog.App.Controllers
                 {
                     var claims = await _userService.GetUserClaimsAsync(user!);
                     await _signInManager.SignInWithClaimsAsync(user!, false, claims);
+
+                    HttpContext.Session.SetString("username", user!.UserName ?? "");
 
                     var userId = claims.FirstOrDefault(c => c.Type == "UserID")?.Value;
                     if (!string.IsNullOrEmpty(model.ReturnUrl) && Url.IsLocalUrl(model.ReturnUrl) && userId == Request.Query["UserId"])
@@ -122,7 +128,10 @@ namespace MyBlog.App.Controllers
                 var user = await _userService.GetUserByNameAsync(userName);
 
                 if (user != null)
+                {
                     await _signInManager.SignInWithClaimsAsync(user!, false, await _userService.GetUserClaimsAsync(user!));
+                    HttpContext.Session.SetString("username", user!.UserName ?? "");
+                }
             }
 
             if (returnUrl != null && Url.IsLocalUrl(returnUrl))

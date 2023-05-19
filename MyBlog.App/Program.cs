@@ -10,6 +10,7 @@ using System.Reflection;
 using MyBlog.Data.DBModels.Roles;
 using MyBlog.Services;
 using Microsoft.AspNetCore.Http.Extensions;
+using Microsoft.AspNetCore.Identity;
 
 namespace MyBlog.App
 {
@@ -19,6 +20,8 @@ namespace MyBlog.App
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            builder.WebHost.UseStaticWebAssets();
+
             builder.Services.AddControllersWithViews();
 
             var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
@@ -27,12 +30,14 @@ namespace MyBlog.App
                 .AddCustomRepository<Post, PostRepository>()
                 .AddCustomRepository<Comment, CommentRepository>()
                 .AddCustomRepository<Tag, TagRepository>()
-                .AddAppServices();
+                .AddAppServices()
+                .AddSession();
 
             var assembly = Assembly.GetAssembly(typeof(MapperProfile));
             builder.Services.AddAutoMapper(assembly);
 
-            builder.Services.AddIdentity<User, Role>(cfg => {
+            builder.Services.AddIdentity<User, Role>(cfg =>
+            {
                 cfg.Password.RequiredLength = 8;
                 cfg.Password.RequireNonAlphanumeric = false;
                 cfg.Password.RequireUppercase = false;
@@ -49,6 +54,8 @@ namespace MyBlog.App
             builder.Services.AddAuthorization();
 
             var app = builder.Build();
+
+            app.UseSession();
 
             app.UseCustomExceptionHandler();
             app.UseFollowLogging();
